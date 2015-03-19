@@ -254,23 +254,6 @@ module CorsicaTests {
             testGoodInitOption("closedDisplayMode", null);
             testGoodInitOption("closedDisplayMode", undefined);
 
-            LiveUnit.LoggingCore.logComment("Testing _layout");
-            testGoodInitOption("_layout", "menu");
-            testGoodInitOption("_layout", "custom");
-            testGoodInitOption("_layout", "commands");
-            var badLayout = "Invalid argument: The _layout property must be 'custom', 'menu' or 'commands'";
-            testBadInitOption("_layout", "fixed", "WinJS.UI.AppBar.BadLayout", badLayout);
-            testBadInitOption("_layout", -1, "WinJS.UI.AppBar.BadLayout", badLayout);
-            testBadInitOption("_layout", 12, "WinJS.UI.AppBar.BadLayout", badLayout);
-            testBadInitOption("_layout", {}, "WinJS.UI.AppBar.BadLayout", badLayout);
-
-            LiveUnit.LoggingCore.logComment("Testing sticky");
-            testGoodInitOption("sticky", true);
-            testGoodInitOption("sticky", false);
-            testGoodInitOption("sticky", -1);
-            testGoodInitOption("sticky", "what");
-            testGoodInitOption("sticky", {});
-
             LiveUnit.LoggingCore.logComment("Testing disabled");
             testGoodInitOption("disabled", true);
             testGoodInitOption("disabled", false);
@@ -733,7 +716,6 @@ module CorsicaTests {
                 }).then(function () {
                         LiveUnit.Assert.areEqual(outsideAppBar, document.activeElement, "Focus should have moved outside of the Overlay");
                         LiveUnit.Assert.isTrue(!appBar.opened, "Overlay should have hid because it lost focus");
-
                         c();
                     });
             }).then(complete);

@@ -324,7 +324,6 @@ define([
                 get ariaLabel() { return _Resources._getWinJSString("ui/appBarAriaLabel").value; },
                 get requiresCommands() { return "Invalid argument: commands must not be empty"; },
                 get cannotChangePlacementWhenVisible() { return "Invalid argument: The placement property cannot be set when the AppBar is visible, call hide() first"; },
-                get badLayout() { return "Invalid argument: The layout property must be 'custom', 'menu' or 'commands'"; },
                 get cannotChangeLayoutWhenVisible() { return "Invalid argument: The layout property cannot be set when the AppBar is visible, call hide() first"; }
             };
 
@@ -392,11 +391,18 @@ define([
                 _ElementUtilities.addClass(this._invokeButton, _Constants.invokeButtonClass);
                 this._element.appendChild(this._invokeButton);
                 var that = this;
-                this._invokeButton.addEventListener("click", function () { AppBar._toggleAllAppBarsState(_KeyboardBehavior._keyboardSeenLast, that); }, false);
+                this._invokeButton.addEventListener("click", function () {
+                    this._keyboardInvoked = _KeyboardBehavior._keyboardSeenLast;
+                    if (this.opened) {
+                        this._hide();
+                    } else {
+                        this._show();
+                    }
+                }, false);
 
                 // Run layout setter immediately. We need to know our layout in order to correctly
                 // position any commands that may be getting set through the constructor.
-                this.layout = options.layout || _Constants.appBarLayoutMenu;
+                this._layout = options.layout || _Constants.appBarLayoutMenu;
                 delete options.layout;
 
                 // Need to set placement before closedDisplayMode, closedDisplayMode sets our starting position, which is dependant on placement.
@@ -510,7 +516,6 @@ define([
                         if (layout !== _Constants.appBarLayoutCommands &&
                             layout !== _Constants.appBarLayoutCustom &&
                             layout !== _Constants.appBarLayoutMenu) {
-                            throw new _ErrorFromName("WinJS.UI.AppBar.BadLayout", strings.badLayout);
                         }
 
                         // In designer we may have to redraw it
