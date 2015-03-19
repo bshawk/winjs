@@ -13,7 +13,7 @@ interface IStyleEquivalentsMap {
     [key: string]: IStyleEquivalents;
 }
 
-interface IShowHideMachine {
+interface IOpenCloseMachine {
     _state: { name: string; }
 }
 
@@ -189,9 +189,9 @@ declare module WinJS {
                 splitView: string;
                 pane: string;
                 content: string;
-                // hidden/shown
-                paneHidden: string;
-                paneShown: string;
+                // closed/opened
+                paneOpened: string;
+                paneClosed: string;
             }
 
             _playShowAnimation(): Promise<any>;
@@ -199,7 +199,7 @@ declare module WinJS {
             _prepareAnimation(paneRect: any, contentRect: any): void;
             _clearAnimation(): void;
             _disposed: boolean;
-            _machine: IShowHideMachine
+            _machine: IOpenCloseMachine
         }
 
         interface ISelect {
@@ -404,7 +404,7 @@ declare module WinJS {
                 overflowButton: HTMLButtonElement;
                 overflowArea: HTMLElement;
             };
-            _machine: IShowHideMachine;
+            _machine: IOpenCloseMachine;
         }
 
         class PrivateToolBarNew extends WinJS.UI.ToolBarNew {
@@ -602,10 +602,10 @@ declare module WinJS {
             public open(): void;
             public close(): void;
             public opened: boolean;
-            public onbeforeshow: (ev: CustomEvent) => void;
-            public onaftershow: (ev: CustomEvent) => void;
-            public onbeforehide: (ev: CustomEvent) => void;
-            public onafterhide: (ev: CustomEvent) => void;
+            public onbeforeopen: (ev: CustomEvent) => void;
+            public onafteropen: (ev: CustomEvent) => void;
+            public onbeforeclose: (ev: CustomEvent) => void;
+            public onafterclose: (ev: CustomEvent) => void;
             public overflowDirection: string;
             public addEventListener(eventName: string, eventHandler: Function, useCapture?: boolean): void;
             public removeEventListener(eventName: string, eventCallback: Function, useCapture?: boolean): void;
@@ -626,10 +626,10 @@ declare module WinJS {
             public open(): void;
             public close(): void;
             public opened: boolean;
-            public onbeforeshow: (ev: CustomEvent) => void;
-            public onaftershow: (ev: CustomEvent) => void;
-            public onbeforehide: (ev: CustomEvent) => void;
-            public onafterhide: (ev: CustomEvent) => void;
+            public onbeforeopen: (ev: CustomEvent) => void;
+            public onafteropen: (ev: CustomEvent) => void;
+            public onbeforeclose: (ev: CustomEvent) => void;
+            public onafterclose: (ev: CustomEvent) => void;
             public addEventListener(eventName: string, eventHandler: Function, useCapture?: boolean): void;
             public removeEventListener(eventName: string, eventCallback: Function, useCapture?: boolean): void;
             public dispatchEvent(type: string, eventProperties: any): boolean;
