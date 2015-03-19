@@ -274,7 +274,7 @@ module CorsicaTests {
 
             LiveUnit.Assert.areEqual(_element, AppBar.element, "Verifying that element is what we set it with");
             LiveUnit.Assert.areEqual("bottom", AppBar.placement, "Verifying that position is 'bottom'");
-            LiveUnit.Assert.areEqual("menu", AppBar._layoutImpl, "Verifying that _layout is 'commands'");
+            LiveUnit.Assert.areEqual("menu", AppBar._layoutImpl, "Verifying that _layout is 'menu'");
             LiveUnit.Assert.isFalse(AppBar.sticky, "Verifying that sticky is false");
             LiveUnit.Assert.isFalse(AppBar.disabled, "Verifying that disabled is false");
             LiveUnit.Assert.isFalse(AppBar.opened, "Verifying that opened is false");
