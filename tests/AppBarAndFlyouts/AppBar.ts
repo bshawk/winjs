@@ -87,7 +87,6 @@ module CorsicaTests {
     }
 
     var displayModeVisiblePositions = {
-        disabled: "hidden",
         none: "hidden",
         hidden: "hidden",
         minimal: "minimal",
@@ -254,13 +253,6 @@ module CorsicaTests {
             testGoodInitOption("closedDisplayMode", null);
             testGoodInitOption("closedDisplayMode", undefined);
 
-            LiveUnit.LoggingCore.logComment("Testing disabled");
-            testGoodInitOption("disabled", true);
-            testGoodInitOption("disabled", false);
-            testGoodInitOption("disabled", -1);
-            testGoodInitOption("disabled", "what");
-            testGoodInitOption("disabled", {});
-
             LiveUnit.LoggingCore.logComment("Testing element");
             //testBadInitOption("element", {}, WinJS.UI.AppBar.badElement);
         }
@@ -275,7 +267,6 @@ module CorsicaTests {
             LiveUnit.Assert.areEqual(_element, AppBar.element, "Verifying that element is what we set it with");
             LiveUnit.Assert.areEqual("bottom", AppBar.placement, "Verifying that position is 'bottom'");
             LiveUnit.Assert.areEqual("custom", AppBar._layout, "Verifying that _layout is 'custom'");
-            LiveUnit.Assert.isFalse(AppBar.disabled, "Verifying that disabled is false");
             LiveUnit.Assert.isFalse(AppBar.opened, "Verifying that opened is false");
             LiveUnit.Assert.areEqual(AppBar.closedDisplayMode, displayModeVisiblePositions.compact, "Verifying closedDisplayMode is compact");
         }
@@ -1331,28 +1322,9 @@ module CorsicaTests {
 
                         verifyAppBarCompletelyHidden(appBar);
 
-                        msg = "Disabling the AppBar should hide it completely.";
-                        LiveUnit.LoggingCore.logComment("Test: " + msg);
-
-                        return waitForPositionChange(appBar, function () { appBar.disabled = true; });
-                    }).then(function () {
-                        verifyAppBarCompletelyHidden(appBar);
-
-                        msg = "Changing closedDisplayMode should not change the AppBar's visible position if the AppBar is disabled.";
+                    msg = "Changing closedDisplayMode on closed AppBar should change the AppBar's visible position.";
                         LiveUnit.LoggingCore.logComment("Test: " + msg);
                         return waitForPositionChange(appBar, function () { appBar.closedDisplayMode = "minimal"; });
-                    }).then(function () {
-                        verifyAppBarCompletelyHidden(appBar);
-
-                        msg = "Disabled AppBar should not open.";
-                        LiveUnit.LoggingCore.logComment("Test: " + msg);
-                        return waitForPositionChange(appBar, function () { appBar.open(); });
-                    }).then(function () {
-                        verifyAppBarCompletelyHidden(appBar);
-
-                        msg = "When AppBar is re-enabled, it should remain closed and assume the visible position of its closedDisplayMode.";
-                        LiveUnit.LoggingCore.logComment("Test: " + msg);
-                        return waitForPositionChange(appBar, function () { appBar.disabled = false; });
                     }).then(function () {
                         verifyAppBarClosedMinimal(appBar);
 
@@ -1362,20 +1334,7 @@ module CorsicaTests {
                     }).then(function () {
                         verifyAppBarOpenAndLightDismiss(appBar);
 
-                        msg = "Changing closedDisplayMode on Open AppBar should not change its visible position.";
-                        LiveUnit.LoggingCore.logComment("Test: " + msg);
                         appBar.closedDisplayMode = "none";
-
-                        // Nothing should have changed. Schedule a job on Idle and verify.
-                        return new WinJS.Promise(function (signalComplete) {
-                            WinJS.Utilities.Scheduler.schedule(function () {
-                                verifyAppBarOpenAndLightDismiss(appBar);
-                                signalComplete();
-                            }, WinJS.Utilities.Scheduler.Priority.idle);
-                        });
-
-                    }).then(function () {
-
                         msg = "Closing an AppBar whose closedDisplayMode is equal to 'none', should hide the AppBar completely";
                         LiveUnit.LoggingCore.logComment("Test: " + msg);
                         return waitForPositionChange(appBar, function () { appBar.close(); });

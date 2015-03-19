@@ -61,7 +61,6 @@ define([
 
             // Enum of known constant pixel values for display modes.
             var knownVisibleHeights = {
-                disabled: 0,
                 none: 0,
                 hidden: 0,
                 minimal: 25,
@@ -70,7 +69,6 @@ define([
 
             // Maps each notion of a display modes to the corresponding visible position
             var displayModeVisiblePositions = {
-                disabled: "hidden",
                 none: "hidden",
                 hidden: "hidden",
                 minimal: "minimal",
@@ -642,30 +640,7 @@ define([
                     },
                 },
 
-                /// <field type="Boolean" locid="WinJS.UI.AppBar.disabled" helpKeyword="WinJS.UI.AppBar.disabled">
-                /// Disable an AppBar, setting or getting the HTML disabled attribute. While disabled, the AppBar is hidden completely, and will not respond to attempts to show it.
-                /// </field>
-                disabled: {
-                    get: function () {
-                        // Ensure it's a boolean because we're using the DOM element to keep in-sync
-                        return !!this._element.disabled;
-                    },
-                    set: function (disable) {
-                        var disable = !!disable;
-                        if (this.disabled !== disable) {
-                            this._element.disabled = disable;
-                            var toPosition;
-                            if (disable) {
-                                // Disabling. Move to the position mapped to the disabled state.
-                                toPosition = displayModeVisiblePositions.disabled;
-                            } else {
-                                // Enabling. Move to the position mapped to our closedDisplayMode.
-                                toPosition = displayModeVisiblePositions[this.closedDisplayMode];
-                            }
-                            this._hide(toPosition);
-                        }
-                    },
-                },
+                
 
                 /// <field type="Boolean" hidden="true" locid="WinJS.UI._AppBar.opened" helpKeyword="WinJS.UI._AppBar.opened">Read only, true if an AppBar is 'hidden'.</field>
                 opened: {
@@ -923,6 +898,7 @@ define([
                     _Dispose.disposeSubTree(this.element);
                     this._layoutImpl.dispose();
                     this.disabled = true;
+                    this.close();
                 },
 
                 _disposeChildren: function AppBar_disposeChildren() {

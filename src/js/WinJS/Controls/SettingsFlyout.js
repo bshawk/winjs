@@ -205,6 +205,25 @@ define([
                     }
                 },
 
+                /// <field type="Boolean" locid="WinJS.UI.SettingsFlyout.disabled" helpKeyword="WinJS.UI.SettingsFlyout.disabled">Disable SettingsFlyout, setting or getting the HTML disabled attribute.  When disabled the Overlay will no longer display with show(), and will hide if currently visible.</field>
+                disabled: {
+                    get: function () {
+                        // Ensure it's a boolean because we're using the DOM element to keep in-sync
+                        return !!this._element.disabled;
+                    },
+                    set: function (value) {
+                        // Force this check into a boolean because our current state could be a bit confused since we tie to the DOM element
+                        value = !!value;
+                        var oldValue = !!this._element.disabled;
+                        if (oldValue !== value) {
+                            this._element.disabled = value;
+                            if (!this.hidden && this._element.disabled) {
+                                this._dismiss();
+                            }
+                        }
+                    }
+                },
+
                 /// <field type="Function" locid="WinJS.UI.SettingsFlyout.onbeforeshow" helpKeyword="WinJS.UI.SettingsFlyout.onbeforeshow">
                 /// Occurs immediately before the control is shown.
                 /// </field>
