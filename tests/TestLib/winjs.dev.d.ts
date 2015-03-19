@@ -470,6 +470,7 @@ declare module WinJS {
             _uniqueId;
             _updateFirstAndFinalDiv;
             _layout;
+            _layoutImpl;
             _visiblePosition;
 
             static _currentAppBarId;

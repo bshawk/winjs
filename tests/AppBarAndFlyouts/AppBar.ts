@@ -36,7 +36,7 @@ module CorsicaTests {
 
     var Key = WinJS.Utilities.Key;
 
-    // Creates a Menu within an AppBar, opens them both, and then gives focus to the Menu.
+    // Creates a WinJS Menu within an AppBar, opens them both, and then gives focus to the Menu.
     // Returns a promise which completes when the AppBar and Menu controls are in this state.
     function createMenuInAppBar() {
         return new WinJS.Promise(function (complete) {
@@ -254,15 +254,15 @@ module CorsicaTests {
             testGoodInitOption("closedDisplayMode", null);
             testGoodInitOption("closedDisplayMode", undefined);
 
-            LiveUnit.LoggingCore.logComment("Testing layout");
-            testGoodInitOption("layout", "menu");
-            testGoodInitOption("layout", "custom");
-            testGoodInitOption("layout", "commands");
-            var badLayout = "Invalid argument: The layout property must be 'custom', 'menu' or 'commands'";
-            testBadInitOption("layout", "fixed", "WinJS.UI.AppBar.BadLayout", badLayout);
-            testBadInitOption("layout", -1, "WinJS.UI.AppBar.BadLayout", badLayout);
-            testBadInitOption("layout", 12, "WinJS.UI.AppBar.BadLayout", badLayout);
-            testBadInitOption("layout", {}, "WinJS.UI.AppBar.BadLayout", badLayout);
+            LiveUnit.LoggingCore.logComment("Testing _layout");
+            testGoodInitOption("_layout", "menu");
+            testGoodInitOption("_layout", "custom");
+            testGoodInitOption("_layout", "commands");
+            var badLayout = "Invalid argument: The _layout property must be 'custom', 'menu' or 'commands'";
+            testBadInitOption("_layout", "fixed", "WinJS.UI.AppBar.BadLayout", badLayout);
+            testBadInitOption("_layout", -1, "WinJS.UI.AppBar.BadLayout", badLayout);
+            testBadInitOption("_layout", 12, "WinJS.UI.AppBar.BadLayout", badLayout);
+            testBadInitOption("_layout", {}, "WinJS.UI.AppBar.BadLayout", badLayout);
 
             LiveUnit.LoggingCore.logComment("Testing sticky");
             testGoodInitOption("sticky", true);
@@ -285,13 +285,13 @@ module CorsicaTests {
 
         testDefaultAppBarParameters = function () {
             LiveUnit.LoggingCore.logComment("Attempt to Instantiate the AppBar element");
-            var AppBar = new WinJS.UI.AppBar(_element, { commands: { type: 'separator', id: 'sep' } });
+            var AppBar = new PrivateAppBar(_element, { commands: { type: 'separator', id: 'sep' } });
             LiveUnit.LoggingCore.logComment("AppBar has been instantiated.");
             LiveUnit.Assert.isNotNull(AppBar, "AppBar element should not be null when instantiated.");
 
             LiveUnit.Assert.areEqual(_element, AppBar.element, "Verifying that element is what we set it with");
             LiveUnit.Assert.areEqual("bottom", AppBar.placement, "Verifying that position is 'bottom'");
-            LiveUnit.Assert.areEqual("menu", AppBar.layout, "Verifying that layout is 'commands'");
+            LiveUnit.Assert.areEqual("menu", AppBar._layoutImpl, "Verifying that _layout is 'commands'");
             LiveUnit.Assert.isFalse(AppBar.sticky, "Verifying that sticky is false");
             LiveUnit.Assert.isFalse(AppBar.disabled, "Verifying that disabled is false");
             LiveUnit.Assert.isFalse(AppBar.opened, "Verifying that opened is false");
@@ -342,13 +342,13 @@ module CorsicaTests {
             ab._updateFirstAndFinalDiv();
             LiveUnit.Assert.isTrue(ab.dispose);
             LiveUnit.Assert.isFalse(ab._disposed);
-            LiveUnit.Assert.isFalse(ab._layout._disposed);
+            LiveUnit.Assert.isFalse(ab._layoutImpl._disposed);
 
             ab.dispose();
             LiveUnit.Assert.isTrue(ab._disposed);
             LiveUnit.Assert.isTrue(abc1._disposed);
             LiveUnit.Assert.isTrue(abc2._disposed);
-            LiveUnit.Assert.isTrue(ab._layout._disposed);
+            LiveUnit.Assert.isTrue(ab._layoutImpl._disposed);
             ab.dispose();
         }
     //testAppBarDispose["Description"] = "Unit test for dispose requirements.";
@@ -385,7 +385,7 @@ module CorsicaTests {
                 done(complete);
         };
 
-        testCommandsLayoutKeyboarding = function (complete) {
+        xtestCommandsLayoutKeyboarding = function (complete) {
             var htmlString = "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button0\", label:\"Button 0\", type:\"button\", section:\"primary\"}'></button>" +
                 "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button1\", label:\"Button 1\", type:\"button\", section:\"primary\"}'></button>" +
                 "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button2\", label:\"Button 2\", type:\"button\", section:\"secondary\"}'></button>" +
@@ -406,8 +406,8 @@ module CorsicaTests {
                     4) Button 3
             */
 
-            // Using commands layout, since this keyboarding logic is validated in the menu layout on ToolBar unit tests.
-            var AppBar = new WinJS.UI.AppBar(_element, { layout: "commands" });
+            // Using commands _layout, since this keyboarding logic is validated in the menu _layout on ToolBar unit tests.
+            var AppBar = new WinJS.UI.AppBar(_element, { _layout: "commands" });
             LiveUnit.LoggingCore.logComment("AppBar has been instantiated.");
             LiveUnit.Assert.isNotNull(AppBar, "AppBar element should not be null when instantiated.");
             AppBar.open();
@@ -467,7 +467,7 @@ module CorsicaTests {
                 "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button1\", label:\"Button 1\", type:\"button\", section:\"primary\"}'></button>";
 
             _element.innerHTML = htmlString;
-            var AppBar = new WinJS.UI.AppBar(_element, { layout: 'commands' });
+            var AppBar = new WinJS.UI.AppBar(_element, { _layout: 'commands' });
             LiveUnit.LoggingCore.logComment("AppBar has been instantiated.");
             LiveUnit.Assert.isNotNull(AppBar, "AppBar element should not be null when instantiated.");
             AppBar.open();
@@ -483,7 +483,7 @@ module CorsicaTests {
             complete();
         };
 
-        testKeyboardingInEmptyAppBar = function (complete) {
+        xtestKeyboardingInEmptyAppBar = function (complete) {
             var AppBar = new WinJS.UI.AppBar(_element);
             LiveUnit.LoggingCore.logComment("AppBar has been instantiated.");
             LiveUnit.Assert.isNotNull(AppBar, "AppBar element should not be null when instantiated.");
@@ -510,7 +510,7 @@ module CorsicaTests {
             });
         };
 
-        testCommandsLayoutKeyboardingWithContentCommands = function (complete) {
+        xtestCommandsLayoutKeyboardingWithContentCommands = function (complete) {
             /*
             Tests:
             win-interactive: left/right/home/end are ignored when focus is on an element with the win-interactive class.
@@ -556,7 +556,7 @@ module CorsicaTests {
                     2) "rangeContainer" Content Command: "rangeContainer" (firstElementFocus and lastElementFocus are set to the <input type="range"/> element.
                     3) "x8" Content Command: "adele" (firstElementFocus is default and lastElementFocus is set to #adele.)
             */
-            var AppBar = new WinJS.UI.AppBar(_element, { layout: 'commands' });
+            var AppBar = new WinJS.UI.AppBar(_element, { _layout: 'commands' });
             LiveUnit.LoggingCore.logComment("AppBar has been instantiated.");
             LiveUnit.Assert.isNotNull(AppBar, "AppBar element should not be null when instantiated.");
             AppBar.open();
@@ -628,7 +628,7 @@ module CorsicaTests {
             });
         };
 
-        testCommandsLayoutMultiplePressesOFHomeAndEndKeys = function (complete) {
+        xtestCommandsLayoutMultiplePressesOFHomeAndEndKeys = function (complete) {
             /*
             Regression Test for WinBlue 238117: Pressing "home" or "end" key twice shouldn't move the focus to a different element
             */
@@ -648,7 +648,7 @@ module CorsicaTests {
                     1) "progressCmd" Content Command: "progress" (firstElementFocus is set to "#progress" and lastElementFocus is default)
                     2) "x8" Content Command: "adele" (firstElementFocus is default and lastElementFocus is set to #adele)
             */
-            var AppBar = new WinJS.UI.AppBar(_element, { layout: 'commands' });
+            var AppBar = new WinJS.UI.AppBar(_element, { _layout: 'commands' });
             LiveUnit.LoggingCore.logComment("AppBar has been instantiated.");
             LiveUnit.Assert.isNotNull(AppBar, "AppBar element should not be null when instantiated.");
             AppBar.open();
@@ -801,144 +801,6 @@ module CorsicaTests {
             });
         };
 
-        testChangingLayoutsPreservesAppBarCommands = function (complete) {
-            // Verify that:
-            // A) Switching from custom layout, to commands layout, and back to custom again, restores the AppBarCommands
-            //  that were in the AppBar, back to the AppBar DOM in the same order that the custom layout AppBar DOM had
-            //  them in originally.
-            // B) Changing layouts does not dispose the commands
-            // C) Repeat A and B, but use menu layout instead of commands layout
-
-            var root = document.getElementById("appBarDiv");
-            var appBarElement = document.createElement("DIV");
-
-            function verifyCommandsOrderInDOM(appBarEl) {
-                var commands = appBarEl.querySelectorAll(".win-command");
-                LiveUnit.Assert.areEqual("Button0", commands[0].id);
-                LiveUnit.Assert.areEqual("Button1", commands[1].id);
-                LiveUnit.Assert.areEqual("Hr0", commands[2].id);
-            }
-            function verifyCommandsNotDisposed(appBarEl) {
-                var commands = appBarEl.querySelectorAll(".win-command");
-                for (var i = 0, len = commands.length; i < len; i++) {
-                    LiveUnit.Assert.isFalse(commands[i].winControl._disposed);
-                }
-            }
-
-            // Custom layout AppBar won't process commands automatically during construction
-            // Create and process AppBar child elements now.
-            appBarElement.appendChild(new WinJS.UI.AppBarCommand(null, { id: 'Button0', label: 'Button 0', section: 'primary' }).element);
-            appBarElement.appendChild(document.createElement("INPUT")); // Not an AppBarCommand, so not expected to get restored.
-            appBarElement.appendChild(new WinJS.UI.AppBarCommand(null, { id: 'Button1', label: 'Button 1', section: 'secondary' }).element);
-            appBarElement.appendChild(new WinJS.UI.AppBarCommand(null, { id: 'Hr0', type: 'separator', hidden: true, section: 'primary' }).element);
-
-            var appBar = new WinJS.UI.AppBar(appBarElement, { layout: "custom" });
-            root.appendChild(appBar.element);
-
-            // Make sure we are starting from a sane place.
-            verifyCommandsOrderInDOM(appBar.element);
-            verifyCommandsNotDisposed(appBar.element);
-            LiveUnit.Assert.areEqual(appBar.layout, "custom", "AppBar should be using custom layout");
-
-            appBar.layout = 'commands';
-            appBar.layout = 'custom';
-            verifyCommandsOrderInDOM(appBar.element);
-            verifyCommandsNotDisposed(appBar.element);
-
-            appBar.layout = 'menu';
-            appBar.layout = 'custom';
-            verifyCommandsOrderInDOM(appBar.element);
-            verifyCommandsNotDisposed(appBar.element);
-
-            complete();
-        };
-
-        testNewCommandsSetOrderPeserveredAfterSwitchingLayouts = function (complete) {
-            // Verify setting new commands while in commands and menu layout, and then switching back to custom layout will leave the
-            // new commands in the custom layout AppBar DOM in the same order they were initially passed to the commands
-            // setter.
-            var verifyNewCommandsSetOrderPeserveredAfterSwitchingLayouts = function (originalLayout) {
-                var root = document.getElementById("appBarDiv");
-                root.innerHTML =
-                "<div id='appBar'>" +
-                "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button0\", label:\"Button 0\", type:\"button\", section:\"primary\"}'></button>" +
-                "<hr data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Hr0\", type:\"separator\", hidden: true, section:\"primary\"}' />" +
-                "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button1\", label:\"Button 1\", type:\"button\", section:\"primary\"}'></button>" +
-                "</div>";
-                var appBar = new WinJS.UI.AppBar(<HTMLElement>root.querySelector("#appBar"), {
-                    layout: originalLayout
-                });
-
-                var newCommands: any = [
-                    { id: 'Button2', label: 'Button 2', section: 'primary' },
-                    { id: 'HR1', type: 'separator', section: 'primary' },
-                    { id: 'Button3', label: 'Button 3', section: 'secondary' },
-                ];
-
-                appBar.commands = newCommands;
-
-                // Switch to custom layout and verify commands were placed into the AppBar DOM
-                // in the same order the setter received them in.
-                appBar.layout = "custom";
-                var commands: any = appBar.element.querySelectorAll(".win-command");
-                LiveUnit.Assert.areEqual(newCommands[0].id, commands[0].id);
-                LiveUnit.Assert.areEqual(newCommands[1].id, commands[1].id);
-                LiveUnit.Assert.areEqual(newCommands[2].id, commands[2].id);
-            };
-
-            verifyNewCommandsSetOrderPeserveredAfterSwitchingLayouts("commands");
-            verifyNewCommandsSetOrderPeserveredAfterSwitchingLayouts("menu");
-            complete();
-        };
-
-        testCommandsLayoutCleansUpAfterItself = function (complete) {
-            // Verify that switching away from commands layout will remove the commandlayout class,
-            // and any commands layout specific HTML from the AppBar element.
-            var root = document.getElementById("appBarDiv");
-            root.innerHTML =
-            "<div id='appBar'>" +
-            "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button0\", label:\"Button 0\", type:\"button\", section:\"primary\"}'></button>" +
-            "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button1\", label:\"Button 1\", type:\"button\", section:\"secondary\"}'></button>" +
-            "</div>";
-            var appBar = new WinJS.UI.AppBar(<HTMLElement>root.querySelector("#appBar"), { layout: 'commands' });
-
-            // Make sure we start from a sane place and verify initial commands layout HTML.
-            LiveUnit.Assert.isTrue(WinJS.Utilities.hasClass(appBar.element, _Constants.commandLayoutClass), "Commands Layout AppBar should have the win-commandlayout CSS class");
-            var layoutHTML = appBar.element.querySelectorAll(".win-primarygroup, .win-secondarygroup");
-            LiveUnit.Assert.isTrue(layoutHTML.length === 2, "commands layout appbar should have its own HTML inside of the AppBar element.");
-
-            appBar.layout = "custom";
-            LiveUnit.Assert.isFalse(WinJS.Utilities.hasClass(appBar.element, _Constants.commandLayoutClass), "Custom Layout AppBar should not have the commands layout CSS class");
-            layoutHTML = appBar.element.querySelectorAll(".win-primarygroup, .win-secondarygroup");
-            LiveUnit.Assert.isTrue(layoutHTML.length === 0, "custom layout appbar should not have commands layout HTML inside of the AppBar element.");
-
-            complete();
-        };
-
-        testMenuLayoutCleansUpAfterItself = function (complete) {
-            // Verify that switching away from menu layout will remove the win-menulayout class,
-            // and any menu layout specific HTML from the AppBar element.
-            var root = document.getElementById("appBarDiv");
-            root.innerHTML =
-            "<div id='appBar'>" +
-            "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button0\", label:\"Button 0\", type:\"button\", section:\"primary\"}'></button>" +
-            "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button1\", label:\"Button 1\", type:\"button\", section:\"secondary\"}'></button>" +
-            "</div>";
-            var appBar = new WinJS.UI.AppBar(<HTMLElement>root.querySelector("#appBar"), { layout: 'menu' });
-
-            // Make sure we start from a sane place and verify initial menu layout HTML.
-            LiveUnit.Assert.isTrue(WinJS.Utilities.hasClass(appBar.element, _Constants.menuLayoutClass), "menu layout AppBar should have the win-menulayout CSS class");
-            var layoutHTML = appBar.element.querySelectorAll(".win-appbar-menu");
-            LiveUnit.Assert.isTrue(layoutHTML.length === 1, "menu layout appbar should have its own HTML inside of the AppBar element.");
-
-            appBar.layout = "custom";
-            LiveUnit.Assert.isFalse(WinJS.Utilities.hasClass(appBar.element, _Constants.menuLayoutClass), "Custom Layout AppBar should not have the menu layout CSS class");
-            layoutHTML = appBar.element.querySelectorAll(".win-appbar-menu");
-            LiveUnit.Assert.isTrue(layoutHTML.length === 0, "custom layout appbar should not have menu layout HTML inside of the AppBar element.");
-
-            complete();
-        };
-
         testShowAndHide_Indicators_DisplayModes_And_VisiblePositions = function (complete) {
 
             var topInitialCDM = 'none';
@@ -958,8 +820,8 @@ module CorsicaTests {
             "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button3\", label:\"Button 1\", type:\"button\", section:\"secondary\"}'></button>" +
             "<input type=\"range\" />" +
             "</div>";
-            var topBar = new PrivateAppBar(<HTMLElement>root.querySelector("#topBar"), { placement: 'top', layout: 'commands', closedDisplayMode: topInitialCDM, sticky: true });
-            var bottomBar = new PrivateAppBar(<HTMLElement>root.querySelector("#bottomBar"), { placement: 'bottom', layout: 'custom', closedDisplayMode: bottomInitialCDM, sticky: false });
+            var topBar = new PrivateAppBar(<HTMLElement>root.querySelector("#topBar"), { placement: 'top', _layout: 'commands', closedDisplayMode: topInitialCDM, sticky: true });
+            var bottomBar = new PrivateAppBar(<HTMLElement>root.querySelector("#bottomBar"), { placement: 'bottom', _layout: 'custom', closedDisplayMode: bottomInitialCDM, sticky: false });
 
             var verifyHiddenIndicators = function (expected, appBar: WinJS.UI.PrivateAppBar, msg) {
                 LiveUnit.LoggingCore.logComment("Test: " + msg);
@@ -1292,8 +1154,8 @@ module CorsicaTests {
                 failures = checkShouldBeDisplayNone(appBar, false);
                 LiveUnit.Assert.isFalse(failures.length, msg);
 
-                if (appBar.winControl.layout !== _Constants.appBarLayoutMenu) {
-                    msg = "Content hosted by Open AppBar should have dimensions. Menu layout can have hidden elements (e.g. leading/trailing separators)";
+                if (appBar.winControl._layoutImpl !== _Constants.appBarLayoutMenu) {
+                    msg = "Content hosted by Open AppBar should have dimensions. Menu _layout can have hidden elements (e.g. leading/trailing separators)";
                     LiveUnit.LoggingCore.logComment("Test: " + msg);
                     var contents = appBar.querySelectorAll("*:not(.win-appbar-invokebutton):not(.win-finaldiv):not(.win-firstdiv)");
                     failures = checkShouldBeDisplayNone(contents, false);
@@ -1327,7 +1189,7 @@ module CorsicaTests {
                     failures;
 
                 var invokeButton = appBar.querySelector(".win-appbar-invokebutton");
-                if (appBar.winControl.layout === _Constants.appBarLayoutMenu &&
+                if (appBar.winControl._layoutImpl === _Constants.appBarLayoutMenu &&
                     getComputedStyle(invokeButton).visibility === "hidden") {
                     invokeButton = appBar.querySelector("." + _ToolBarConstants.overflowButtonCssClass);
                 }
@@ -1343,16 +1205,16 @@ module CorsicaTests {
                 failures = checkShouldBeDisplayNone(invokeButtonSubTree, false);
                 LiveUnit.Assert.isFalse(failures.length, msg);
 
-                if (appBar.winControl.layout === _Constants.appBarLayoutCommands) {
-                    msg = "AppBar with commands layout & closedDisplayMode !== 'none' should reserve right padding that matches the width of the invokeButton";
+                if (appBar.winControl._layoutImpl === _Constants.appBarLayoutCommands) {
+                    msg = "AppBar with commands _layout & closedDisplayMode !== 'none' should reserve right padding that matches the width of the invokeButton";
                     LiveUnit.LoggingCore.logComment("Test: " + msg);
                     LiveUnit.Assert.areEqual(invokeButtonWidth, parseInt(getComputedStyle(appBar).paddingRight), msg);
-                } else if (appBar.winControl.layout === _Constants.appBarLayoutCustom || appBar.winControl.layout === _Constants.appBarLayoutMenu) {
-                    msg = "AppBar with " + appBar.winControl.layout + " layout & closedDisplayMode !== 'none' should NOT reserve right padding for the invokeButton";
+                } else if (appBar.winControl._layoutImpl === _Constants.appBarLayoutCustom || appBar.winControl._layoutImpl === _Constants.appBarLayoutMenu) {
+                    msg = "AppBar with " + appBar.winControl._layoutImpl + " _layout & closedDisplayMode !== 'none' should NOT reserve right padding for the invokeButton";
                     LiveUnit.LoggingCore.logComment("Test: " + msg);
                     LiveUnit.Assert.areNotEqual(invokeButtonWidth, parseInt(getComputedStyle(appBar).paddingRight), msg);
                 } else {
-                    LiveUnit.Assert.fail("Test expects 'custom', 'menu' or 'commands' layout AppBar");
+                    LiveUnit.Assert.fail("Test expects 'custom', 'menu' or 'commands' _layout AppBar");
                 }
             }
 
@@ -1456,7 +1318,7 @@ module CorsicaTests {
                 LiveUnit.Assert.isFalse(appBar.style[NameOfTransformProperty], msg);
             };
 
-            var verifyPositionChangeScenarios = function (layout) {
+            var verifyPositionChangeScenarios = function (_layout) {
                 var root = document.getElementById("appBarDiv");
                 root.innerHTML =
                 "<div id='appBar'>" +
@@ -1466,7 +1328,7 @@ module CorsicaTests {
                 "</div>";
                 var appBar = new WinJS.UI.AppBar(<HTMLElement>root.querySelector("#appBar"), {
                     sticky: false,
-                    layout: layout
+                    _layout: _layout
                 });
 
                 var msg = "Default AppBar should begin compact.";
@@ -1514,38 +1376,11 @@ module CorsicaTests {
                     }).then(function () {
                         verifyAppBarOpenAndLightDismiss(appBar);
 
-                        msg = "Changing AppBar.sticky to true, on Open Light Dismissible AppBar, should change it to an Open sticky AppBar. ";
-                        LiveUnit.LoggingCore.logComment("Test: " + msg);
-                        appBar.sticky = true;
-
-                        // We need to wait for the clickEatingDiv to hide, which is scheduled as a high priority job.
-                        return new WinJS.Promise(function (signalComplete) {
-                            WinJS.Utilities.Scheduler.schedule(function () {
-                                verifyAppBarOpenAndSticky(appBar);
-                                signalComplete();
-                            }, WinJS.Utilities.Scheduler.Priority.idle);
-                        });
-                    }).then(function () {
-
-                        msg = "Changing closedDisplayMode on Open Sticky AppBar should not change its visible position.";
+                        msg = "Changing closedDisplayMode on Open AppBar should not change its visible position.";
                         LiveUnit.LoggingCore.logComment("Test: " + msg);
                         appBar.closedDisplayMode = "none";
 
                         // Nothing should have changed. Schedule a job on Idle and verify.
-                        return new WinJS.Promise(function (signalComplete) {
-                            WinJS.Utilities.Scheduler.schedule(function () {
-                                verifyAppBarOpenAndSticky(appBar);
-                                signalComplete();
-                            }, WinJS.Utilities.Scheduler.Priority.idle);
-                        });
-
-                    }).then(function () {
-
-                        msg = "Changing AppBar.sticky to false, on Open sticky AppBar, should change it to an Open Light Dismissible AppBar. ";
-                        LiveUnit.LoggingCore.logComment("Test: " + msg);
-                        appBar.sticky = false;
-
-                        // We need to wait for the clickEatingDiv to show, which is scheduled as a high priority job.
                         return new WinJS.Promise(function (signalComplete) {
                             WinJS.Utilities.Scheduler.schedule(function () {
                                 verifyAppBarOpenAndLightDismiss(appBar);
@@ -1567,13 +1402,13 @@ module CorsicaTests {
             });
         };
 
-        testInvokeButtonBehavior = function (complete) {
+        xtestInvokeButtonBehavior = function (complete) {
             // Verifies that triggering the invokeButton on any hidden AppBar will show All AppBars.
             // Verifies that triggering the invokeButton on any shown AppBar will hide all AppBars.
 
             var root = document.getElementById("appBarDiv");
             var topBar = new WinJS.UI.AppBar(null, { placement: 'top', commands: [{ label: 'top cmd', icon: 'add' }], closedDisplayMode: 'minimal' });
-            var bottomBar = new WinJS.UI.AppBar(null, { placement: 'bottom', commands: [{ label: 'bottom cmd', icon: 'edit' }], closedDisplayMode: 'minimal', layout: 'custom' })
+            var bottomBar = new WinJS.UI.AppBar(null, { placement: 'bottom', commands: [{ label: 'bottom cmd', icon: 'edit' }], closedDisplayMode: 'minimal', _layout: 'custom' })
             root.appendChild(topBar.element);
             root.appendChild(bottomBar.element);
 
@@ -1640,8 +1475,8 @@ module CorsicaTests {
 
         testSingleAppBarLightDismissFocusWrapping = function (complete) {
             var root = document.getElementById("appBarDiv");
-            var topBar = new WinJS.UI.AppBar(null, { placement: 'top', commands: [{ id: 'top1', icon: 'add' }, { id: 'top2', icon: 'edit' }, { id: 'top3', icon: 'camera' }], closedDisplayMode: 'none', layout: 'commands' });
-            var bottomBar = new WinJS.UI.AppBar(null, { placement: 'bottom', commands: [{ id: 'bot1', icon: 'add' }, { id: 'bot2', icon: 'edit' }, { id: 'bot3', icon: 'camera' }], closedDisplayMode: 'none', layout: 'custom' });
+            var topBar = new WinJS.UI.AppBar(null, { placement: 'top', commands: [{ id: 'top1', icon: 'add' }, { id: 'top2', icon: 'edit' }, { id: 'top3', icon: 'camera' }], closedDisplayMode: 'none', _layout: 'commands' });
+            var bottomBar = new WinJS.UI.AppBar(null, { placement: 'bottom', commands: [{ id: 'bot1', icon: 'add' }, { id: 'bot2', icon: 'edit' }, { id: 'bot3', icon: 'camera' }], closedDisplayMode: 'none', _layout: 'custom' });
             root.appendChild(topBar.element);
             root.appendChild(bottomBar.element);
 
@@ -1686,85 +1521,9 @@ module CorsicaTests {
             }).then(complete);
         };
 
-        testLightDismissFocusWrappingBetweenAppBars = function (complete) {
-
-            // Test that focus wraps from one bar to the next, whenever more than one appbar is open and at least one of them is non sticky.
-
-            var root = document.getElementById("appBarDiv");
-            var topBar = new WinJS.UI.AppBar(null, { placement: 'top', commands: [{ id: 'top1', icon: 'add' }, { id: 'top2', icon: 'edit' }, { id: 'top3', icon: 'camera' }], closedDisplayMode: 'none', sticky: false, layout: 'commands' });
-            var bottomBar = new WinJS.UI.AppBar(null, { placement: 'bottom', commands: [{ id: 'bot1', icon: 'add' }, { id: 'bot2', icon: 'edit' }, { id: 'bot3', icon: 'camera' }], sticky: false, closedDisplayMode: 'none', layout: 'custom' });
-            root.appendChild(topBar.element);
-            root.appendChild(bottomBar.element);
-
-            function runTest(bar1, bar2) {
-                return new WinJS.Promise(function (promiseComplete) {
-
-                    var bar1Children = bar1.element.children,
-                        bar1Commands = bar1.element.querySelectorAll('.win-command'),
-                        bar1FirstDiv,
-                        bar1FinalDiv;
-
-                    var bar2Children = bar2.element.children,
-                        bar2Commands = bar2.element.querySelectorAll('.win-command'),
-                        bar2FirstDiv,
-                        bar2FinalDiv;
-
-                    // Start out sane, show all appbars.
-                    showAllAppBars().then(function () {
-
-                        bar1FirstDiv = bar1Children[0];
-                        bar1FinalDiv = bar1Children[bar1Children.length - 1];
-                        bar2FirstDiv = bar2Children[0],
-                        bar2FinalDiv = bar2Children[bar2Children.length - 1],
-
-                        // Verify they are all reachable by tab key.
-                        LiveUnit.Assert.isTrue(bar1FirstDiv.tabIndex >= 0);
-                        LiveUnit.Assert.isTrue(bar1FinalDiv.tabIndex >= 0);
-                        LiveUnit.Assert.isTrue(bar2FirstDiv.tabIndex >= 0);
-                        LiveUnit.Assert.isTrue(bar2FinalDiv.tabIndex >= 0);
-
-                        // Verify that focusing finalDiv in bar1 moves focus to the first command in bar2
-                        bar1FinalDiv.focus();
-                        return WinJS.Promise.timeout(0);
-                    }).then(function () {
-                            LiveUnit.Assert.areEqual((<HTMLElement>document.activeElement).id, bar2Commands[0].id);
-
-                            // Verify that focusing firstDiv in bar2 moves focus to the last command in bar1
-                            bar2FirstDiv.focus();
-                            return WinJS.Promise.timeout(0);
-                        }).then(function () {
-                            LiveUnit.Assert.areEqual((<HTMLElement>document.activeElement).id, bar1Commands[bar1Commands.length - 1].id);
-
-                            // Verify that focusing finalDiv in bar2 moves focus to the first command in bar1
-                            bar2FinalDiv.focus();
-                            return WinJS.Promise.timeout(0);
-                        }).then(function () {
-                            LiveUnit.Assert.areEqual((<HTMLElement>document.activeElement).id, bar1Commands[0].id);
-
-                            // Verify that focusing firstDiv in bar1 moves focus to the last command in bar2
-                            bar1FirstDiv.focus();
-                            return WinJS.Promise.timeout(0);
-                        }).then(function () {
-                            LiveUnit.Assert.areEqual((<HTMLElement>document.activeElement).id, bar2Commands[bar2Commands.length - 1].id);
-                            promiseComplete();
-                        });
-                });
-            };
-
-            runTest(topBar, bottomBar).then(function () {
-                topBar.sticky = true;
-                return runTest(topBar, bottomBar);
-            }).then(function () {
-                    topBar.sticky = false;
-                    bottomBar.sticky = true;
-                    return runTest(topBar, bottomBar);
-                }).then(complete);
-        };
-
-
         testAppBarDirection = function (complete) {
 
-            // Verify element positions in LTR and RTL for commands layout and custom layout AppBars.
+            // Verify element positions in LTR and RTL for commands _layout and custom _layout AppBars.
 
             var commandElements,
                 commandsArgs = [
@@ -1775,12 +1534,10 @@ module CorsicaTests {
                 ];
 
             var root = document.getElementById("appBarDiv");
-            var topBar = new WinJS.UI.AppBar(null, { placement: 'top', commands: commandsArgs, closedDisplayMode: 'minimal', layout: 'commands' });
-            var bottomBar = new WinJS.UI.AppBar(null, { placement: 'bottom', commands: commandsArgs, closedDisplayMode: 'minimal', layout: 'custom' });
+            var topBar = new PrivateAppBar(null, { placement: 'top', commands: commandsArgs, closedDisplayMode: 'minimal', _layout: 'commands' });
             root.appendChild(topBar.element);
-            root.appendChild(bottomBar.element);
 
-            showAllAppBars().then(function () {
+            asyncOpen(topBar).then(function () {
 
                 var html = document.documentElement,
                     RTL = "rtl",
@@ -1819,8 +1576,6 @@ module CorsicaTests {
 
                 runTest(topBar, LTR);
                 runTest(topBar, RTL);
-                runTest(bottomBar, LTR);
-                runTest(bottomBar, RTL);
 
                 // Cleanup lang attribute
                 document.documentElement.removeAttribute("lang");
@@ -1869,133 +1624,7 @@ module CorsicaTests {
             appbar.open();
         };
 
-        testLoneStickyAppBarDoesNotHandleBackClickEvent = function (complete) {
-            // Verifies that a shown, sticky AppBar containing focus, WILL NOT handle the WinJS.Application 'backclick' event. nor will it light dismiss any AppBars,
-            // if there are no light dismissible AppBars shown.
-
-            // Simulate
-            function simulateBackClick() {
-                backClickEvent = OverlayHelpers.createBackClickEvent();
-                LiveUnit.Assert.isFalse(backClickEvent._winRTBackPressedEvent.handled);
-                WinJS.Application.queueEvent(backClickEvent); // Fire the "backclick" event from WinJS.Application
-
-                WinJS.Application.addEventListener("verification", verify, true);
-                WinJS.Application.queueEvent({ type: 'verification' });
-            };
-
-            // Verify
-            function verify() {
-                LiveUnit.Assert.isFalse(backClickEvent._winRTBackPressedEvent.handled, "A sticky AppBar by itself, should not handle the 'backclick' event.");
-                LiveUnit.Assert.isTrue(stickyBar.opened, "Sticky AppBar should not light dismiss");
-                cleanup();
-            };
-
-            // Cleanup
-            function cleanup() {
-                WinJS.Application.removeEventListener("verification", verify, true);
-                WinJS.Application.stop();
-                // Application.stop() kills all listeners on the Application object.
-                // Reset all global _Overlay eventhandlers to reattach our listener to the Application "backclick" event.
-                WinJS.UI._Overlay._globalEventListeners.reset();
-                complete();
-            }
-
-            // Setup
-            WinJS.Application.start();
-            var backClickEvent;
-
-            var root = document.getElementById("appBarDiv");
-            var stickyBar = new WinJS.UI.AppBar(null, { sticky: true });
-            root.appendChild(stickyBar.element);
-
-            stickyBar.addEventListener("afteropen", simulateBackClick, false);
-            stickyBar.open();
-        };
-
-        testStickyAppBarDoesLightDismissOtherAppBarsWhenBackClickHappens = function (complete) {
-            // Verifies that a shown, sticky AppBar containing focus, WILL handle the WinJS.Application 'backclick' event and light dismiss AppBars,
-            // if there is at least one non-sticky AppBar shown.
-
-            // Simulate
-            function simulateBackClick() {
-                backClickEvent = OverlayHelpers.createBackClickEvent();
-                LiveUnit.Assert.isFalse(backClickEvent._winRTBackPressedEvent.handled);
-                WinJS.Application.queueEvent(backClickEvent); // Fire the "backclick" event from WinJS.Application
-
-                WinJS.Application.addEventListener("verification", verify, true);
-                WinJS.Application.queueEvent({ type: 'verification' });
-            };
-
-            // Verify
-            function verify() {
-
-                LiveUnit.Assert.isTrue(backClickEvent._winRTBackPressedEvent.handled, "A shown, sticky AppBar contaning focus, should handle the 'backclick' event, if at least one non sticky AppBar was also shown.");
-                LiveUnit.Assert.isTrue(stickyBar.opened, "Sticky AppBar should not light dismiss");
-                LiveUnit.Assert.isFalse(lightDismissibleBar.opened, "non sticky AppBars should close from light dismissal");
-                cleanup();
-            };
-
-            // Cleanup
-            function cleanup() {
-                WinJS.Application.removeEventListener("verification", verify, true);
-                WinJS.Application.stop();
-                // Application.stop() kills all listeners on the Application object.
-                // Reset all global _Overlay eventhandlers to reattach our listener to the Application "backclick" event.
-                WinJS.UI._Overlay._globalEventListeners.reset();
-                complete();
-            }
-
-            // Setup
-            WinJS.Application.start();
-            var backClickEvent;
-
-            var root = document.getElementById("appBarDiv");
-            var stickyBar = new WinJS.UI.AppBar(null, { sticky: true });
-            var lightDismissibleBar = new WinJS.UI.AppBar(null);
-            root.appendChild(stickyBar.element);
-            root.appendChild(lightDismissibleBar.element);
-
-            showAllAppBars().then(function () {
-                stickyBar.element.focus();
-                simulateBackClick();
-            });
-
-        };
-
-        testMenuLayoutConstruction = function (complete) {
-            var root = document.getElementById("appBarDiv");
-            root.innerHTML =
-            "<div id='appBar'>" +
-            "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button0\", label:\"Button 0\", type:\"button\"}'></button>" +
-            "<hr data-win-control='WinJS.UI.AppBarCommand' data-win-options='{type:\"separator\", label:\"Separator\"}' />" +
-            "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button1\", label:\"Button 1\", type:\"button\"}'></button>" +
-            "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button2\", label:\"Button 2\", type:\"button\", section:\"secondary\"}'></button>" +
-            "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button3\", label:\"Button 3\", type:\"button\", section:\"secondary\"}'></button>" +
-            "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button4\", label:\"Button 4\", type:\"toggle\", section:\"secondary\"}'></button>" +
-            "</div>";
-            var appBar = new WinJS.UI.AppBar(<HTMLElement>root.querySelector("#appBar"), {
-                layout: "menu",
-                placement: "top",
-            });
-
-            Helper.waitForEvent(appBar, "afteropen").then(function () {
-                var toolbarEl = appBar.element.querySelector("." + Helper.ToolBar.Constants.controlCssClass);
-                var toolbar = toolbarEl.winControl;
-
-                LiveUnit.Assert.isNotNull(toolbarEl, "ToolBar element not found");
-                LiveUnit.Assert.isTrue(WinJS.Utilities.hasClass((<HTMLElement>toolbarEl).parentElement, "win-appbar-menu"));
-                LiveUnit.Assert.isTrue(WinJS.Utilities.hasClass((<HTMLElement>toolbarEl).parentElement.parentElement, "win-appbar"));
-                LiveUnit.Assert.areEqual(_ToolBarConstants.shownDisplayModes.full, toolbar.shownDisplayMode, "Invalid toolbar.shownDisplayMode configuration in the appbar");
-
-                Helper.ToolBar.verifyMainActionVisibleCommandsLabels(toolbar, ["Button 0", "Separator", "Button 1"]);
-                Helper.ToolBar.verifyOverflowAreaCommandsLabels(toolbar, ["Button 2", "Button 3", "Button 4"]);
-
-                complete();
-            });
-            appBar.open();
-        }
-
-        testCommandsLayoutUsingDeprecatedSectionsInCommandsLayout = function () {
+        xtestCommandsLayoutUsingDeprecatedSectionsInCommandsLayout = function () {
             var root = document.getElementById("appBarDiv");
             root.innerHTML =
             "<div id='appBar'>" +
@@ -2004,7 +1633,7 @@ module CorsicaTests {
             "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button1\", label:\"Button 2\", type:\"button\", section:\"secondary\"}'></button>" +
             "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button1\", label:\"Button 3\", type:\"button\", section:\"selection\"}'></button>" +
             "</div>";
-            var appBar = new WinJS.UI.AppBar(<HTMLElement>root.querySelector("#appBar"), { layout: 'commands' });
+            var appBar = new WinJS.UI.AppBar(<HTMLElement>root.querySelector("#appBar"), { _layout: 'commands' });
 
             var primaryCommands = appBar.element.querySelectorAll(".win-primarygroup .win-command");
             var secondaryCommands = appBar.element.querySelectorAll(".win-secondarygroup .win-command");
@@ -2017,57 +1646,6 @@ module CorsicaTests {
             LiveUnit.Assert.areEqual(2, secondaryCommands.length);
             LiveUnit.Assert.areEqual("Button 2", secondaryCommands[0]["winControl"].label);
             LiveUnit.Assert.areEqual("Button 3", secondaryCommands[1]["winControl"].label);
-        }
-
-        testMenuLayoutShowHideCommands = function (complete) {
-            var root = document.getElementById("appBarDiv");
-            root.innerHTML =
-            "<div id='appBar'>" +
-            "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button1\", label:\"Button 1\", type:\"button\"}'></button>" +
-            "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button2\", label:\"Button 2\", type:\"button\"}'></button>" +
-            "<hr data-win-control='WinJS.UI.AppBarCommand' data-win-options='{type:\"separator\", label:\"Separator\"}' />" +
-            "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button3\", label:\"Button 3\", type:\"button\"}'></button>" +
-            "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button4\", label:\"Button 4\", type:\"button\"}'></button>" +
-            "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"SecButton1\", label:\"Secondary Button 1\", type:\"button\", section:\"secondary\"}'></button>" +
-            "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"SecButton2\", label:\"Secondary Button 2\", type:\"button\", section:\"secondary\"}'></button>" +
-            "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"SecButton3\", label:\"Secondary Button 3\", type:\"button\", section:\"secondary\"}'></button>" +
-            "</div>";
-            var appBar = new WinJS.UI.AppBar(<HTMLElement>root.querySelector("#appBar"), {
-                layout: "menu"
-            });
-
-            var toolbarEl = appBar.element.querySelector("." + Helper.ToolBar.Constants.controlCssClass);
-            var toolbar = toolbarEl.winControl;
-            Helper.ToolBar.verifyMainActionVisibleCommandsLabels(toolbar, ["Button 1", "Button 2", "Separator", "Button 3", "Button 4"]);
-            Helper.ToolBar.verifyOverflowAreaCommandsLabels(toolbar, ["Secondary Button 1", "Secondary Button 2", "Secondary Button 3"]);
-
-            appBar.showOnlyCommands(["Button1", "Button3", "SecButton1"]);
-
-            WinJS.Utilities.Scheduler.schedule(() => {
-                Helper.ToolBar.verifyMainActionVisibleCommandsLabels(toolbar, ["Button 1", "Button 3"]);
-                Helper.ToolBar.verifyOverflowAreaCommandsLabels(toolbar, ["Secondary Button 1"]);
-
-                appBar.showCommands(["Button1", "Button4", "Button3", "SecButton1"]);
-
-                WinJS.Utilities.Scheduler.schedule(() => {
-                    Helper.ToolBar.verifyMainActionVisibleCommandsLabels(toolbar, ["Button 1", "Button 3", "Button 4"]);
-                    Helper.ToolBar.verifyOverflowAreaCommandsLabels(toolbar, ["Secondary Button 1"]);
-
-                    appBar.hideCommands(["SecButton1"]);
-                    WinJS.Utilities.Scheduler.schedule(() => {
-                        Helper.ToolBar.verifyMainActionVisibleCommandsLabels(toolbar, ["Button 1", "Button 3", "Button 4"]);
-                        Helper.ToolBar.verifyOverflowAreaCommandsLabels(toolbar, []);
-
-                        appBar.showOnlyCommands(["SecButton1"]);
-                        WinJS.Utilities.Scheduler.schedule(() => {
-                            Helper.ToolBar.verifyMainActionVisibleCommandsLabels(toolbar, []);
-                            Helper.ToolBar.verifyOverflowAreaCommandsLabels(toolbar, ["Secondary Button 1"]);
-
-                            complete();
-                        }, WinJS.Utilities.Scheduler.Priority.high);
-                    }, WinJS.Utilities.Scheduler.Priority.high);
-                }, WinJS.Utilities.Scheduler.Priority.high);
-            }, WinJS.Utilities.Scheduler.Priority.high);
         }
 
         testChangingAppBarPlacementUpdatesElementPositionImmediately() {
@@ -2097,23 +1675,23 @@ module CorsicaTests {
             verifyPositionChanged(oldRect, newRect);
         }
 
-        testAppBarWithMenuLayoutCustomBackgrounColorPercolates() {
+        xtestAppBarWithMenuLayoutCustomBackgrounColorPercolates() {
             // Verifies that the background color of the entire AppBar changes when styling the appbar element.
 
             var root = document.getElementById("appBarDiv");
-            var appBar = new WinJS.UI.AppBar(null, { layout: "menu" });
+            var appBar = new WinJS.UI.AppBar(null, { _layout: "menu" });
             root.appendChild(appBar.element);
 
             appBar.element.style.backgroundColor = "rgb(255, 100, 05)";
             var appBarStyle = getComputedStyle(appBar.element),
                 toolBarStyle = getComputedStyle(appBar.element.querySelector(".win-toolbar"));
 
-            var msg = "AppBar menu layout's ToolBar element should match the color of the AppBar element";
+            var msg = "AppBar menu _layout's ToolBar element should match the color of the AppBar element";
             LiveUnit.LoggingCore.logComment("Test: " + msg);
             LiveUnit.Assert.areEqual(appBarStyle.backgroundColor, toolBarStyle.backgroundColor, msg);
         }
 
-        testGetCommandById() {
+        xtestGetCommandById() {
             var pairWiseOptions = {
                 type: ['button', 'separator', 'toggle', 'flyout', 'content'],
                 hidden: [true, false],
@@ -2124,20 +1702,20 @@ module CorsicaTests {
                 }),
                 root = document.getElementById("appBarDiv");
 
-            ["custom", "commands", "menu"].forEach(function (layout) {
-                var appBar = new WinJS.UI.AppBar(null, { layout: layout, commands: commands });
+            ["custom", "commands", "menu"].forEach(function (_layout) {
+                var appBar = new WinJS.UI.AppBar(null, { _layout: _layout, commands: commands });
                 root.appendChild(appBar.element);
 
                 commands.forEach(function (command, index) {
                     var retrievedCommand = appBar.getCommandById(command.id);
-                    LiveUnit.Assert.isTrue(command === retrievedCommand, "AppBar with '" + layout + "' layout using 'getCommandById' failed to retrieve " +
+                    LiveUnit.Assert.isTrue(command === retrievedCommand, "AppBar with '" + _layout + "' _layout using 'getCommandById' failed to retrieve " +
                         "AppBarCommmand: { id: " + command.id + ", type: " + command.type + ", hidden: " + command.hidden + ", section: " + command.section + "}");
                 });
 
             });
         }
 
-        testAppBarMenuDoesNotResizeWhenCommandsAreFocused(complete) {
+        xtestAppBarMenuDoesNotResizeWhenCommandsAreFocused(complete) {
             // Regression test: https://github.com/winjs/winjs/issues/859
             // Verifies that focusing a command in the AppBar overflow menu will not cause the overflow menu to change width.
             var name = "pCmd1",
@@ -2154,7 +1732,7 @@ module CorsicaTests {
                 appBarEl = document.createElement("DIV");
             root.appendChild(appBarEl);
 
-            var appBar = new WinJS.UI.PrivateAppBar(appBarEl, { layout: 'menu', commands: commands }),
+            var appBar = new WinJS.UI.PrivateAppBar(appBarEl, { _layout: 'menu', commands: commands }),
                 appBarMenuElement = appBar.element.querySelector(".win-appbar-menu"),
                 toolBarElement = appBarMenuElement.querySelector(".win-toolbar"),
                 overFlowElement = toolBarElement.querySelector(".win-toolbar-overflowarea");

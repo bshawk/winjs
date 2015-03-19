@@ -502,9 +502,9 @@ define([
                 /// <field type="String" defaultValue="commands" oamOptionsDatatype="WinJS.UI.AppBar.layout" locid="WinJS.UI.AppBar.layout" helpKeyword="WinJS.UI.AppBar.layout">
                 /// Gets or sets the layout of the AppBar contents to either "commands" or "custom".
                 /// </field>
-                layout: {
+                _layout: {
                     get: function AppBar_get_layout() {
-                        return this._layout.type;
+                        return this._layoutImpl.type;
                     },
                     set: function (layout) {
                         if (layout !== _Constants.appBarLayoutCommands &&
@@ -529,20 +529,20 @@ define([
                             // Gather commands in preparation for hand off to new layout.
                             // We expect prev layout to return commands in the order they were set in,
                             // not necessarily the current DOM order the layout is using.
-                            commands = this._layout.commandsInOrder;
-                            this._layout.disconnect();
+                            commands = this._layoutImpl.commandsInOrder;
+                            this._layoutImpl.disconnect();
                         }
 
                         // Set layout
                         if (layout === _Constants.appBarLayoutCommands) {
-                            this._layout = new _Layouts._AppBarCommandsLayout();
+                            this._layoutImpl = new _Layouts._AppBarCommandsLayout();
                         } else if (layout === _Constants.appBarLayoutMenu) {
-                            this._layout = new _Layouts._AppBarMenuLayout();
+                            this._layoutImpl = new _Layouts._AppBarMenuLayout();
                         } else {
                             // Custom layout uses Base AppBar Layout class.
-                            this._layout = new _Layouts._AppBarBaseLayout();
+                            this._layoutImpl = new _Layouts._AppBarBaseLayout();
                         }
-                        this._layout.connect(this._element);
+                        this._layoutImpl.connect(this._element);
 
                         if (commands && commands.length) {
                             // Reset AppBar since layout changed.
@@ -555,46 +555,6 @@ define([
                         }
                     },
                     configurable: true
-                },
-
-                /// <field type="Boolean" locid="WinJS.UI.AppBar.sticky" isAdvanced="true" helpKeyword="WinJS.UI.AppBar.sticky">
-                /// Gets or sets value that indicates whether the AppBar is sticky.
-                /// This value is true if the AppBar is sticky; otherwise, it's false.
-                /// </field>
-                sticky: {
-                    get: function AppBar_get_sticky() {
-                        return this._sticky;
-                    },
-                    set: function AppBar_set_sticky(value) {
-                        // If it doesn't change, do nothing
-                        if (this._sticky === !!value) {
-                            return;
-                        }
-
-                        this._sticky = !!value;
-
-                        // Note: caller still has to call .show() if also want it shown.
-
-                        // Show or hide the click eating div based on sticky value
-                        if (this.opened && this._element.style.visibility === "visible") {
-                            // May have changed sticky state for keyboard navigation
-                            _updateAllAppBarsFirstAndFinalDiv();
-
-                            // Ensure that the click eating div is in the correct state
-                            if (this._sticky) {
-                                if (!_isThereVisibleNonStickyBar()) {
-                                    _Overlay._Overlay._hideClickEatingDivAppBar();
-                                }
-                            } else {
-                                _Overlay._Overlay._showClickEatingDivAppBar();
-
-                                if (this._shouldStealFocus()) {
-                                    _storePreviousFocus(_Global.document.activeElement);
-                                    this._setFocusToAppBar();
-                                }
-                            }
-                        }
-                    }
                 },
 
                 /// <field type="Array" locid="WinJS.UI.AppBar.commands" helpKeyword="WinJS.UI.AppBar.commands" isAdvanced="true">
@@ -628,7 +588,7 @@ define([
                         commands = [commands];
                     }
 
-                    this._layout.layout(commands);
+                    this._layoutImpl.layout(commands);
                 },
 
                 /// <field type="String" defaultValue="compact" locid="WinJS.UI.AppBar.closedDisplayMode" helpKeyword="WinJS.UI.AppBar.closedDisplayMode" isAdvanced="true">
@@ -667,7 +627,7 @@ define([
                             }
 
                             // The invoke button has changed the amount of available space in the AppBar. Layout might need to scale.
-                            this._layout.resize();
+                            this._layoutImpl.resize();
 
                             if (changeVisiblePosition) {
                                 // If the value is being set while we are not showing, change to our new position.
@@ -745,7 +705,7 @@ define([
                     /// The command found, an array of commands if more than one have the same ID, or null if no command is found.
                     /// </returns>
                     /// </signature>
-                    var commands = this._layout.commandsInOrder.filter(function (command) {
+                    var commands = this._layoutImpl.commandsInOrder.filter(function (command) {
                         return command.id === id || command.element.id === id;
                     });
 
@@ -771,7 +731,7 @@ define([
                         throw new _ErrorFromName("WinJS.UI.AppBar.RequiresCommands", strings.requiresCommands);
                     }
 
-                    this._layout.showCommands(commands);
+                    this._layoutImpl.showCommands(commands);
                 },
 
                 hideCommands: function (commands) {
@@ -785,7 +745,7 @@ define([
                         throw new _ErrorFromName("WinJS.UI.AppBar.RequiresCommands", strings.requiresCommands);
                     }
 
-                    this._layout.hideCommands(commands);
+                    this._layoutImpl.hideCommands(commands);
                 },
 
                 showOnlyCommands: function (commands) {
@@ -801,7 +761,7 @@ define([
                         throw new _ErrorFromName("WinJS.UI.AppBar.RequiresCommands", strings.requiresCommands);
                     }
 
-                    this._layout.showOnlyCommands(commands);
+                    this._layoutImpl.showOnlyCommands(commands);
                 },
 
                 open: function () {
@@ -850,7 +810,7 @@ define([
                                 _storePreviousFocus(_Global.document.activeElement);
                             }
 
-                            this._layout.setFocusOnShow();
+                            this._layoutImpl.setFocusOnShow();
                         }
                     }
                 },
@@ -956,13 +916,13 @@ define([
 
                 _dispose: function AppBar_dispose() {
                     _Dispose.disposeSubTree(this.element);
-                    this._layout.dispose();
+                    this._layoutImpl.dispose();
                     this.disabled = true;
                 },
 
                 _disposeChildren: function AppBar_disposeChildren() {
                     // Be purposeful about what we dispose.
-                    this._layout.disposeChildren();
+                    this._layoutImpl.disposeChildren();
                 },
 
                 _isLightDismissible: function AppBar_isLightDismissible() {
@@ -986,7 +946,7 @@ define([
                     // If the current active element isn't an intrinsic part of the AppBar,
                     // Layout might want to handle additional keys.
                     if (!this._invokeButton.contains(_Global.document.activeElement)) {
-                        this._layout.handleKeyDown(event);
+                        this._layoutImpl.handleKeyDown(event);
                     }
                 },
 
@@ -1169,7 +1129,7 @@ define([
                     }
 
                     // Make sure everything fits before showing
-                    this._layout.scale();
+                    this._layoutImpl.scale();
 
                     if (this.closedDisplayMode === closedDisplayModes.compact) {
                         this._heightWithoutLabels = this._element.offsetHeight;
@@ -1221,7 +1181,7 @@ define([
                 _animatePositionChange: function AppBar_animatePositionChange(fromPosition, toPosition) {
                     // Determines and executes the proper transition between visible positions
 
-                    var layoutElementsAnimationPromise = this._layout.positionChanging(fromPosition, toPosition),
+                    var layoutElementsAnimationPromise = this._layoutImpl.positionChanging(fromPosition, toPosition),
                         appBarElementAnimationPromise;
 
                     // Get values in terms of pixels to perform animation.
@@ -1337,8 +1297,8 @@ define([
                 _commandsUpdated: function AppBar_commandsUpdated() {
                     // If we are still initializing then we don't have a layout yet so it doesn't need updating.
                     if (!this._initializing) {
-                        this._layout.commandsUpdated();
-                        this._layout.scale();
+                        this._layoutImpl.commandsUpdated();
+                        this._layoutImpl.scale();
                     }
                 },
 
@@ -1347,11 +1307,11 @@ define([
                     // 1) showCommands[]: All of the HIDDEN win-command elements that ARE scheduled to show.
                     // 2) hideCommands[]: All of the VISIBLE win-command elements that ARE scheduled to hide.
                     // 3) otherVisibleCommands[]: All VISIBLE win-command elements that ARE NOT scheduled to hide.
-                    this._layout.beginAnimateCommands(showCommands, hideCommands, otherVisibleCommands);
+                    this._layoutImpl.beginAnimateCommands(showCommands, hideCommands, otherVisibleCommands);
                 },
 
                 _endAnimateCommands: function AppBar_endAnimateCommands() {
-                    this._layout.endAnimateCommands();
+                    this._layoutImpl.endAnimateCommands();
                     this._endAnimateCommandsCallBack();
                 },
 
@@ -1446,7 +1406,7 @@ define([
 
                     // Make sure everything still fits.
                     if (!this._initializing) {
-                        this._layout.resize(event);
+                        this._layoutImpl.resize(event);
                     }
                 },
 

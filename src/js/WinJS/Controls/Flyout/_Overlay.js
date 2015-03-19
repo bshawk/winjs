@@ -1003,6 +1003,8 @@ define([
                     var element = this._element;
                     if (element && _ElementUtilities.hasClass(element, _Constants.settingsFlyoutClass)) {
                         this._dismiss();
+                    } else if (element && _ElementUtilities.hasClass(element, _Constants.appBarClass)) {
+                        this.close();
                     } else {
                         this.hide();
                     }
@@ -1435,7 +1437,7 @@ define([
                     var allBarsAnimationPromises = bars.map(function (bar) {
                         bar._keyboardInvoked = keyboardInvoked;
                         bar._doNotFocus = false;
-                        bar._open();
+                        bar._show();
                         return bar._animationPromise;
                     });
                     return Promise.join(allBarsAnimationPromises);
