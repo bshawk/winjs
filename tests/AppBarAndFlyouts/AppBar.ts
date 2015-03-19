@@ -274,7 +274,7 @@ module CorsicaTests {
 
             LiveUnit.Assert.areEqual(_element, AppBar.element, "Verifying that element is what we set it with");
             LiveUnit.Assert.areEqual("bottom", AppBar.placement, "Verifying that position is 'bottom'");
-            LiveUnit.Assert.areEqual("custom", AppBar._layout, "Verifying that _layout is 'menu'");
+            LiveUnit.Assert.areEqual("custom", AppBar._layout, "Verifying that _layout is 'custom'");
             LiveUnit.Assert.isFalse(AppBar.disabled, "Verifying that disabled is false");
             LiveUnit.Assert.isFalse(AppBar.opened, "Verifying that opened is false");
             LiveUnit.Assert.areEqual(AppBar.closedDisplayMode, displayModeVisiblePositions.compact, "Verifying closedDisplayMode is compact");
@@ -1191,11 +1191,11 @@ module CorsicaTests {
                 failures = checkShouldBeDisplayNone(invokeButtonSubTree, false);
                 LiveUnit.Assert.isFalse(failures.length, msg);
 
-                if (appBar.winControl._layoutImpl === _Constants.appBarLayoutCommands) {
+                if (appBar.winControl._layout === _Constants.appBarLayoutCommands) {
                     msg = "AppBar with commands _layout & closedDisplayMode !== 'none' should reserve right padding that matches the width of the invokeButton";
                     LiveUnit.LoggingCore.logComment("Test: " + msg);
                     LiveUnit.Assert.areEqual(invokeButtonWidth, parseInt(getComputedStyle(appBar).paddingRight), msg);
-                } else if (appBar.winControl._layoutImpl === _Constants.appBarLayoutCustom || appBar.winControl._layoutImpl === _Constants.appBarLayoutMenu) {
+                } else if (appBar.winControl._layout === _Constants.appBarLayoutCustom || appBar.winControl._layout === _Constants.appBarLayoutMenu) {
                     msg = "AppBar with " + appBar.winControl._layoutImpl + " _layout & closedDisplayMode !== 'none' should NOT reserve right padding for the invokeButton";
                     LiveUnit.LoggingCore.logComment("Test: " + msg);
                     LiveUnit.Assert.areNotEqual(invokeButtonWidth, parseInt(getComputedStyle(appBar).paddingRight), msg);
@@ -1383,9 +1383,7 @@ module CorsicaTests {
                         verifyAppBarCompletelyHidden(appBar);
                     });
             };
-            verifyPositionChangeScenarios("commands").then(function () {
-                verifyPositionChangeScenarios("menu").then(complete, complete);
-            });
+            verifyPositionChangeScenarios("custom").then(complete);
         };
 
         xtestInvokeButtonBehavior = function (complete) {

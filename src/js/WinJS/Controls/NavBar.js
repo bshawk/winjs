@@ -86,20 +86,6 @@ define([
                     Scheduler.schedule(this._processChildren.bind(this), Scheduler.Priority.idle, null, "WinJS.UI.NavBar.processChildren");
                 }
             }, {
-                // Block others from setting the layout property.
-
-                /// <field type="String" defaultValue="commands" oamOptionsDatatype="WinJS.UI.NavBar.layout" locid="WinJS.UI.NavBar.layout" helpKeyword="WinJS.UI.NavBar.layout">
-                /// The layout of the NavBar contents.
-                /// <compatibleWith platform="Windows" minVersion="8.1"/>
-                /// </field>
-                layout: {
-                    get: function () {
-                        return customLayout;
-                    },
-                    set: function () {
-                        Object.getOwnPropertyDescriptor(AppBar.AppBar.prototype, "layout").set.call(this, customLayout);
-                    },
-                },
 
                 // Restrict values of closedDisplayMode to 'none' or 'minimal'
 
