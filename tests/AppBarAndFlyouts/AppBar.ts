@@ -274,8 +274,7 @@ module CorsicaTests {
 
             LiveUnit.Assert.areEqual(_element, AppBar.element, "Verifying that element is what we set it with");
             LiveUnit.Assert.areEqual("bottom", AppBar.placement, "Verifying that position is 'bottom'");
-            LiveUnit.Assert.areEqual("menu", AppBar._layoutImpl, "Verifying that _layout is 'menu'");
-            LiveUnit.Assert.isFalse(AppBar.sticky, "Verifying that sticky is false");
+            LiveUnit.Assert.areEqual("custom", AppBar._layout, "Verifying that _layout is 'menu'");
             LiveUnit.Assert.isFalse(AppBar.disabled, "Verifying that disabled is false");
             LiveUnit.Assert.isFalse(AppBar.opened, "Verifying that opened is false");
             LiveUnit.Assert.areEqual(AppBar.closedDisplayMode, displayModeVisiblePositions.compact, "Verifying closedDisplayMode is compact");
@@ -450,19 +449,16 @@ module CorsicaTests {
                 "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button1\", label:\"Button 1\", type:\"button\", section:\"primary\"}'></button>";
 
             _element.innerHTML = htmlString;
-            var AppBar = new WinJS.UI.AppBar(_element, { _layout: 'commands' });
+            var AppBar = new WinJS.UI.AppBar(_element, { _layout: 'custom' });
             LiveUnit.LoggingCore.logComment("AppBar has been instantiated.");
             LiveUnit.Assert.isNotNull(AppBar, "AppBar element should not be null when instantiated.");
             AppBar.open();
 
-            var cmds = _element.querySelectorAll(".win-command");
-            var firstCmd = cmds[0],
-                secondCmd = cmds[1];
+            var buttons = _element.querySelectorAll("button");
+            var firstCmd = buttons[0],
+                secondCmd = buttons[1];
 
             LiveUnit.Assert.areEqual(firstCmd, document.activeElement, "The focus should be on the first AppBarCommand");
-            // Don't wait for the afteropen event to fire to perform the action
-            Helper.keydown(_element, Key.rightArrow);
-            LiveUnit.Assert.areEqual(secondCmd, document.activeElement, "The focus should be on the Second AppBarCommand");
             complete();
         };
 
@@ -724,29 +720,37 @@ module CorsicaTests {
         testRemainsVisibleWhenMovingFocusInternally = function (complete) {
             var root = document.getElementById("appBarDiv");
             root.innerHTML =
-            "<div id='appBar'>" +
-            "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button0\", label:\"Button 0\", type:\"button\", section:\"primary\"}'></button>" +
-            "<hr data-win-control='WinJS.UI.AppBarCommand' data-win-options='{type:\"separator\", hidden: true, section:\"primary\"}' />" +
-            "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button1\", label:\"Button 1\", type:\"button\", section:\"primary\"}'></button>" +
+            "<div id='appBar'>"
             "</div>";
-            var appBar = new PrivateAppBar(<HTMLElement>root.querySelector("#appBar"));
-            
-                return new WinJS.Promise(function (c) {
-                    var focusFrom = appBar.getCommandById("Button0").element;
-                    var focusTo = appBar.getCommandById("Button1").element;
 
-                    asyncOpen(appBar).then(function () {
-                        LiveUnit.Assert.areEqual(focusFrom, document.activeElement, "Unexpected element initially has focus");
-                        LiveUnit.Assert.isFalse(!appBar.opened, "Overlay should initially be visible");
+            var commands = [
+                new AppBarCommand(null, { id: "Button0", label: "Button 0", type: "button", section: "primary" }),
+                new AppBarCommand(null, { type: "separator", section: "primary" }),
+                new AppBarCommand(null, { id: "Button1", label: "Button 1", type: "button", section: "primary" }),
+            ]
 
-                        return Helper.focus(focusTo);
-                    }).then(function () {
-                            LiveUnit.Assert.areEqual(focusTo, document.activeElement, "Expected element didn't receive focus");
-                            LiveUnit.Assert.isFalse(!appBar.opened, "Overlay should have remained visible when moving focus within it");
+            var appBarEl = root.querySelector("#appBar");
+            commands.forEach(function (cmd) {
+                appBarEl.appendChild(cmd.element);
+            })
 
-                            c();
-                        });
-                }).then(complete);
+            var appBar = new PrivateAppBar(<HTMLElement>appBarEl);
+            return new WinJS.Promise(function (c) {
+                var focusFrom = appBar.getCommandById("Button0").element;
+                var focusTo = appBar.getCommandById("Button1").element;
+
+                asyncOpen(appBar).then(function () {
+                    LiveUnit.Assert.areEqual(focusFrom, document.activeElement, "Unexpected element initially has focus");
+                    LiveUnit.Assert.isFalse(!appBar.opened, "Overlay should initially be visible");
+
+                    return Helper.focus(focusTo);
+                }).then(function () {
+                        LiveUnit.Assert.areEqual(focusTo, document.activeElement, "Expected element didn't receive focus");
+                        LiveUnit.Assert.isFalse(!appBar.opened, "Overlay should have remained visible when moving focus within it");
+
+                        c();
+                    });
+            }).then(complete);
         };
 
         testMoveFocusFromMenuToAppBar = function (complete) {
@@ -802,8 +806,8 @@ module CorsicaTests {
             "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button3\", label:\"Button 1\", type:\"button\", section:\"secondary\"}'></button>" +
             "<input type=\"range\" />" +
             "</div>";
-            var topBar = new PrivateAppBar(<HTMLElement>root.querySelector("#topBar"), { placement: 'top', _layout: 'commands', closedDisplayMode: topInitialCDM, sticky: true });
-            var bottomBar = new PrivateAppBar(<HTMLElement>root.querySelector("#bottomBar"), { placement: 'bottom', _layout: 'custom', closedDisplayMode: bottomInitialCDM, sticky: false });
+            var topBar = new PrivateAppBar(<HTMLElement>root.querySelector("#topBar"), { placement: 'top', _layout: 'commands', closedDisplayMode: topInitialCDM });
+            var bottomBar = new PrivateAppBar(<HTMLElement>root.querySelector("#bottomBar"), { placement: 'bottom', _layout: 'custom', closedDisplayMode: bottomInitialCDM });
 
             var verifyHiddenIndicators = function (expected, appBar: WinJS.UI.PrivateAppBar, msg) {
                 LiveUnit.LoggingCore.logComment("Test: " + msg);
@@ -1390,7 +1394,7 @@ module CorsicaTests {
 
             var root = document.getElementById("appBarDiv");
             var topBar = new WinJS.UI.AppBar(null, { placement: 'top', commands: [{ label: 'top cmd', icon: 'add' }], closedDisplayMode: 'minimal' });
-            var bottomBar = new WinJS.UI.AppBar(null, { placement: 'bottom', commands: [{ label: 'bottom cmd', icon: 'edit' }], closedDisplayMode: 'minimal', _layout: 'custom' })
+            var bottomBar = new WinJS.UI.AppBar(null, { placement: 'bottom', commands: [{ label: 'bottom cmd', icon: 'edit' }], closedDisplayMode: 'minimal' })
             root.appendChild(topBar.element);
             root.appendChild(bottomBar.element);
 
@@ -1457,8 +1461,8 @@ module CorsicaTests {
 
         testSingleAppBarLightDismissFocusWrapping = function (complete) {
             var root = document.getElementById("appBarDiv");
-            var topBar = new WinJS.UI.AppBar(null, { placement: 'top', commands: [{ id: 'top1', icon: 'add' }, { id: 'top2', icon: 'edit' }, { id: 'top3', icon: 'camera' }], closedDisplayMode: 'none', _layout: 'commands' });
-            var bottomBar = new WinJS.UI.AppBar(null, { placement: 'bottom', commands: [{ id: 'bot1', icon: 'add' }, { id: 'bot2', icon: 'edit' }, { id: 'bot3', icon: 'camera' }], closedDisplayMode: 'none', _layout: 'custom' });
+            var topBar = new WinJS.UI.AppBar(null, { placement: 'top', commands: [{ id: 'top1', icon: 'add' }, { id: 'top2', icon: 'edit' }, { id: 'top3', icon: 'camera' }], closedDisplayMode: 'none' });
+            var bottomBar = new WinJS.UI.AppBar(null, { placement: 'bottom', commands: [{ id: 'bot1', icon: 'add' }, { id: 'bot2', icon: 'edit' }, { id: 'bot3', icon: 'camera' }], closedDisplayMode: 'none' });
             root.appendChild(topBar.element);
             root.appendChild(bottomBar.element);
 
@@ -1516,7 +1520,7 @@ module CorsicaTests {
                 ];
 
             var root = document.getElementById("appBarDiv");
-            var topBar = new PrivateAppBar(null, { placement: 'top', commands: commandsArgs, closedDisplayMode: 'minimal', _layout: 'commands' });
+            var topBar = new PrivateAppBar(null, { placement: 'top', commands: commandsArgs, closedDisplayMode: 'minimal' });
             root.appendChild(topBar.element);
 
             asyncOpen(topBar).then(function () {

@@ -374,14 +374,14 @@ define([
                 this._lastPositionVisited = displayModeVisiblePositions.none;
                 _ElementUtilities.addClass(this._element, _Constants.hiddenClass);
 
-                // validate that if they didn't set commands, but want command
-                // layout that the HTML only contains commands.  Do this first
-                // so that we don't leave partial AppBars in the DOM.
-                if (options.layout !== _Constants.appBarLayoutCustom && !options.commands && this._element) {
-                    // Shallow copy object so we can modify it.
-                    options = _BaseUtils._shallowCopy(options);
-                    options.commands = this._verifyCommandsOnly(this._element, "WinJS.UI.AppBarCommand");
-                }
+                //// validate that if they didn't set commands, but want command
+                //// layout that the HTML only contains commands.  Do this first
+                //// so that we don't leave partial AppBars in the DOM.
+                //if (options._layout !== _Constants.appBarLayoutCustom && !options.commands && this._element) {
+                //    // Shallow copy object so we can modify it.
+                //    options = _BaseUtils._shallowCopy(options);
+                //    options.commands = this._verifyCommandsOnly(this._element, "WinJS.UI.AppBarCommand");
+                //}
 
                 // Add Invoke button.
                 this._invokeButton = _Global.document.createElement("button");
@@ -402,8 +402,8 @@ define([
 
                 // Run layout setter immediately. We need to know our layout in order to correctly
                 // position any commands that may be getting set through the constructor.
-                this._layout = options.layout || _Constants.appBarLayoutMenu;
-                delete options.layout;
+                this._layout = _Constants.appBarLayoutCustom;
+                delete options._layout;
 
                 // Need to set placement before closedDisplayMode, closedDisplayMode sets our starting position, which is dependant on placement.
                 this.placement = options.placement || _Constants.appBarPlacementBottom;
