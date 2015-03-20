@@ -155,7 +155,6 @@ export class ToolBarNew {
         var stateMachine = new _OpenCloseMachine.OpenCloseMachine({
             eventElement: this.element,
             onOpen: () => {
-
                 this._synchronousOpen();
 
                 // Animate
@@ -163,18 +162,17 @@ export class ToolBarNew {
             },
 
             onClose: () => {
-
                 this._synchronousClose()
 
                 // Animate
                 return Promise.wrap();
             },
             onUpdateDom: () => {
-                this._commandingSurface.updateDomImpl();
+                this._updateDomImpl();
             },
             onUpdateDomWithIsOpened: (isOpened: boolean) => {
-                this._commandingSurface._isOpenedMode = isOpened;
-                this._commandingSurface.updateDomImpl();
+                this._isOpenedMode = isOpened;
+                this._updateDomImpl();
             }
         });
         // Initialize private state.
@@ -340,6 +338,7 @@ export class ToolBarNew {
             }
         }
         rendered.isOpenedMode = this._isOpenedMode;
+        this._commandingSurface.updateDomImpl();
     }
 
     private _updateDomImpl_renderOpened(): void {

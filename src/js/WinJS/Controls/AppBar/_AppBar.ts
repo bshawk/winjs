@@ -172,6 +172,8 @@ export class AppBar {
                     this._commandingSurface.overflowDirection = "top";
                     break;
             }
+
+            this._commandingSurface.deferredDomUpate();
         }
     }
 
@@ -220,18 +222,16 @@ export class AppBar {
             },
 
             onClose: () => {
-
                 this._synchronousClose()
-
                 // Animate
                 return Promise.wrap();
             },
             onUpdateDom: () => {
-                this._commandingSurface.updateDomImpl();
+                this._updateDomImpl();
             },
             onUpdateDomWithIsOpened: (isOpened: boolean) => {
-                this._commandingSurface._isOpenedMode = isOpened;
-                this._commandingSurface.updateDomImpl();
+                this._isOpenedMode = isOpened;
+                this._updateDomImpl();
             }
         });
         // Initialize private state.
@@ -392,7 +392,7 @@ export class AppBar {
 
         if (rendered.placement !== this.placement) {
             removeClass(this._dom.root, placementClassMap[rendered.placement]);
-            removeClass(this._dom.root, placementClassMap[this.placement]);
+            addClass(this._dom.root, placementClassMap[this.placement]);
             rendered.placement = this.placement;
         }
     }

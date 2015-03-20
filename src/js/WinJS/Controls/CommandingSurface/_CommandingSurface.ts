@@ -423,6 +423,10 @@ export class _CommandingSurface {
             overflowArea: this._dom.overflowArea.getBoundingClientRect(),
         };
     }
+
+    deferredDomUpate(): void { 
+        this._machine.updateDom();
+    }
     
     get initialized(): Promise<any> {
         return this._initializedSignal.promise;
