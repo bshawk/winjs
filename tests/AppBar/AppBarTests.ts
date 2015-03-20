@@ -254,7 +254,7 @@ module CorsicaTests {
         testAria() {
             var appBar = new AppBar();
             LiveUnit.Assert.areEqual("menubar", appBar.element.getAttribute("role"), "Missing default aria role");
-            LiveUnit.Assert.areEqual("AppBar", appBar.element.getAttribute("aria-label"), "Missing default aria label");
+            LiveUnit.Assert.areEqual("App Bar", appBar.element.getAttribute("aria-label"), "Missing default aria label");
 
             var el = document.createElement("div");
             appBar = new AppBar(el);
@@ -521,7 +521,7 @@ module CorsicaTests {
 
         }
 
-        testOverflowBehaviorOfToggleChangingValues() {
+        testOverflowBehaviorOfToggleCommandChangingValues() {
             var data = new WinJS.Binding.List([
                 new Command(null, { type: _Constants.typeToggle, label: "1", extraClass: "c1", selected: true }),
                 new Command(null, { type: _Constants.typeButton, label: "2", extraClass: "c2", disabled: true }),
@@ -1396,47 +1396,41 @@ module CorsicaTests {
             Helper._CommandingSurface.verifyRenderedClosed(appBar._commandingSurface);
         }
 
-        //testPlacementConstructorOptions() {
-        //    var appBar = new AppBar();
-        //    LiveUnit.Assert.areEqual(_Constants.defaultClosedDisplayMode, appBar.closedDisplayMode, "'closedDisplayMode' property has incorrect default value.");
-        //    appBar.dispose();
+        testPlacementConstructorOptions() {
+            var appBar = new AppBar();
+            LiveUnit.Assert.areEqual(_Constants.defaultPlacement, appBar.placement, "'placement' property has incorrect default value.");
+            appBar.dispose();
 
-        //    Object.keys(AppBar.ClosedDisplayMode).forEach(function (mode) {
-        //        appBar = new AppBar(null, { closedDisplayMode: mode });
-        //        LiveUnit.Assert.areEqual(mode, appBar.closedDisplayMode, "closedDisplayMode does not match the value passed to the constructor.");
-        //        appBar.dispose();
-        //    })
-        //}
+            Object.keys(AppBar.Placement).forEach(function (placement) {
+                appBar = new AppBar(null, { placement: placement});
+                LiveUnit.Assert.areEqual(placement, appBar.placement, "placement does not match the value passed to the constructor.");
+                appBar.dispose();
+            })
+        }
 
-        //testPlacementProperty() {
-        //    this._element.style.width = "1000px";
-        //    var contentElement = document.createElement("DIV");
-        //    contentElement.style.height = "100px";
-        //    contentElement.style.border = "none";
+        testPlacementProperty() {
+            this._element.style.width = "1000px";
+            var contentElement = document.createElement("DIV");
+            contentElement.style.height = "100px";
+            contentElement.style.border = "none";
 
-        //    var data = new WinJS.Binding.List([
-        //        new Command(null, { type: _Constants.typeButton, icon: 'add', label: "button" }),
-        //        new Command(null, { type: _Constants.typeSeparator }),
-        //        new Command(contentElement, { type: _Constants.typeContent, label: "content" }),
-        //        new Command(null, { type: _Constants.typeButton, section: 'secondary', label: "secondary" }),
-        //    ]);
-        //    var appBar = new AppBar(this._element, {
-        //        data: data,
-        //        opened: false,
-        //    });
+            var data = new WinJS.Binding.List([
+                new Command(null, { type: _Constants.typeButton, icon: 'add', label: "button" }),
+                new Command(null, { type: _Constants.typeSeparator }),
+                new Command(contentElement, { type: _Constants.typeContent, label: "content" }),
+                new Command(null, { type: _Constants.typeButton, section: 'secondary', label: "secondary" }),
+            ]);
+            var appBar = new AppBar(this._element, {
+                data: data,
+                opened: false,
+            });
 
-        //    var msg = "Changing the closedDisplayMode property should not trigger this event";
-        //    appBar.onbeforeopen = failEventHandler(_Constants.EventNames.beforeOpen, msg);
-        //    appBar.onbeforeclose = failEventHandler(_Constants.EventNames.beforeClose, msg);
-        //    appBar.onafteropen = failEventHandler(_Constants.EventNames.afterOpen, msg);
-        //    appBar.onafterclose = failEventHandler(_Constants.EventNames.afterClose, msg);
-
-        //    Object.keys(AppBar.ClosedDisplayMode).forEach(function (mode) {
-        //        appBar.closedDisplayMode = mode;
-        //        LiveUnit.Assert.areEqual(mode, appBar.closedDisplayMode, "closedDisplayMode property should be writeable.");
-        //        Helper._CommandingSurface.verifyRenderedClosed(appBar._commandingSurface);
-        //    });
-        //}
+            Object.keys(AppBar.Placement).forEach(function (placement) {
+                appBar.placement = placement;
+                LiveUnit.Assert.areEqual(placement, appBar.placement, "placement property should be writeable.");
+                Helper.AppBar.verifyPlacement(appBar);
+            });
+        }
 
         testOpen() {
             var data = new WinJS.Binding.List([

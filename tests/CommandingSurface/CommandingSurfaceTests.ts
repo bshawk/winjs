@@ -508,7 +508,7 @@ module CorsicaTests {
 
         }
 
-        testOverflowBehaviorOfToggleChangingValues() {
+        testOverflowBehaviorOfToggleCommandChangingValues() {
             var data = new WinJS.Binding.List([
                 new Command(null, { type: _Constants.typeToggle, label: "1", extraClass: "c1", selected: true }),
                 new Command(null, { type: _Constants.typeButton, label: "2", extraClass: "c2", disabled: true }),
