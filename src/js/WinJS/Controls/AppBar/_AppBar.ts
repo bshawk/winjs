@@ -249,9 +249,9 @@ export class AppBar {
         _ElementUtilities._inDom(this.element).then(() => {
             return this._commandingSurface.initialized;
         }).then(() => {
-            stateMachine.exitInit();
-            this._writeProfilerMark("constructor,StopTM");
-        });
+                stateMachine.exitInit();
+                this._writeProfilerMark("constructor,StopTM");
+            });
     }
 
     /// <field type="Function" locid="WinJS.UI.AppBar.onbeforeopen" helpKeyword="WinJS.UI.AppBar.onbeforeopen">
@@ -391,19 +391,19 @@ export class AppBar {
         rendered.isOpenedMode = this._isOpenedMode;
 
         if (rendered.placement !== this.placement) {
-            _ElementUtilities.removeClass(this._dom.root, placementClassMap[rendered.placement]);
-            _ElementUtilities.removeClass(this._dom.root, placementClassMap[this.placement]);
+            removeClass(this._dom.root, placementClassMap[rendered.placement]);
+            removeClass(this._dom.root, placementClassMap[this.placement]);
             rendered.placement = this.placement;
         }
     }
     private _updateDomImpl_renderOpened(): void {
-        _ElementUtilities.addClass(this._dom.root, _Constants.ClassNames.openedClass);
-        _ElementUtilities.removeClass(this._dom.root, _Constants.ClassNames.closedClass);
+        addClass(this._dom.root, _Constants.ClassNames.openedClass);
+        removeClass(this._dom.root, _Constants.ClassNames.closedClass);
         this._commandingSurface.synchronousOpen();
     }
     private _updateDomImpl_renderClosed(): void {
-        _ElementUtilities.addClass(this._dom.root, _Constants.ClassNames.closedClass);
-        _ElementUtilities.removeClass(this._dom.root, _Constants.ClassNames.openedClass);
+        addClass(this._dom.root, _Constants.ClassNames.closedClass);
+        removeClass(this._dom.root, _Constants.ClassNames.openedClass);
         this._commandingSurface.synchronousClose();
     }
 }
