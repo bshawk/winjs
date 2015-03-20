@@ -114,7 +114,7 @@ module CorsicaTests {
         return WinJS.UI._Overlay._showAppBars(AppBars);
     }
 
-    export class AppBarTests {
+    export class LegacyAppBarTests {
 
 
         setUp() {
@@ -178,7 +178,7 @@ module CorsicaTests {
 
         // Test multiple instantiation of the same AppBar DOM element
         testAppBarMultipleInstantiation() {
-            AppBarTests.prototype.testAppBarMultipleInstantiation["LiveUnit.ExpectedException"] = { message: "Invalid argument: Controls may only be instantiated one time for each DOM element" };
+            LegacyAppBarTests.prototype.testAppBarMultipleInstantiation["LiveUnit.ExpectedException"] = { message: "Invalid argument: Controls may only be instantiated one time for each DOM element" };
             var AppBar = new PrivateLegacyAppBar(_element, { commands: { type: 'separator', id: 'sep' } });
             LiveUnit.LoggingCore.logComment("AppBar has been instantiated.");
             LiveUnit.Assert.isNotNull(AppBar, "AppBar element should not be null when instantiated.");
@@ -326,7 +326,7 @@ module CorsicaTests {
     //testAppBarDispose["Description"] = "Unit test for dispose requirements.";
 
         testAppBarThrowsWhenPlacementIsSetAndAppBarVisible() {
-            AppBarTests.prototype.testAppBarThrowsWhenPlacementIsSetAndAppBarVisible["LiveUnit.ExpectedException"] = {
+            LegacyAppBarTests.prototype.testAppBarThrowsWhenPlacementIsSetAndAppBarVisible["LiveUnit.ExpectedException"] = {
                 message: "Invalid argument: The placement property cannot be set when the AppBar is visible, call hide() first"
             }
             var AppBar = new PrivateLegacyAppBar(_element);
@@ -1669,4 +1669,4 @@ module CorsicaTests {
     };
 }
 // register the object as a test class by passing in the name
-LiveUnit.registerTestClass("CorsicaTests.AppBarTests");
+LiveUnit.registerTestClass("CorsicaTests.LegacyAppBarTests");
