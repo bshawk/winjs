@@ -390,11 +390,11 @@ define([
                 this._element.appendChild(this._invokeButton);
                 var that = this;
                 this._invokeButton.addEventListener("click", function () {
-                    this._keyboardInvoked = _KeyboardBehavior._keyboardSeenLast;
-                    if (this.opened) {
-                        this._hide();
+                    that._keyboardInvoked = _KeyboardBehavior._keyboardSeenLast;
+                    if (that.opened) {
+                        that._hide();
                     } else {
-                        this._show();
+                        that._show();
                     }
                 }, false);
 
