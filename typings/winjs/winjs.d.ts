@@ -3616,6 +3616,25 @@ declare module WinJS.UI {
      * Represents an application pane for displaying commands.
     **/
     class AppBar {
+
+        /** 
+         * Display options for the AppBar when closed.
+        */
+        static ClosedDisplayMode: {
+            none: string;
+            minimal: string;
+            compact: string;
+            full: string;
+        };
+
+        /** 
+         * Display options for AppBar placement in relation to the main view.
+        */
+        static Placement: {
+            top: string;
+            bottom: string;
+        };
+
         //#region Constructors
 
         /**
@@ -3634,25 +3653,25 @@ declare module WinJS.UI {
          * Occurs immediately after the AppBar is closed.
          * @param eventInfo An object that contains information about the event.
         **/
-        onafterclose(eventInfo: Event): void;
+        onafterclose: (ev: CustomEvent) => void;
 
         /**
-         * Occurs after the AppBar is opened.
+         * Occurs immeidately after the AppBar is opened.
          * @param eventInfo An object that contains information about the event.
         **/
-        onafteropen(eventInfo: Event): void;
+        onafteropen: (ev: CustomEvent) => void;
 
         /**
-         * Occurs before the AppBar is closed.
+         * Occurs immediately before the AppBar is closed. Is cancelable.
          * @param eventInfo An object that contains information about the event.
         **/
-        onbeforeclose(eventInfo: Event): void;
+        onbeforeclose: (ev: CustomEvent) => void;
 
         /**
-         * Occurs before a closed AppBar is opened.
+         * Occurs immediately before the AppBar is opened. Is cancelable.
          * @param eventInfo An object that contains information about the event.
         **/
-        onbeforeopen(eventInfo: Event): void;
+        onbeforeopen: (ev: CustomEvent) => void;
 
         //#endregion Events
 
@@ -3664,7 +3683,15 @@ declare module WinJS.UI {
          * @param listener The event handler function to associate with the event.
          * @param useCapture Set to true to register the event handler for the capturing phase; otherwise, set to false to register the event handler for the bubbling phase.
         **/
-        addEventListener(type: string, listener: Function, useCapture?: boolean): void;
+        addEventListener(eventName: string, eventHandler: Function, useCapture?: boolean): void;
+
+        /**
+         * Removes an event handler that the addEventListener method registered.
+         * @param type The event type to unregister. It must be beforeopen, beforeclose, afteropen, or afterclose.
+         * @param listener The event handler function to remove.
+         * @param useCapture Set to true to remove the capturing phase event handler; set to false to remove the bubbling phase event handler.
+        **/
+        removeEventListener(eventName: string, eventHandler: Function, useCapture?: boolean): void;
 
         /**
          * Raises an event of the specified type and with additional properties.
@@ -3672,7 +3699,7 @@ declare module WinJS.UI {
          * @param eventProperties The set of additional properties to be attached to the event object when the event is raised.
          * @returns true if preventDefault was called on the event, otherwise false.
         **/
-        dispatchEvent(type: string, eventProperties: any): boolean;
+        dispatchEvent(eventName: string, eventProperties: any): boolean;
 
         /**
          * Releases resources held by this AppBar. Call this method when the AppBar is no longer needed. After calling this method, the AppBar becomes unusable.
@@ -3684,7 +3711,12 @@ declare module WinJS.UI {
          * @param id The element idenitifier (ID) of the command to be returned.
          * @returns The command identified by id. If multiple commands have the same ID, returns an array of all the commands matching the ID.
         **/
-        getCommandById(id: string): AppBarCommand;
+        getCommandById(id: string): ICommand;
+
+        /**
+         * Opens the AppBar.
+        **/
+        open(): void;
 
         /**
          * Closes the AppBar.
@@ -3697,19 +3729,6 @@ declare module WinJS.UI {
          * @param immediate The parameter immediate is not supported and may be altered or unavailable in the future. true to hide the commands immediately, without animating them; otherwise, false.
         **/
         hideCommands(commands: any[], immediate?: boolean): void;
-
-        /**
-         * Removes an event handler that the addEventListener method registered.
-         * @param type The event type to unregister. It must be beforeopen, beforeclose, afteropen, or afterclose.
-         * @param listener The event handler function to remove.
-         * @param useCapture Set to true to remove the capturing phase event handler; set to false to remove the bubbling phase event handler.
-        **/
-        removeEventListener(type: string, listener: Function, useCapture?: boolean): void;
-
-        /**
-         * Opens the AppBar.
-        **/
-        open(): void;
 
         /**
          * Opens the specified commands of the AppBar.
@@ -3725,19 +3744,24 @@ declare module WinJS.UI {
         **/
         showOnlyCommands(commands: any[], immediate?: boolean): void;
 
+        /**
+         * Forces the AppBar to update its layout. Use this function when the window did not change size, but AppBar itself did.
+        **/
+        forceLayout(): void;
+
         //#endregion Methods
 
         //#region Properties
 
         /**
-         * Gets/Sets how AppBar will display itself while closed. Values are "none" and "minimal".
+         * Gets/Sets how AppBar will display itself while closed. Values are "none" , "minimal", "compact" and "full".
         **/
         closedDisplayMode: string;
 
         /**
-         * Sets the AppBarCommand objects that appear in the app bar.
+         * Gets or sets the Binding List of WinJS.UI.Command for the AppBar.
         **/
-        commands: AppBarCommand[];
+        data: WinJS.Binding.List<ICommand>;
 
         /**
          * Gets the DOM element that hosts the AppBar.
@@ -3745,7 +3769,7 @@ declare module WinJS.UI {
         element: HTMLElement;
 
         /**
-         * Gets a value that indicates whether the AppBar is opened or in the process of becoming opened.
+         * Gets or sets whether the AppBar is currently opened.
         **/
         opened: boolean;
 
@@ -3857,7 +3881,7 @@ declare module WinJS.UI {
         onclick: Function;
 
         /**
-         * Gets the section of the app bar that the command is in.
+         * Gets/Sets the section of the parent control that the command is in. 
         **/
         section: string;
 
@@ -3875,6 +3899,11 @@ declare module WinJS.UI {
          * Gets the type of the command.
         **/
         type: string;
+
+        /**
+         * Gets or sets the priority of the command
+        **/
+        priority: number;
 
         //#endregion Properties
 

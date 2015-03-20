@@ -407,6 +407,15 @@ declare module WinJS {
             _machine: IOpenCloseMachine;
         }
 
+        class PrivateAppBar extends WinJS.UI.AppBar {
+            _disposed: boolean;
+            _dom: {
+                root: HTMLElement;
+                commandingSurfaceEl: HTMLElement;
+            };
+            _commandingSurface: WinJS.UI.PrivateCommandingSurface;
+        }
+
         class PrivateToolBarNew extends WinJS.UI.ToolBarNew {
             _disposed: boolean;
             _dom: {
@@ -433,8 +442,7 @@ declare module WinJS {
             _inlineOverflowArea: HTMLElement;
         }
 
-        class PrivateCommand extends WinJS.UI.AppBarCommand implements ICommand {
-            priority: number;
+        class PrivateCommand extends WinJS.UI.AppBarCommand {
             winControl: ICommand;
             _commandBarIconButton;
             _disposed;

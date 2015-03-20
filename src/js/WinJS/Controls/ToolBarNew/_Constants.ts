@@ -19,8 +19,6 @@ export var ClassNames = {
     openedClass: "win-toolbarnew-opened",
     closingClass: "win-toolbarnew-closing",
     closedClass: "win-toolbarnew-closed",
-    noneClass: "win-toolbarnew-closeddisplaynone",
-    minimalClass: "win-toolbarnew-closeddisplayminimal",
     compactClass: "win-toolbarnew-closeddisplaycompact",
     fullClass: "win-toolbarnew-closeddisplayfull",
     overflowTopClass: "win-toolbarnew-overflowtop",

@@ -244,6 +244,7 @@ export class _CommandingSurface {
         var isChangingState = (value !== this._overflowDirection);
         if (OverflowDirection[value] && isChangingState) {
             this._overflowDirection = value;
+            this._machine.updateDom();
         }
     }
 

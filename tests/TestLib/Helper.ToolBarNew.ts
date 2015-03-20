@@ -9,6 +9,8 @@ module Helper.ToolBarNew {
 
         //TODO Verify Auto overflowdirection?
 
+        // TODO verify that the AppBar element has the same bounding rect as the the Commanding surface element.
+
         //TODO Verify that we are in the Body, absolutely positioned. and that based on our overflowdirection, we are correctly positioned over the proper edge of our placeholder.
         
         //TODO Verify that we are just as wide as our placeholder.
@@ -19,6 +21,8 @@ module Helper.ToolBarNew {
     }
 
     export function verifyRenderedClosed(toolBar: WinJS.UI.PrivateToolBarNew): void {
+        // TODO verify that the AppBar element has the same bounding rect as the the Commanding surface element.
+        
         //TODO Verify we have a parent element and our placeHolder element does not.
 
         Helper._CommandingSurface.verifyRenderedClosed(toolBar._commandingSurface);
