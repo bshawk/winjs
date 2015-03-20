@@ -3687,7 +3687,7 @@ declare module WinJS.UI {
         getCommandById(id: string): AppBarCommand;
 
         /**
-         * closes the AppBar.
+         * Closes the AppBar.
         **/
         close(): void;
 
@@ -3707,7 +3707,7 @@ declare module WinJS.UI {
         removeEventListener(type: string, listener: Function, useCapture?: boolean): void;
 
         /**
-         * Opens the AppBar if it is not disabled.
+         * Opens the AppBar.
         **/
         open(): void;
 
@@ -3740,11 +3740,6 @@ declare module WinJS.UI {
         commands: AppBarCommand[];
 
         /**
-         * Gets or sets a value that indicates whether the AppBar is disabled.
-        **/
-        disabled: boolean;
-
-        /**
          * Gets the DOM element that hosts the AppBar.
         **/
         element: HTMLElement;
@@ -3755,19 +3750,9 @@ declare module WinJS.UI {
         opened: boolean;
 
         /**
-         * Gets or sets the layout of the app bar contents.
-        **/
-        layout: string;
-
-        /**
          * Gets or sets a value that specifies whether the AppBar appears at the top or bottom of the main view.
         **/
         placement: string;
-
-        /**
-         * Gets or sets a value that indicates whether the AppBar is sticky (won't light dismiss). If not sticky, the app bar dismisses normally when the user touches outside of the appbar.
-        **/
-        sticky: boolean;
 
         //#endregion Properties
 
@@ -6304,7 +6289,7 @@ declare module WinJS.UI {
     }
 
     /**
-     * Displays navigation commands in a pane that that can be opened or closed.
+     * Displays navigation commands in a pane that can be opened or closed.
     **/
     class NavBar {
         //#region Constructors
@@ -6397,7 +6382,7 @@ declare module WinJS.UI {
         removeEventListener(eventName: string, eventCallback: Function, useCapture?: boolean): void;
 
         /**
-         * Opens the NavBar if it is not disabled.
+         * Opens the NavBar
         **/
         open(): void;
 
@@ -6425,11 +6410,6 @@ declare module WinJS.UI {
         commands: AppBarCommand;
 
         /**
-         * Gets or sets a value that indicates whether the NavBar is disabled.
-        **/
-        disabled: boolean;
-
-        /**
          * Gets the HTML element that hosts this NavBar.
         **/
         element: HTMLElement;
@@ -6440,19 +6420,9 @@ declare module WinJS.UI {
         opened: boolean;
 
         /**
-         * This API supports the WinJS infrastructure and is not intended to be used directly from your code.
-        **/
-        layout: string;
-
-        /**
          * Gets or sets a value that specifies whether the NavBar appears at the top or bottom of the main view.
         **/
         placement: string;
-
-        /**
-         * Gets or sets a value that indicates whether the NavBar is sticky (won't light dismiss). If not sticky, the NavBar dismisses normally when the user touches outside of the NavBar.
-        **/
-        sticky: boolean;
 
         //#endregion Properties
 

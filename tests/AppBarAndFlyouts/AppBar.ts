@@ -358,7 +358,7 @@ module CorsicaTests {
                 done(complete);
         };
 
-        xtestCommandsLayoutKeyboarding = function (complete) {
+        xtestCommandsLayoutKeyboarding = function (complete) { // TODO delete entirely or migrate into commanding surface tests. [jessesh]
             var htmlString = "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button0\", label:\"Button 0\", type:\"button\", section:\"primary\"}'></button>" +
                 "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button1\", label:\"Button 1\", type:\"button\", section:\"primary\"}'></button>" +
                 "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button2\", label:\"Button 2\", type:\"button\", section:\"secondary\"}'></button>" +
@@ -453,7 +453,7 @@ module CorsicaTests {
             complete();
         };
 
-        xtestKeyboardingInEmptyAppBar = function (complete) {
+        xtestKeyboardingInEmptyAppBar = function (complete) { // TODO delete entirely or migrate into commanding surface tests. [jessesh]
             var AppBar = new WinJS.UI.AppBar(_element);
             LiveUnit.LoggingCore.logComment("AppBar has been instantiated.");
             LiveUnit.Assert.isNotNull(AppBar, "AppBar element should not be null when instantiated.");
@@ -480,7 +480,7 @@ module CorsicaTests {
             });
         };
 
-        xtestCommandsLayoutKeyboardingWithContentCommands = function (complete) {
+        xtestCommandsLayoutKeyboardingWithContentCommands = function (complete) { // TODO delete entirely or migrate into commanding surface tests. [jessesh]
             /*
             Tests:
             win-interactive: left/right/home/end are ignored when focus is on an element with the win-interactive class.
@@ -598,7 +598,7 @@ module CorsicaTests {
             });
         };
 
-        xtestCommandsLayoutMultiplePressesOFHomeAndEndKeys = function (complete) {
+        xtestCommandsLayoutMultiplePressesOFHomeAndEndKeys = function (complete) { // TODO delete entirely or migrate into commanding surface tests. [jessesh]
             /*
             Regression Test for WinBlue 238117: Pressing "home" or "end" key twice shouldn't move the focus to a different element
             */
@@ -1322,7 +1322,7 @@ module CorsicaTests {
 
                         verifyAppBarCompletelyHidden(appBar);
 
-                    msg = "Changing closedDisplayMode on closed AppBar should change the AppBar's visible position.";
+                        msg = "Changing closedDisplayMode on closed AppBar should change the AppBar's visible position.";
                         LiveUnit.LoggingCore.logComment("Test: " + msg);
                         return waitForPositionChange(appBar, function () { appBar.closedDisplayMode = "minimal"; });
                     }).then(function () {
@@ -1345,76 +1345,36 @@ module CorsicaTests {
             verifyPositionChangeScenarios("custom").then(complete);
         };
 
-        xtestInvokeButtonBehavior = function (complete) {
-            // Verifies that triggering the invokeButton on any hidden AppBar will show All AppBars.
-            // Verifies that triggering the invokeButton on any shown AppBar will hide all AppBars.
+        testInvokeButtonBehavior = function (complete) {
+            // Verifies that triggering the invokeButton on a closed AppBar will open that AppBar.
+            // Verifies that triggering the invokeButton on a opened AppBar will close all AppBar.
 
             var root = document.getElementById("appBarDiv");
-            var topBar = new WinJS.UI.AppBar(null, { placement: 'top', commands: [{ label: 'top cmd', icon: 'add' }], closedDisplayMode: 'minimal' });
-            var bottomBar = new WinJS.UI.AppBar(null, { placement: 'bottom', commands: [{ label: 'bottom cmd', icon: 'edit' }], closedDisplayMode: 'minimal' })
-            root.appendChild(topBar.element);
-            root.appendChild(bottomBar.element);
+            var appBar = new PrivateAppBar(null, { placement: 'bottom', commands: [{ label: 'bottom cmd', icon: 'edit' }], closedDisplayMode: 'minimal' })
+            root.appendChild(appBar.element);
 
-            function verifyShown(msg?) {
-                var appBars = root.querySelector(".win-appbar");
-                Array.prototype.map.call(appBars, function (appBar) {
-                    LiveUnit.Assert.isTrue(WinJS.Utilities.hasClass(appBar, _Constants.shownClass), msg);
-                });
+            function verifyOpened(msg?) {
+                LiveUnit.Assert.isTrue(WinJS.Utilities.hasClass(appBar.element, _Constants.shownClass), msg);
             }
 
-            function verifyHidden(msg?) {
-                var appBars = root.querySelector(".win-appbar");
-                Array.prototype.map.call(appBars, function (appBar) {
-                    LiveUnit.Assert.isTrue(WinJS.Utilities.hasClass(appBar, _Constants.hiddenClass), msg);
-                });
+            function verifyClosed(msg?) {
+                LiveUnit.Assert.isTrue(WinJS.Utilities.hasClass(appBar.element, _Constants.hiddenClass), msg);
             }
 
-            function testInvokeBehavior(trigger) {
-
-                var triggerTestPromise = new WinJS.Promise(function (triggerTestComplete) {
-
-                    // Sanity check that when we begin, all AppBars are hidden
-                    verifyHidden();
-
-                    trigger();
-                    PrivateAppBar._appBarsSynchronizationPromise.then(function () {
-                        verifyShown()
-
-                    trigger();
-                        return PrivateAppBar._appBarsSynchronizationPromise;
-                    }).then(function () {
-                            verifyHidden();
-
-                    // Set up next scenario so that one bar is shown and one is hidden. trigger invoke on the shown bar to
-                    // verify that both bars are hidden afterwards, ensuring that the invoke button behavior really is
-                    // different than the Edgy event handler.
-                    return waitForPositionChange(trigger.sourceAppBar, function () { trigger.sourceAppBar.open(); }).then(function () {
-                                trigger();
-                                return PrivateAppBar._appBarsSynchronizationPromise;
-                            })
-                }).then(function () {
-                            verifyHidden();
-                            triggerTestComplete();
-                        });
-
-                });
-
-                return triggerTestPromise;
+            appBar.onafteropen = function () {
+                verifyOpened();
+                Helper.click(appBar._invokeButton);
             }
 
-            // Simulate click on invoke button.
-            var click = function (appBar) {
-                var trigger: any = function () {
-                    Helper.click(appBar._invokeButton);
-                };
-                trigger.sourceAppBar = appBar;
-                return trigger;
+            appBar.onafterclose = function () {
+                verifyClosed();
+                complete();
             }
 
-        testInvokeBehavior(click(bottomBar)).
-                then(function () { return testInvokeBehavior(click(topBar)); }).
-                done(function () { complete(); });
-        };
+            // Sanity check that when we begin, all AppBars are hidden
+            verifyClosed();
+            Helper.click(appBar._invokeButton);
+        }
 
         testSingleAppBarLightDismissFocusWrapping = function (complete) {
             var root = document.getElementById("appBarDiv");
@@ -1567,7 +1527,7 @@ module CorsicaTests {
             appbar.open();
         };
 
-        xtestCommandsLayoutUsingDeprecatedSectionsInCommandsLayout = function () {
+        xtestCommandsLayoutUsingDeprecatedSectionsInCommandsLayout = function () { // TODO delete entirely or migrate into commanding surface tests. [jessesh]
             var root = document.getElementById("appBarDiv");
             root.innerHTML =
             "<div id='appBar'>" +
@@ -1618,7 +1578,7 @@ module CorsicaTests {
             verifyPositionChanged(oldRect, newRect);
         }
 
-        xtestAppBarWithMenuLayoutCustomBackgrounColorPercolates() {
+        xtestAppBarWithMenuLayoutCustomBackgrounColorPercolates() { // TODO delete entirely or migrate into commanding surface tests. [jessesh]
             // Verifies that the background color of the entire AppBar changes when styling the appbar element.
 
             var root = document.getElementById("appBarDiv");
@@ -1634,7 +1594,7 @@ module CorsicaTests {
             LiveUnit.Assert.areEqual(appBarStyle.backgroundColor, toolBarStyle.backgroundColor, msg);
         }
 
-        xtestGetCommandById() {
+        xtestGetCommandById() { // TODO delete entirely or migrate into commanding surface tests. [jessesh]
             var pairWiseOptions = {
                 type: ['button', 'separator', 'toggle', 'flyout', 'content'],
                 hidden: [true, false],
@@ -1658,7 +1618,7 @@ module CorsicaTests {
             });
         }
 
-        xtestAppBarMenuDoesNotResizeWhenCommandsAreFocused(complete) {
+        xtestAppBarMenuDoesNotResizeWhenCommandsAreFocused(complete) { // TODO delete entirely or migrate into commanding surface tests. [jessesh]
             // Regression test: https://github.com/winjs/winjs/issues/859
             // Verifies that focusing a command in the AppBar overflow menu will not cause the overflow menu to change width.
             var name = "pCmd1",

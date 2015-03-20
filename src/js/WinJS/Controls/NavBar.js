@@ -35,7 +35,7 @@ define([
         /// </div>
         /// </div>]]></htmlSnippet>
         /// <event name="beforeopen" locid="WinJS.UI.NavBar_e:beforeopen">Raised just before opening the NavBar.</event>
-        /// <event name="aftershow" locid="WinJS.UI.NavBar_e:aftershow">Raised immediately after an NavBar is fully opened.</event>
+        /// <event name="afteropen" locid="WinJS.UI.NavBar_e:afteropen">Raised immediately after an NavBar is fully opened.</event>
         /// <event name="beforeclose" locid="WinJS.UI.NavBar_e:beforeclose">Raised just before closing the  NavBar.</event>
         /// <event name="afterclose" locid="WinJS.UI.NavBar_e:afterclose">Raised immediately after the NavBar is fully closed.</event>
         /// <event name="childrenprocessed" locid="WinJS.UI.NavBar_e:childrenprocessed">Fired when children of NavBar control have been processed from a WinJS.UI.processAll call.</event>

@@ -372,15 +372,6 @@ define([
                 this._lastPositionVisited = displayModeVisiblePositions.none;
                 _ElementUtilities.addClass(this._element, _Constants.hiddenClass);
 
-                //// validate that if they didn't set commands, but want command
-                //// layout that the HTML only contains commands.  Do this first
-                //// so that we don't leave partial AppBars in the DOM.
-                //if (options._layout !== _Constants.appBarLayoutCustom && !options.commands && this._element) {
-                //    // Shallow copy object so we can modify it.
-                //    options = _BaseUtils._shallowCopy(options);
-                //    options.commands = this._verifyCommandsOnly(this._element, "WinJS.UI.AppBarCommand");
-                //}
-
                 // Add Invoke button.
                 this._invokeButton = _Global.document.createElement("button");
                 this._invokeButton.tabIndex = 0;
@@ -1560,7 +1551,7 @@ define([
                 }
             }, {
                 // Statics
-                Events: EVENTS,
+                _Events: EVENTS,
 
                 _appBarsSynchronizationPromise: Promise.as(),
 

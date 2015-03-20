@@ -482,6 +482,7 @@ declare module WinJS {
             _layout;
             _layoutImpl;
             _visiblePosition;
+            _invokeButton: HTMLButtonElement;
 
             static _currentAppBarId;
             static _appBarsSynchronizationPromise;
