@@ -357,7 +357,7 @@ module CorsicaTests {
                 done(complete);
         };
 
-        xtestCommandsLayoutKeyboarding = function (complete) { // TODO delete entirely or migrate into commanding surface tests. [jessesh]
+        xtestCommandsLayoutKeyboarding = function (complete) { // TODO delete entirely or migrate into commanding surface tests. 
             var htmlString = "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button0\", label:\"Button 0\", type:\"button\", section:\"primary\"}'></button>" +
                 "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button1\", label:\"Button 1\", type:\"button\", section:\"primary\"}'></button>" +
                 "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button2\", label:\"Button 2\", type:\"button\", section:\"secondary\"}'></button>" +
@@ -452,7 +452,7 @@ module CorsicaTests {
             complete();
         };
 
-        xtestKeyboardingInEmptyAppBar = function (complete) { // TODO delete entirely or migrate into commanding surface tests. [jessesh]
+        xtestKeyboardingInEmptyAppBar = function (complete) { // TODO delete entirely or migrate into commanding surface tests. 
             var AppBar = new PrivateLegacyAppBar(_element);
             LiveUnit.LoggingCore.logComment("AppBar has been instantiated.");
             LiveUnit.Assert.isNotNull(AppBar, "AppBar element should not be null when instantiated.");
@@ -479,7 +479,7 @@ module CorsicaTests {
             });
         };
 
-        xtestCommandsLayoutKeyboardingWithContentCommands = function (complete) { // TODO delete entirely or migrate into commanding surface tests. [jessesh]
+        xtestCommandsLayoutKeyboardingWithContentCommands = function (complete) { // TODO delete entirely or migrate into commanding surface tests. 
             /*
             Tests:
             win-interactive: left/right/home/end are ignored when focus is on an element with the win-interactive class.
@@ -597,7 +597,7 @@ module CorsicaTests {
             });
         };
 
-        xtestCommandsLayoutMultiplePressesOFHomeAndEndKeys = function (complete) { // TODO delete entirely or migrate into commanding surface tests. [jessesh]
+        xtestCommandsLayoutMultiplePressesOFHomeAndEndKeys = function (complete) { // TODO delete entirely or migrate into commanding surface tests. 
             /*
             Regression Test for WinBlue 238117: Pressing "home" or "end" key twice shouldn't move the focus to a different element
             */
@@ -1346,13 +1346,16 @@ module CorsicaTests {
 
         testInvokeButtonBehavior = function (complete) {
             // Verifies that triggering the invokeButton on a closed AppBar will open that AppBar.
-            // Verifies that triggering the invokeButton on a opened AppBar will close all AppBar.
+            // Verifies that triggering the invokeButton on a opened AppBar will close that AppBar.
 
             var root = document.getElementById("appBarDiv");
             var appBar = new PrivateLegacyAppBar(null, { placement: 'bottom', commands: [{ label: 'bottom cmd', icon: 'edit' }], closedDisplayMode: 'minimal' })
             root.appendChild(appBar.element);
 
+            var afterOpened = false;
+
             function verifyOpened(msg?) {
+                afterOpened = true;
                 LiveUnit.Assert.isTrue(WinJS.Utilities.hasClass(appBar.element, _Constants.shownClass), msg);
             }
 
@@ -1366,6 +1369,7 @@ module CorsicaTests {
             }
 
             appBar.onafterclose = function () {
+                LiveUnit.Assert.isTrue(afterOpened, "'afteropen' handler should have been called before 'afterclosed' handler")
                 verifyClosed();
                 complete();
             }
@@ -1526,7 +1530,7 @@ module CorsicaTests {
             appbar.open();
         };
 
-        xtestCommandsLayoutUsingDeprecatedSectionsInCommandsLayout = function () { // TODO delete entirely or migrate into commanding surface tests. [jessesh]
+        xtestCommandsLayoutUsingDeprecatedSectionsInCommandsLayout = function () { // TODO delete entirely or migrate into commanding surface tests. 
             var root = document.getElementById("appBarDiv");
             root.innerHTML =
             "<div id='appBar'>" +
@@ -1577,7 +1581,7 @@ module CorsicaTests {
             verifyPositionChanged(oldRect, newRect);
         }
 
-        xtestAppBarWithMenuLayoutCustomBackgrounColorPercolates() { // TODO delete entirely or migrate into commanding surface tests. [jessesh]
+        xtestAppBarWithMenuLayoutCustomBackgrounColorPercolates() { // TODO delete entirely or migrate into commanding surface tests. 
             // Verifies that the background color of the entire AppBar changes when styling the appbar element.
 
             var root = document.getElementById("appBarDiv");
@@ -1593,7 +1597,7 @@ module CorsicaTests {
             LiveUnit.Assert.areEqual(appBarStyle.backgroundColor, toolBarStyle.backgroundColor, msg);
         }
 
-        xtestGetCommandById() { // TODO delete entirely or migrate into commanding surface tests. [jessesh]
+        xtestGetCommandById() { // TODO delete entirely or migrate into commanding surface tests. 
             var pairWiseOptions = {
                 type: ['button', 'separator', 'toggle', 'flyout', 'content'],
                 hidden: [true, false],
@@ -1617,7 +1621,7 @@ module CorsicaTests {
             });
         }
 
-        xtestAppBarMenuDoesNotResizeWhenCommandsAreFocused(complete) { // TODO delete entirely or migrate into commanding surface tests. [jessesh]
+        xtestAppBarMenuDoesNotResizeWhenCommandsAreFocused(complete) { // TODO delete entirely or migrate into commanding surface tests. 
             // Regression test: https://github.com/winjs/winjs/issues/859
             // Verifies that focusing a command in the AppBar overflow menu will not cause the overflow menu to change width.
             var name = "pCmd1",
