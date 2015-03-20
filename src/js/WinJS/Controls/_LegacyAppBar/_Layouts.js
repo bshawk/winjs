@@ -97,7 +97,7 @@ define([
                 },
                 sanitizeCommand: function _AppBarBaseLayout_sanitizeCommand(command) {
                     if (!command) {
-                        throw new _ErrorFromName("WinJS.UI._LegacyAppBar.NullCommand", strings.nullCommand);
+                        throw new _ErrorFromName("WinJS.UI.AppBar.NullCommand", strings.nullCommand);
                     }
                     // See if it's a command already
                     command = command.winControl || command;

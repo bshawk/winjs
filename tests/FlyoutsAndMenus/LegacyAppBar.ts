@@ -1224,7 +1224,7 @@ module CorsicaTests {
 
                 var firstDiv = appBar.querySelector(".win-firstdiv");
                 var finalDiv = appBar.querySelector(".win-finaldiv");
-                var clickEater = document.querySelector(".win-legacyappbarclickeater");
+                var clickEater = document.querySelector("." + _Constants._clickEatingAppBarClass);
 
                 // Verify sticky properties.
                 msg = "Sticky AppBar should be sticky";
@@ -1259,7 +1259,7 @@ module CorsicaTests {
 
                 var firstDiv = appBar.querySelector(".win-firstdiv");
                 var finalDiv = appBar.querySelector(".win-finaldiv");
-                var clickEater = document.querySelector(".win-legacyappbarclickeater");
+                var clickEater = document.querySelector("." + _Constants._clickEatingAppBarClass);
 
                 // Verify light dismiss properties.
                 msg = "Light dismiss AppBar should not be sticky";

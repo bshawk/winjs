@@ -475,8 +475,8 @@ declare module WinJS {
         }
 
         /**
-        * Represents a husk of the old AppBar control, contains limited functionality. 
-          Currently only used by NavBar and is planned to be phased out completely.
+        * Remnants of the previous implementation of the AppBar control, contains limited functionality. 
+          Currently only used by NavBar and is planned to be replaced by a new implementation.
         **/
         class _LegacyAppBar {
             constructor(element?: HTMLElement, options?: any);
