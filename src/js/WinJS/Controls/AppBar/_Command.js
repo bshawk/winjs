@@ -13,7 +13,7 @@ define([
     '../../Utilities/_ElementUtilities',
     '../Flyout/_Overlay',
     '../Tooltip',
-    './_Constants',
+    '../_LegacyAppBar/_Constants',
     './_Icon'
     ], function appBarCommandInit(exports, _Global, _WinRT, _Base, _ErrorFromName, _Resources, _Control, _Dispose, _ElementUtilities, _Overlay, Tooltip, _Constants, _Icon) {
     "use strict";
@@ -434,7 +434,6 @@ define([
                         if (!this._sendEvent(_Constants.commandVisibilityChanged)) {
                             style.visibility = originalVisibility;
                             style.display = originalDisplay;
-                            throw new _ErrorFromName("WinJS.UI.AppBarCommand.CannotChangeHiddenProperty", _Resources._formatString(_Overlay._Overlay.commonstrings.cannotChangeHiddenProperty, ""));
                         }
                     }
                 },

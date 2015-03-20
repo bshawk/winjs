@@ -14,7 +14,7 @@ module CorsicaTests {
     var _Constants;
     var _ToolBarConstants;
     var _element;
-    WinJS.Utilities._require(["WinJS/Controls/AppBar/_Constants"], function (constants) {
+    WinJS.Utilities._require(["WinJS/Controls/_LegacyAppBar/_Constants"], function (constants) {
         _Constants = constants;
     })
     WinJS.Utilities._require(["WinJS/Controls/ToolBar/_Constants"], function (constants) {

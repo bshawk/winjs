@@ -15,7 +15,7 @@ define([
     '../Utilities/_Dispose',
     '../Utilities/_ElementUtilities',
     '../Utilities/_Hoverable',
-    './AppBar/_Constants',
+    './_LegacyAppBar/_Constants',
     './Flyout/_Overlay'
 ], function flyoutInit(exports, _Global, _Base, _BaseUtils, _ErrorFromName, _Events, _Log, _Resources, _WriteProfilerMark, Animations, _Signal, _Dispose, _ElementUtilities, _Hoverable, _Constants, _Overlay) {
     "use strict";

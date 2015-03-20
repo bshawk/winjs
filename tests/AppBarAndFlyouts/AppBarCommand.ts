@@ -233,26 +233,19 @@ module CorsicaTests {
             AppBarElement.addEventListener("commandvisibilitychanged", function () {
                 commandVisibilityChangedCount++;
             });
-            AppBar.close();
+
             var cmd = AppBar.getCommandById("cmdA");
             cmd.hidden = true;
             LiveUnit.Assert.areEqual(true, cmd.hidden, "verify the command is now hidden");
             LiveUnit.Assert.areEqual(1, commandVisibilityChangedCount, "commandvisibilitychanged event should have been fired");
 
-            AppBar.open();
-            var result = false;
-            try {
-                cmd.hidden = false;
-            } catch (err) {
-                // we throw
-                result = true;
-            } finally {
-                LiveUnit.Assert.areEqual(true, cmd.hidden, "verify that hidden property did not change");
-                LiveUnit.Assert.areEqual(true, result, "verify the hidden property throw the exception");
-                LiveUnit.Assert.areEqual(2, commandVisibilityChangedCount, "commandvisibilitychanged event should have been fired");
-                AppBar.close();
-                document.body.removeChild(AppBarElement);
-            }
+            cmd.hidden = false;
+
+            LiveUnit.Assert.areEqual(false, cmd.hidden, "verify the command is now visible");
+            LiveUnit.Assert.areEqual(2, commandVisibilityChangedCount, "commandvisibilitychanged event should have been fired");
+            AppBar.close();
+            document.body.removeChild(AppBarElement);
+
         }
 
         // Tests for dispose members and requirements

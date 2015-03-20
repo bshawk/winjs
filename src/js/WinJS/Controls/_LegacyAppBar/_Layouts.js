@@ -16,7 +16,7 @@ define([
     '../../Utilities/_Control',
     '../../Utilities/_Dispose',
     '../../Utilities/_ElementUtilities',
-    './_Command',
+    '../AppBar/_Command',
     './_Constants'
 ], function appBarLayoutsInit(exports, _TransitionAnimation, BindingList, _BaseUtils, _Global, _Base, _ErrorFromName, _Resources, _WriteProfilerMark, ToolBar, _ToolBarConstants, Promise, Scheduler, _Control, _Dispose, _ElementUtilities, _Command, _Constants) {
     "use strict";

@@ -33,7 +33,7 @@ define([
     'WinJS/Controls/Pivot',
     'WinJS/Controls/Hub',
     'WinJS/Controls/Flyout',
-    'WinJS/Controls/AppBar',
+    'WinJS/Controls/_LegacyAppBar',
     'WinJS/Controls/Menu',
     'WinJS/Controls/SearchBox',
     'WinJS/Controls/SettingsFlyout',

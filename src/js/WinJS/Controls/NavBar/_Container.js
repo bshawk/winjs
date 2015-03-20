@@ -20,7 +20,7 @@ define([
     '../../Utilities/_ElementUtilities',
     '../../Utilities/_KeyboardBehavior',
     '../../Utilities/_UI',
-    '../AppBar/_Constants',
+    '../_LegacyAppBar/_Constants',
     '../Repeater',
     './_Command'
 ], function NavBarContainerInit(exports, _Global, _Base, _BaseUtils, _ErrorFromName, _Events, _Log, _Resources, _WriteProfilerMark, Animations, _TransitionAnimation, BindingList, ControlProcessor, Navigation, Promise, Scheduler, _Control, _ElementUtilities, _KeyboardBehavior, _UI, _Constants, Repeater, _Command) {

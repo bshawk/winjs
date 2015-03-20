@@ -10,7 +10,7 @@ define([
     '../Scheduler',
     '../Utilities/_ElementUtilities',
     '../Utilities/_Hoverable',
-    './AppBar',
+    './_LegacyAppBar',
     './NavBar/_Command',
     './NavBar/_Container',
     'require-style!less/styles-navbar',
