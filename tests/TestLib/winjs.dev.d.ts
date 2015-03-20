@@ -466,7 +466,7 @@ declare module WinJS {
             winControl: ICommand
         }
 
-        class PrivateAppBar extends AppBar {
+        class PrivateLegacyAppBar  extends _LegacyAppBar {
             getCommandById(id: string): PrivateCommand;
             showCommands(commands: any[], immediate?: boolean): void;
             showCommands(commands: any, immediate?: boolean): void;

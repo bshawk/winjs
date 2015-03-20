@@ -6,7 +6,7 @@
 module CorsicaTests {
     "use strict";
 
-    var PrivateAppBar = <typeof WinJS.UI.PrivateAppBar>WinJS.UI.AppBar;
+    var PrivateLegacyAppBar = <typeof WinJS.UI.PrivateLegacyAppBar>WinJS.UI._LegacyAppBar;
     var AppBarCommand = <typeof WinJS.UI.PrivateCommand>WinJS.UI.AppBarCommand;
 
     export class AppBarCommandTests {
@@ -226,7 +226,7 @@ module CorsicaTests {
             var AppBarElement = document.createElement("div");
             document.body.appendChild(AppBarElement);
             LiveUnit.LoggingCore.logComment("Attempt to Instantiate the AppBar element");
-            var AppBar = new PrivateAppBar(AppBarElement, { commands: { type: 'separator', id: 'sep' } });
+            var AppBar = new PrivateLegacyAppBar(AppBarElement, { commands: { type: 'separator', id: 'sep' } });
             LiveUnit.LoggingCore.logComment("set commands");
             AppBar.commands = [{ id: 'cmdA', label: 'One', icon: 'back', section: 'primary', tooltip: 'Test glyph by name' }];
             var commandVisibilityChangedCount = 0;

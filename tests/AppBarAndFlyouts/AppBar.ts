@@ -8,7 +8,7 @@
 module CorsicaTests {
 
 
-    var PrivateAppBar = <typeof WinJS.UI.PrivateAppBar>WinJS.UI.AppBar;
+    var PrivateLegacyAppBar = <typeof WinJS.UI.PrivateLegacyAppBar>WinJS.UI._LegacyAppBar;
     var AppBarCommand = <typeof WinJS.UI.PrivateCommand>WinJS.UI.AppBarCommand;
 
     var _Constants;
@@ -23,7 +23,7 @@ module CorsicaTests {
 
     "use strict";
 
-    function asyncOpen(appbar: WinJS.UI.PrivateAppBar): WinJS.Promise<any> {
+    function asyncOpen(appbar: WinJS.UI.PrivateLegacyAppBar): WinJS.Promise<any> {
         return new WinJS.Promise(function (c, e, p): void {
             function afterShow(): void {
                 appbar.removeEventListener("afteropen", afterShow, false);
@@ -43,7 +43,7 @@ module CorsicaTests {
             var root = document.getElementById("appBarDiv");
             root.innerHTML =
             "<button id='outsideAppBar'>outsideAppBar</button>" +
-            "<div id='appBar' data-win-control='WinJS.UI.AppBar'>" +
+            "<div id='appBar' data-win-control='WinJS.UI._LegacyAppBar'>" +
             "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button0\", label:\"Button 0\", type:\"button\", section:\"primary\"}'></button>" +
             "<hr data-win-control='WinJS.UI.AppBarCommand' data-win-options='{type:\"separator\", hidden: true, section:\"primary\"}' />" +
             "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button1\", label:\"Button 1\", type:\"button\", section:\"primary\"}'></button>" +
@@ -103,13 +103,13 @@ module CorsicaTests {
 
 
     function hideAllAppBars() {
-        var AppBars = document.querySelectorAll(".win-appbar");
+        var AppBars = document.querySelectorAll(".win-legacyappbar");
         AppBars = Array.prototype.map.call(AppBars, function (AppBar) { return AppBar.winControl; });
         return WinJS.UI._Overlay._hideAppBars(AppBars);
     };
 
     function showAllAppBars() {
-        var AppBars = document.querySelectorAll(".win-appbar");
+        var AppBars = document.querySelectorAll(".win-legacyappbar");
         AppBars = Array.prototype.map.call(AppBars, function (AppBar) { return AppBar.winControl; });
         return WinJS.UI._Overlay._showAppBars(AppBars);
     }
@@ -138,7 +138,7 @@ module CorsicaTests {
 
         // Test AppBar Instantiation
         testAppBarInstantiation = function () {
-            var AppBar = new WinJS.UI.AppBar(_element, { commands: { type: 'separator', id: 'sep' } });
+            var AppBar = new PrivateLegacyAppBar(_element, { commands: { type: 'separator', id: 'sep' } });
             LiveUnit.LoggingCore.logComment("AppBar has been instantiated.");
             LiveUnit.Assert.isNotNull(AppBar, "AppBar element should not be null when instantiated.");
 
@@ -162,7 +162,7 @@ module CorsicaTests {
         // Test AppBar Instantiation with null element
         testAppBarNullInstantiation = function () {
             LiveUnit.LoggingCore.logComment("Attempt to Instantiate the AppBar with null element");
-            var AppBar = new WinJS.UI.AppBar(null, { commands: { type: 'separator', id: 'sep' } });
+            var AppBar = new PrivateLegacyAppBar(null, { commands: { type: 'separator', id: 'sep' } });
             LiveUnit.Assert.isNotNull(AppBar, "AppBar instantiation was null when sent a null AppBar element.");
         }
     //testAppBarNullInstantiation["Description"] = "Test AppBar Instantiation with null AppBar element";
@@ -170,7 +170,7 @@ module CorsicaTests {
         // Test AppBar Instantiation with no options
         testAppBarEmptyInstantiation = function () {
             LiveUnit.LoggingCore.logComment("Attempt to Instantiate the AppBar with empty constructor");
-            var AppBar = new WinJS.UI.AppBar();
+            var AppBar = new PrivateLegacyAppBar();
             LiveUnit.Assert.isNotNull(AppBar.element, "AppBar.element is null");
             LiveUnit.Assert.isNotNull(AppBar, "AppBar instantiation was null when sent a Empty AppBar element.");
         }
@@ -179,12 +179,12 @@ module CorsicaTests {
         // Test multiple instantiation of the same AppBar DOM element
         testAppBarMultipleInstantiation() {
             AppBarTests.prototype.testAppBarMultipleInstantiation["LiveUnit.ExpectedException"] = { message: "Invalid argument: Controls may only be instantiated one time for each DOM element" };
-            var AppBar = new WinJS.UI.AppBar(_element, { commands: { type: 'separator', id: 'sep' } });
+            var AppBar = new PrivateLegacyAppBar(_element, { commands: { type: 'separator', id: 'sep' } });
             LiveUnit.LoggingCore.logComment("AppBar has been instantiated.");
             LiveUnit.Assert.isNotNull(AppBar, "AppBar element should not be null when instantiated.");
             var error;
             try {
-                new WinJS.UI.AppBar(_element, { commands: { type: 'separator', id: 'sep' } });
+                new PrivateLegacyAppBar(_element, { commands: { type: 'separator', id: 'sep' } });
             } catch (e) {
                 error = e;
             } finally {
@@ -202,7 +202,7 @@ module CorsicaTests {
                 var options = { commands: { type: 'separator', id: 'sep' } };
                 options[paramName] = value;
                 document.body.appendChild(div);
-                var AppBar = new WinJS.UI.AppBar(div, options);
+                var AppBar = new PrivateLegacyAppBar(div, options);
                 LiveUnit.Assert.isNotNull(AppBar);
                 document.body.removeChild(div);
             }
@@ -214,7 +214,7 @@ module CorsicaTests {
                 var options = { commands: { type: 'separator', id: 'sep' } };
                 options[paramName] = value;
                 try {
-                    new WinJS.UI.AppBar(div, options);
+                    new PrivateLegacyAppBar(div, options);
                     LiveUnit.Assert.fail("Expected creating AppBar with " + paramName + "=" + value + " to throw an exception");
                 } catch (e) {
                     var exception = e;
@@ -254,13 +254,12 @@ module CorsicaTests {
             testGoodInitOption("closedDisplayMode", undefined);
 
             LiveUnit.LoggingCore.logComment("Testing element");
-            //testBadInitOption("element", {}, WinJS.UI.AppBar.badElement);
         }
     //testAppBarParams["Description"] = "Test initializing a AppBar with good and bad initialization options";
 
         testDefaultAppBarParameters = function () {
             LiveUnit.LoggingCore.logComment("Attempt to Instantiate the AppBar element");
-            var AppBar = new PrivateAppBar(_element, { commands: { type: 'separator', id: 'sep' } });
+            var AppBar = new PrivateLegacyAppBar(_element, { commands: { type: 'separator', id: 'sep' } });
             LiveUnit.LoggingCore.logComment("AppBar has been instantiated.");
             LiveUnit.Assert.isNotNull(AppBar, "AppBar element should not be null when instantiated.");
 
@@ -275,7 +274,7 @@ module CorsicaTests {
         // Simple Function Tests
         testSimpleAppBarTestsFunctions = function () {
             LiveUnit.LoggingCore.logComment("Attempt to Instantiate the AppBar element");
-            var AppBar = new PrivateAppBar(_element, { commands: { type: 'separator', id: 'sep' } });
+            var AppBar = new PrivateLegacyAppBar(_element, { commands: { type: 'separator', id: 'sep' } });
             LiveUnit.LoggingCore.logComment("AppBar has been instantiated.");
             LiveUnit.Assert.isNotNull(AppBar, "AppBar element should not be null when instantiated.");
 
@@ -311,7 +310,7 @@ module CorsicaTests {
             var abc1 = new AppBarCommand(document.createElement("button"), { label: "abc1" });
             var abc2 = new AppBarCommand(document.createElement("button"), { label: "abc2" });
 
-            var ab = new PrivateAppBar(null, { commands: [abc1, abc2] });
+            var ab = new PrivateLegacyAppBar(null, { commands: [abc1, abc2] });
             ab._updateFirstAndFinalDiv();
             LiveUnit.Assert.isTrue(ab.dispose);
             LiveUnit.Assert.isFalse(ab._disposed);
@@ -330,7 +329,7 @@ module CorsicaTests {
             AppBarTests.prototype.testAppBarThrowsWhenPlacementIsSetAndAppBarVisible["LiveUnit.ExpectedException"] = {
                 message: "Invalid argument: The placement property cannot be set when the AppBar is visible, call hide() first"
             }
-            var AppBar = new WinJS.UI.AppBar(_element);
+            var AppBar = new PrivateLegacyAppBar(_element);
             LiveUnit.LoggingCore.logComment("AppBar has been instantiated.");
             LiveUnit.Assert.isNotNull(AppBar, "AppBar element should not be null when instantiated.");
             AppBar.open();
@@ -339,7 +338,7 @@ module CorsicaTests {
 
         testSynchronousShowHide = function (complete) {
             var htmlString =
-                "<div data-win-control='WinJS.UI.AppBar'>" +
+                "<div data-win-control='WinJS.UI._LegacyAppBar'>" +
                 "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button0\", label:\"Button 0\", type:\"button\", section:\"primary\"}'></button>" +
                 "<hr data-win-control='WinJS.UI.AppBarCommand' data-win-options='{type:\"separator\", hidden: true, section:\"primary\"}' />" +
                 "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button1\", label:\"Button 1\", type:\"button\", section:\"primary\"}'></button>" +
@@ -348,7 +347,7 @@ module CorsicaTests {
             _element.innerHTML = htmlString;
             WinJS.UI.processAll().
                 then(function () {
-                    var appbar = document.querySelector(".win-appbar").winControl;
+                    var appbar = document.querySelector(".win-legacyappbar").winControl;
                     appbar.open();
                     appbar.close();
                     appbar.open();
@@ -380,7 +379,7 @@ module CorsicaTests {
             */
 
             // Using commands _layout, since this keyboarding logic is validated in the menu _layout on ToolBar unit tests.
-            var AppBar = new WinJS.UI.AppBar(_element, { _layout: "commands" });
+            var AppBar = new PrivateLegacyAppBar(_element, { _layout: "commands" });
             LiveUnit.LoggingCore.logComment("AppBar has been instantiated.");
             LiveUnit.Assert.isNotNull(AppBar, "AppBar element should not be null when instantiated.");
             AppBar.open();
@@ -440,7 +439,7 @@ module CorsicaTests {
                 "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button1\", label:\"Button 1\", type:\"button\", section:\"primary\"}'></button>";
 
             _element.innerHTML = htmlString;
-            var AppBar = new WinJS.UI.AppBar(_element, { _layout: 'custom' });
+            var AppBar = new PrivateLegacyAppBar(_element, { _layout: 'custom' });
             LiveUnit.LoggingCore.logComment("AppBar has been instantiated.");
             LiveUnit.Assert.isNotNull(AppBar, "AppBar element should not be null when instantiated.");
             AppBar.open();
@@ -454,7 +453,7 @@ module CorsicaTests {
         };
 
         xtestKeyboardingInEmptyAppBar = function (complete) { // TODO delete entirely or migrate into commanding surface tests. [jessesh]
-            var AppBar = new WinJS.UI.AppBar(_element);
+            var AppBar = new PrivateLegacyAppBar(_element);
             LiveUnit.LoggingCore.logComment("AppBar has been instantiated.");
             LiveUnit.Assert.isNotNull(AppBar, "AppBar element should not be null when instantiated.");
             AppBar.open();
@@ -526,7 +525,7 @@ module CorsicaTests {
                     2) "rangeContainer" Content Command: "rangeContainer" (firstElementFocus and lastElementFocus are set to the <input type="range"/> element.
                     3) "x8" Content Command: "adele" (firstElementFocus is default and lastElementFocus is set to #adele.)
             */
-            var AppBar = new WinJS.UI.AppBar(_element, { _layout: 'commands' });
+            var AppBar = new PrivateLegacyAppBar(_element, { _layout: 'commands' });
             LiveUnit.LoggingCore.logComment("AppBar has been instantiated.");
             LiveUnit.Assert.isNotNull(AppBar, "AppBar element should not be null when instantiated.");
             AppBar.open();
@@ -618,7 +617,7 @@ module CorsicaTests {
                     1) "progressCmd" Content Command: "progress" (firstElementFocus is set to "#progress" and lastElementFocus is default)
                     2) "x8" Content Command: "adele" (firstElementFocus is default and lastElementFocus is set to #adele)
             */
-            var AppBar = new WinJS.UI.AppBar(_element, { _layout: 'commands' });
+            var AppBar = new PrivateLegacyAppBar(_element, { _layout: 'commands' });
             LiveUnit.LoggingCore.logComment("AppBar has been instantiated.");
             LiveUnit.Assert.isNotNull(AppBar, "AppBar element should not be null when instantiated.");
             AppBar.open();
@@ -663,7 +662,7 @@ module CorsicaTests {
             WinJS.UI._Overlay._clickEatingAppBarDiv = null;
             WinJS.UI._Overlay._clickEatingFlyoutDiv = null;
 
-            var appBar = new WinJS.UI.AppBar(document.getElementById("appBarDiv"));
+            var appBar = new PrivateLegacyAppBar(document.getElementById("appBarDiv"));
             document.body.appendChild(appBar.element);
             appBar.open();
 
@@ -692,7 +691,7 @@ module CorsicaTests {
             "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button1\", label:\"Button 1\", type:\"button\", section:\"primary\"}'></button>" +
             "</div>";
             var outsideAppBar = root.querySelector("#outsideAppBar");
-            var appBar = new PrivateAppBar(<HTMLElement>root.querySelector("#appBar"));
+            var appBar = new PrivateLegacyAppBar(<HTMLElement>root.querySelector("#appBar"));
 
             new WinJS.Promise(function (c) {
                 asyncOpen(appBar).then(function () {
@@ -725,7 +724,7 @@ module CorsicaTests {
                 appBarEl.appendChild(cmd.element);
             })
 
-            var appBar = new PrivateAppBar(<HTMLElement>appBarEl);
+            var appBar = new PrivateLegacyAppBar(<HTMLElement>appBarEl);
             return new WinJS.Promise(function (c) {
                 var focusFrom = appBar.getCommandById("Button0").element;
                 var focusTo = appBar.getCommandById("Button1").element;
@@ -747,7 +746,7 @@ module CorsicaTests {
         testMoveFocusFromMenuToAppBar = function (complete) {
             createMenuInAppBar().then(function () {
                 var root = document.querySelector("#appBarDiv");
-                var appBar: WinJS.UI.PrivateAppBar = root.querySelector("#appBar").winControl;
+                var appBar: WinJS.UI.PrivateLegacyAppBar = root.querySelector("#appBar").winControl;
                 var menu = root.querySelector("#myMenu").winControl;
                 var button1 = appBar.getCommandById("Button1").element;
 
@@ -765,7 +764,7 @@ module CorsicaTests {
             createMenuInAppBar().then(function () {
                 var root = document.querySelector("#appBarDiv");
                 var outsideAppBar = root.querySelector("#outsideAppBar");
-                var appBar: WinJS.UI.PrivateAppBar = root.querySelector("#appBar").winControl;
+                var appBar: WinJS.UI.PrivateLegacyAppBar = root.querySelector("#appBar").winControl;
                 var menu = root.querySelector("#myMenu").winControl;
 
                 Helper.focus(outsideAppBar).then(function () {
@@ -797,10 +796,10 @@ module CorsicaTests {
             "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button3\", label:\"Button 1\", type:\"button\", section:\"secondary\"}'></button>" +
             "<input type=\"range\" />" +
             "</div>";
-            var topBar = new PrivateAppBar(<HTMLElement>root.querySelector("#topBar"), { placement: 'top', _layout: 'commands', closedDisplayMode: topInitialCDM });
-            var bottomBar = new PrivateAppBar(<HTMLElement>root.querySelector("#bottomBar"), { placement: 'bottom', _layout: 'custom', closedDisplayMode: bottomInitialCDM });
+            var topBar = new PrivateLegacyAppBar(<HTMLElement>root.querySelector("#topBar"), { placement: 'top', _layout: 'commands', closedDisplayMode: topInitialCDM });
+            var bottomBar = new PrivateLegacyAppBar(<HTMLElement>root.querySelector("#bottomBar"), { placement: 'bottom', _layout: 'custom', closedDisplayMode: bottomInitialCDM });
 
-            var verifyHiddenIndicators = function (expected, appBar: WinJS.UI.PrivateAppBar, msg) {
+            var verifyHiddenIndicators = function (expected, appBar: WinJS.UI.PrivateLegacyAppBar, msg) {
                 LiveUnit.LoggingCore.logComment("Test: " + msg);
                 LiveUnit.Assert.areEqual(expected, !appBar.opened, msg);
                 LiveUnit.Assert.areEqual(expected, appBar._visiblePosition !== displayModeVisiblePositions.shown, msg);
@@ -992,7 +991,7 @@ module CorsicaTests {
                 verifyHasInvokeButton(appBar);
 
                 // Now that we have verified the invoke button, ensure that all other immediate children are not displayed or tabbable.
-                var childrenMinusInvokeButton = document.body.querySelectorAll("#" + appBar.id + " > :not(.win-appbar-invokebutton)");
+                var childrenMinusInvokeButton = document.body.querySelectorAll("#" + appBar.id + " > :not(.win-legacyappbar-invokebutton)");
                 msg = "Except for InvokeButton, children of Closed Minimal AppBar should not be visible or have dimensions.";
                 LiveUnit.LoggingCore.logComment("Test: " + msg);
                 failures = checkShouldBeDisplayNone(childrenMinusInvokeButton, true);
@@ -1032,7 +1031,7 @@ module CorsicaTests {
                 verifyHasInvokeButton(appBar);
 
                 // Now that we have verified the invoke button, ensure that all other immediate children are not displayed or tabbable.
-                var childrenMinusInvokeButton = document.body.querySelectorAll("#" + appBar.id + " > :not(.win-appbar-invokebutton)");
+                var childrenMinusInvokeButton = document.body.querySelectorAll("#" + appBar.id + " > :not(.win-legacyappbar-invokebutton)");
                 msg = "Children of Closed Compact AppBar should be visible or have dimensions.";
                 LiveUnit.LoggingCore.logComment("Test: " + msg);
                 failures = checkShouldBeDisplayNone(childrenMinusInvokeButton, false);
@@ -1134,7 +1133,7 @@ module CorsicaTests {
                 if (appBar.winControl._layoutImpl !== _Constants.appBarLayoutMenu) {
                     msg = "Content hosted by Open AppBar should have dimensions. Menu _layout can have hidden elements (e.g. leading/trailing separators)";
                     LiveUnit.LoggingCore.logComment("Test: " + msg);
-                    var contents = appBar.querySelectorAll("*:not(.win-appbar-invokebutton):not(.win-finaldiv):not(.win-firstdiv)");
+                    var contents = appBar.querySelectorAll("*:not(.win-legacyappbar-invokebutton):not(.win-finaldiv):not(.win-firstdiv)");
                     failures = checkShouldBeDisplayNone(contents, false);
                     LiveUnit.Assert.isFalse(failures.length, msg);
                 }
@@ -1142,7 +1141,7 @@ module CorsicaTests {
                 // Verify appBar sub components are in proper DOM order.
                 var firstDiv = appBar.querySelector(".win-firstdiv");
                 var finalDiv = appBar.querySelector(".win-finaldiv");
-                var invokeButton = appBar.querySelector(".win-appbar-invokebutton");
+                var invokeButton = appBar.querySelector(".win-legacyappbar-invokebutton");
                 var children = appBar.children;
 
                 msg = "firstDiv should be first element in open AppBar";
@@ -1165,12 +1164,12 @@ module CorsicaTests {
                 var msg,
                     failures;
 
-                var invokeButton = appBar.querySelector(".win-appbar-invokebutton");
+                var invokeButton = appBar.querySelector(".win-legacyappbar-invokebutton");
                 if (appBar.winControl._layoutImpl === _Constants.appBarLayoutMenu &&
                     getComputedStyle(invokeButton).visibility === "hidden") {
                     invokeButton = appBar.querySelector("." + _ToolBarConstants.overflowButtonCssClass);
                 }
-                var invokeButtonSubTree = appBar.querySelectorAll(".win-appbar-invokebutton *");
+                var invokeButtonSubTree = appBar.querySelectorAll(".win-legacyappbar-invokebutton *");
 
                 msg = "AppBar with closedDisplayMode !== 'none' should have InvokeButton TabStop.";
                 failures = checkShouldBeTabStop(invokeButton, true);
@@ -1201,8 +1200,8 @@ module CorsicaTests {
                 var msg,
                     failures;
 
-                var invokeButton = appBar.querySelector(".win-appbar-invokebutton");
-                var invokeButtonSubTree = appBar.querySelectorAll(".win-appbar-invokebutton *");
+                var invokeButton = appBar.querySelector(".win-legacyappbar-invokebutton");
+                var invokeButtonSubTree = appBar.querySelectorAll(".win-legacyappbar-invokebutton *");
 
                 msg = "AppBar with 'none' closedDisplayMode should not have InvokeButton tab stop.";
                 failures = checkShouldBeTabStop(invokeButton, false);
@@ -1225,7 +1224,7 @@ module CorsicaTests {
 
                 var firstDiv = appBar.querySelector(".win-firstdiv");
                 var finalDiv = appBar.querySelector(".win-finaldiv");
-                var clickEater = document.querySelector(".win-appbarclickeater");
+                var clickEater = document.querySelector(".win-legacyappbarclickeater");
 
                 // Verify sticky properties.
                 msg = "Sticky AppBar should be sticky";
@@ -1260,7 +1259,7 @@ module CorsicaTests {
 
                 var firstDiv = appBar.querySelector(".win-firstdiv");
                 var finalDiv = appBar.querySelector(".win-finaldiv");
-                var clickEater = document.querySelector(".win-appbarclickeater");
+                var clickEater = document.querySelector(".win-legacyappbarclickeater");
 
                 // Verify light dismiss properties.
                 msg = "Light dismiss AppBar should not be sticky";
@@ -1303,7 +1302,7 @@ module CorsicaTests {
                 "<hr data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Hr0\", type:\"separator\", hidden: false, section:\"primary\"}' />" +
                 "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button1\", label:\"Button 1\", type:\"button\", section:\"secondary\"}'></button>" +
                 "</div>";
-                var appBar = new WinJS.UI.AppBar(<HTMLElement>root.querySelector("#appBar"), {
+                var appBar = new PrivateLegacyAppBar(<HTMLElement>root.querySelector("#appBar"), {
                     sticky: false,
                     _layout: _layout
                 });
@@ -1350,7 +1349,7 @@ module CorsicaTests {
             // Verifies that triggering the invokeButton on a opened AppBar will close all AppBar.
 
             var root = document.getElementById("appBarDiv");
-            var appBar = new PrivateAppBar(null, { placement: 'bottom', commands: [{ label: 'bottom cmd', icon: 'edit' }], closedDisplayMode: 'minimal' })
+            var appBar = new PrivateLegacyAppBar(null, { placement: 'bottom', commands: [{ label: 'bottom cmd', icon: 'edit' }], closedDisplayMode: 'minimal' })
             root.appendChild(appBar.element);
 
             function verifyOpened(msg?) {
@@ -1378,8 +1377,8 @@ module CorsicaTests {
 
         testSingleAppBarLightDismissFocusWrapping = function (complete) {
             var root = document.getElementById("appBarDiv");
-            var topBar = new WinJS.UI.AppBar(null, { placement: 'top', commands: [{ id: 'top1', icon: 'add' }, { id: 'top2', icon: 'edit' }, { id: 'top3', icon: 'camera' }], closedDisplayMode: 'none' });
-            var bottomBar = new WinJS.UI.AppBar(null, { placement: 'bottom', commands: [{ id: 'bot1', icon: 'add' }, { id: 'bot2', icon: 'edit' }, { id: 'bot3', icon: 'camera' }], closedDisplayMode: 'none' });
+            var topBar = new PrivateLegacyAppBar(null, { placement: 'top', commands: [{ id: 'top1', icon: 'add' }, { id: 'top2', icon: 'edit' }, { id: 'top3', icon: 'camera' }], closedDisplayMode: 'none' });
+            var bottomBar = new PrivateLegacyAppBar(null, { placement: 'bottom', commands: [{ id: 'bot1', icon: 'add' }, { id: 'bot2', icon: 'edit' }, { id: 'bot3', icon: 'camera' }], closedDisplayMode: 'none' });
             root.appendChild(topBar.element);
             root.appendChild(bottomBar.element);
 
@@ -1437,7 +1436,7 @@ module CorsicaTests {
                 ];
 
             var root = document.getElementById("appBarDiv");
-            var topBar = new PrivateAppBar(null, { placement: 'top', commands: commandsArgs, closedDisplayMode: 'minimal' });
+            var topBar = new PrivateLegacyAppBar(null, { placement: 'top', commands: commandsArgs, closedDisplayMode: 'minimal' });
             root.appendChild(topBar.element);
 
             asyncOpen(topBar).then(function () {
@@ -1521,7 +1520,7 @@ module CorsicaTests {
             var backClickEvent;
 
             var root = document.getElementById("appBarDiv");
-            var appbar = new WinJS.UI.AppBar();
+            var appbar = new PrivateLegacyAppBar();
             root.appendChild(appbar.element);
             appbar.addEventListener("afteropen", simulateBackClick, false);
             appbar.open();
@@ -1536,7 +1535,7 @@ module CorsicaTests {
             "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button1\", label:\"Button 2\", type:\"button\", section:\"secondary\"}'></button>" +
             "<button data-win-control='WinJS.UI.AppBarCommand' data-win-options='{id:\"Button1\", label:\"Button 3\", type:\"button\", section:\"selection\"}'></button>" +
             "</div>";
-            var appBar = new WinJS.UI.AppBar(<HTMLElement>root.querySelector("#appBar"), { _layout: 'commands' });
+            var appBar = new PrivateLegacyAppBar(<HTMLElement>root.querySelector("#appBar"), { _layout: 'commands' });
 
             var primaryCommands = appBar.element.querySelectorAll(".win-primarygroup .win-command");
             var secondaryCommands = appBar.element.querySelectorAll(".win-secondarygroup .win-command");
@@ -1554,7 +1553,7 @@ module CorsicaTests {
         testChangingAppBarPlacementUpdatesElementPositionImmediately() {
 
             var root = document.getElementById("appBarDiv");
-            var appBar = new WinJS.UI.AppBar(null, { placement: 'top' });
+            var appBar = new PrivateLegacyAppBar(null, { placement: 'top' });
             root.appendChild(appBar.element);
 
             var oldRect: ClientRect,
@@ -1582,7 +1581,7 @@ module CorsicaTests {
             // Verifies that the background color of the entire AppBar changes when styling the appbar element.
 
             var root = document.getElementById("appBarDiv");
-            var appBar = new WinJS.UI.AppBar(null, { _layout: "menu" });
+            var appBar = new PrivateLegacyAppBar(null, { _layout: "menu" });
             root.appendChild(appBar.element);
 
             appBar.element.style.backgroundColor = "rgb(255, 100, 05)";
@@ -1606,7 +1605,7 @@ module CorsicaTests {
                 root = document.getElementById("appBarDiv");
 
             ["custom", "commands", "menu"].forEach(function (_layout) {
-                var appBar = new WinJS.UI.AppBar(null, { _layout: _layout, commands: commands });
+                var appBar = new PrivateLegacyAppBar(null, { _layout: _layout, commands: commands });
                 root.appendChild(appBar.element);
 
                 commands.forEach(function (command, index) {
@@ -1635,8 +1634,8 @@ module CorsicaTests {
                 appBarEl = document.createElement("DIV");
             root.appendChild(appBarEl);
 
-            var appBar = new WinJS.UI.PrivateAppBar(appBarEl, { _layout: 'menu', commands: commands }),
-                appBarMenuElement = appBar.element.querySelector(".win-appbar-menu"),
+            var appBar = new PrivateLegacyAppBar(appBarEl, { _layout: 'menu', commands: commands }),
+                appBarMenuElement = appBar.element.querySelector(".win-legacyappbar-menu"),
                 toolBarElement = appBarMenuElement.querySelector(".win-toolbar"),
                 overFlowElement = toolBarElement.querySelector(".win-toolbar-overflowarea");
 

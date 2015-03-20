@@ -40,7 +40,7 @@ define([
             };
 
             var MenuCommand = _Base.Class.define(function MenuCommand_ctor(element, options) {
-                /// <signature helpKeyword="WinJS.UI.AppBarCommand.MenuCommand">
+                /// <signature helpKeyword="WinJS.UI.MenuCommand.MenuCommand">
                 /// <summary locid="WinJS.UI.MenuCommand.constructor">
                 /// Creates a new MenuCommand object.
                 /// </summary>
