@@ -7,24 +7,24 @@ define([
 
     _Base.Namespace._moduleDefine(exports, null, {
         // AppBar class names.
-        appBarClass: "win-appbar",
+        appBarClass: "win-legacyappbar",
         firstDivClass: "win-firstdiv",
         finalDivClass: "win-finaldiv",
-        invokeButtonClass: "win-appbar-invokebutton",
-        ellipsisClass: "win-appbar-ellipsis",
+        invokeButtonClass: "win-legacyappbar-invokebutton",
+        ellipsisClass: "win-legacyappbar-ellipsis",
         primaryCommandsClass: "win-primarygroup",
         secondaryCommandsClass: "win-secondarygroup",
         commandLayoutClass: "win-commandlayout",
         menuLayoutClass: "win-menulayout",
         topClass: "win-top",
         bottomClass: "win-bottom",
-        showingClass : "win-appbar-opening",
-        shownClass : "win-appbar-opened",
-        hidingClass : "win-appbar-closing",
-        hiddenClass: "win-appbar-closed",
-        compactClass: "win-appbar-compact",
-        minimalClass: "win-appbar-minimal",
-        menuContainerClass: "win-appbar-menu",
+        showingClass : "win-legacyappbar-opening",
+        shownClass : "win-legacyappbar-opened",
+        hidingClass : "win-legacyappbar-closing",
+        hiddenClass: "win-legacyappbar-closed",
+        compactClass: "win-legacyappbar-compact",
+        minimalClass: "win-legacyappbar-minimal",
+        menuContainerClass: "win-legacyappbar-menu",
 
         // Constants for AppBar placement
         appBarPlacementTop: "top",
@@ -78,7 +78,7 @@ define([
 
         narrowClass: "win-narrow",
         wideClass: "win-wide",
-        _clickEatingAppBarClass: "win-appbarclickeater",
+        _clickEatingAppBarClass: "win-legacyappbarclickeater",
         _clickEatingFlyoutClass: "win-flyoutmenuclickeater",
         _visualViewportClass: "win-visualviewport-space",
 

@@ -466,7 +466,33 @@ declare module WinJS {
             winControl: ICommand
         }
 
-        class PrivateAppBar extends AppBar {
+        /**
+        * Represents a husk of the old AppBar control, contains limited functionality. 
+          Currently only used by NavBar and is planned to be phased out completely.
+        **/
+        class _LegacyAppBar {
+            constructor(element?: HTMLElement, options?: any);
+            onafterclose(eventInfo: Event): void;
+            onafteropen(eventInfo: Event): void;
+            onbeforeclose(eventInfo: Event): void;
+            onbeforeopen(eventInfo: Event): void;
+            addEventListener(type: string, listener: Function, useCapture?: boolean): void;
+            dispatchEvent(type: string, eventProperties: any): boolean;
+            dispose(): void;
+            getCommandById(id: string): AppBarCommand;
+            close(): void;
+            hideCommands(commands: any[], immediate?: boolean): void;
+            removeEventListener(type: string, listener: Function, useCapture?: boolean): void;
+            open(): void;
+            showCommands(commands: any[], immediate?: boolean): void;
+            showOnlyCommands(commands: any[], immediate?: boolean): void;
+            closedDisplayMode: string;
+            commands: AppBarCommand[];
+            element: HTMLElement;
+            opened: boolean;
+            placement: string;
+        }
+        class PrivateLegacyAppBar extends _LegacyAppBar {
             getCommandById(id: string): PrivateCommand;
             showCommands(commands: any[], immediate?: boolean): void;
             showCommands(commands: any, immediate?: boolean): void;

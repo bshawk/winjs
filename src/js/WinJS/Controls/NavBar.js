@@ -10,12 +10,12 @@ define([
     '../Scheduler',
     '../Utilities/_ElementUtilities',
     '../Utilities/_Hoverable',
-    './AppBar',
+    './_LegacyAppBar',
     './NavBar/_Command',
     './NavBar/_Container',
     'require-style!less/styles-navbar',
     'require-style!less/colors-navbar'
-], function NavBarInit(_Global,_WinRT, _Base, _BaseUtils, _Events, _WriteProfilerMark, Promise, Scheduler, _ElementUtilities, _Hoverable, AppBar, _Command, _Container) {
+], function NavBarInit(_Global,_WinRT, _Base, _BaseUtils, _Events, _WriteProfilerMark, Promise, Scheduler, _ElementUtilities, _Hoverable, _LegacyAppBar, _Command, _Container) {
     "use strict";
 
     var customLayout = "custom";
@@ -46,7 +46,7 @@ define([
             var childrenProcessedEventName = "childrenprocessed";
             var createEvent = _Events._createEventProperty;
 
-            var NavBar = _Base.Class.derive(AppBar.AppBar, function NavBar_ctor(element, options) {
+            var NavBar = _Base.Class.derive(_LegacyAppBar._LegacyAppBar, function NavBar_ctor(element, options) {
                 /// <signature helpKeyword="WinJS.UI.NavBar.NavBar">
                 /// <summary locid="WinJS.UI.NavBar.constructor">
                 /// Creates a new NavBar.
@@ -74,7 +74,7 @@ define([
                 options.layout = customLayout;
                 options.closedDisplayMode = options.closedDisplayMode || "minimal";
 
-                AppBar.AppBar.call(this, element, options);
+                _LegacyAppBar._LegacyAppBar.call(this, element, options);
 
                 this._element.addEventListener("beforeopen", this._handleBeforeShow.bind(this));
 
@@ -98,7 +98,7 @@ define([
                     },
                     set: function (value) {
                         var newValue = (value  === "none" ? "none" : "minimal");
-                        Object.getOwnPropertyDescriptor(AppBar.AppBar.prototype, "closedDisplayMode").set.call(this, newValue);
+                        Object.getOwnPropertyDescriptor(_LegacyAppBar._LegacyAppBar.prototype, "closedDisplayMode").set.call(this, newValue);
                         this._closedDisplayMode = newValue;
                     },
                 },
@@ -153,13 +153,13 @@ define([
                     }
                     var that = this;
                     this._processChildren().then(function () {
-                        AppBar.AppBar.prototype._show.call(that);
+                        _LegacyAppBar._LegacyAppBar.prototype._show.call(that);
                     });
                 },
 
                 _handleBeforeShow: function NavBar_handleBeforeShow() {
-                    // Navbar needs to ensure its elements to have their correct height and width after AppBar changes display="none"
-                    // to  display="" and AppBar needs the elements to have their final height before it measures its own element height
+                    // Navbar needs to ensure its elements to have their correct height and width after _LegacyAppBar changes display="none"
+                    // to  display="" and _LegacyAppBar needs the elements to have their final height before it measures its own element height
                     // to do the slide in animation over the correct amount of pixels.
                     if (this._disposed) {
                         return;
