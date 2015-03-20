@@ -425,6 +425,7 @@ export class _CommandingSurface {
     }
 
     deferredDomUpate(): void { 
+        // Notify the machine that an update has been requested.
         this._machine.updateDom();
     }
     

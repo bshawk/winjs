@@ -336,8 +336,8 @@ export class ToolBarNew {
             } else {
                 this._updateDomImpl_renderClosed();
             }
+            rendered.isOpenedMode = this._isOpenedMode;
         }
-        rendered.isOpenedMode = this._isOpenedMode;
         this._commandingSurface.updateDomImpl();
     }
 

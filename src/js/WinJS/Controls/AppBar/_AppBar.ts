@@ -172,7 +172,6 @@ export class AppBar {
                     this._commandingSurface.overflowDirection = "top";
                     break;
             }
-
             this._commandingSurface.deferredDomUpate();
         }
     }
@@ -387,14 +386,15 @@ export class AppBar {
             } else {
                 this._updateDomImpl_renderClosed();
             }
+            rendered.isOpenedMode = this._isOpenedMode;
         }
-        rendered.isOpenedMode = this._isOpenedMode;
 
         if (rendered.placement !== this.placement) {
             removeClass(this._dom.root, placementClassMap[rendered.placement]);
             addClass(this._dom.root, placementClassMap[this.placement]);
             rendered.placement = this.placement;
         }
+        this._commandingSurface.updateDomImpl();
     }
     private _updateDomImpl_renderOpened(): void {
         addClass(this._dom.root, _Constants.ClassNames.openedClass);

@@ -39,7 +39,7 @@ module Helper.AppBar {
 
             case WinJS.UI.AppBar.Placement.bottom:
                 LiveUnit.Assert.isTrue(appBarRect.bottom < (bottomOfViewPort + tolerance));
-                LiveUnit.Assert.areEqual(appBar._commandingSurface.overflowDirection, WinJS.UI._CommandingSurface.OverflowDirection.bottom, "Bottom AppBar should overflow towards the top");
+                LiveUnit.Assert.areEqual(appBar._commandingSurface.overflowDirection, WinJS.UI._CommandingSurface.OverflowDirection.top, "Bottom AppBar should overflow towards the top");
                 break;
 
             default:
