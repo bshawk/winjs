@@ -426,22 +426,6 @@ declare module WinJS {
             _commandingSurface: WinJS.UI.PrivateCommandingSurface;
         }
 
-        class PrivateToolBar extends WinJS.UI.ToolBar {
-            _disposed: boolean;
-            _primaryCommands: ICommand[];
-            _secondaryCommands: ICommand[];
-            _overflowButton: HTMLButtonElement;
-            _mainActionArea: HTMLElement;
-            _menu: WinJS.UI.Menu;
-            _separatorWidth: number;
-            _standardCommandWidth: number;
-            _overflowButtonWidth: number;
-            _getCommandWidth(command: ICommand): number;
-            _customContentFlyout: WinJS.UI.Flyout;
-            _customContentContainer: HTMLElement;
-            _inlineOverflowArea: HTMLElement;
-        }
-
         class PrivateCommand extends WinJS.UI.AppBarCommand {
             winControl: ICommand;
             _commandBarIconButton;
@@ -668,16 +652,6 @@ declare module WinJS {
             public addEventListener(eventName: string, eventHandler: Function, useCapture?: boolean): void;
             public removeEventListener(eventName: string, eventCallback: Function, useCapture?: boolean): void;
             public dispatchEvent(type: string, eventProperties: any): boolean;
-        }
-
-        class ToolBar {
-            public element: HTMLElement;
-            public shownDisplayMode: string;
-            public data: WinJS.Binding.List<ICommand>;
-            public extraClass: string;
-            constructor(element?: HTMLElement, options?: any);
-            public dispose(): void;
-            public forceLayout(): void;
         }
 
         class PrivateItemContainer extends WinJS.UI.ItemContainer {

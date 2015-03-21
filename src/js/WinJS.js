@@ -41,7 +41,6 @@ define([
     'WinJS/Controls/Tooltip',
     'WinJS/Controls/ViewBox',
     'WinJS/Controls/ContentDialog',
-    'WinJS/Controls/ToolBar',
     'WinJS/Controls/SplitView',
     'WinJS/Controls/CommandingSurface',
     'WinJS/Controls/ToolBarNew',
