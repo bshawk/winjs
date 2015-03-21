@@ -56,7 +56,7 @@ closedDisplayModeClassMap[ClosedDisplayMode.full] = _Constants.ClassNames.fullCl
 
 /// <field>
 /// <summary locid="WinJS.UI.ToolBar">
-/// Represents a toolbar for displaying commands.
+/// Displays ICommands within the flow of the app. Use the ToolBar around other statically positined app content.
 /// </summary>
 /// </field>
 /// <icon src="ui_winjs.ui.toolbar.12x12.png" width="12" height="12" />
@@ -195,7 +195,7 @@ export class ToolBar {
     }
 
     /// <field type="Function" locid="WinJS.UI.ToolBar.onbeforeopen" helpKeyword="WinJS.UI.ToolBar.onbeforeopen">
-    /// Occurs immediately before the control is opened.
+    /// Occurs immediately before the control is opened. Is cancelable.
     /// </field>
     onbeforeopen: (ev: CustomEvent) => void;
     /// <field type="Function" locid="WinJS.UI.ToolBar.onafteropen" helpKeyword="WinJS.UI.ToolBar.onafteropen">
@@ -203,7 +203,7 @@ export class ToolBar {
     /// </field>
     onafteropen: (ev: CustomEvent) => void;
     /// <field type="Function" locid="WinJS.UI.ToolBar.onbeforeclose" helpKeyword="WinJS.UI.ToolBar.onbeforeclose">
-    /// Occurs immediately before the control is closed.
+    /// Occurs immediately before the control is closed. Is cancelable.
     /// </field>
     onbeforeclose: (ev: CustomEvent) => void;
     /// <field type="Function" locid="WinJS.UI.ToolBar.onafterclose" helpKeyword="WinJS.UI.ToolBar.onafterclose">

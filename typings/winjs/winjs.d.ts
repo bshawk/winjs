@@ -2465,6 +2465,119 @@ declare module WinJS.UI {
 
     //#region Interfaces
 
+    // Define the shape of a Command object to be used in AppBar and ToolBar controls.
+    export interface ICommand {
+        //#region Methods
+
+        /**
+         * Registers an event handler for the specified event.
+         * @param type The event type to register.
+         * @param listener The event handler function to associate with the event.
+         * @param useCapture Set to true to register the event handler for the capturing phase; otherwise, set to false to register the event handler for the bubbling phase.
+        **/
+        addEventListener(type: string, listener: Function, useCapture?: boolean): void;
+
+        /**
+         * Releases resources held by this ICommand. Call this method when the ICommand is no longer needed. After calling this method, the ICommand becomes unusable.
+        **/
+        dispose(): void;
+
+        /**
+         * Removes an event handler that the addEventListener method registered.
+         * @param type The event type to unregister. It must be beforeshow, beforehide, aftershow, or afterhide.
+         * @param listener The event handler function to remove.
+         * @param useCapture Set to true to remove the capturing phase event handler; set to false to remove the bubbling phase event handler.
+        **/
+        removeEventListener(type: string, listener: Function, useCapture?: boolean): void;
+
+        //#endregion Methods
+
+        //#region Properties
+
+        /**
+         * Gets or sets a value that indicates whether the ICommand is disabled.
+        **/
+        disabled: boolean;
+
+        /**
+         * Gets the DOM element that hosts the ICommand.
+        **/
+        element: HTMLElement;
+
+        /**
+         * Adds an extra CSS class during construction.
+        **/
+        extraClass: string;
+
+        /**
+         * Gets or sets the HTMLElement with a 'content' type ICommand that should receive focus whenever focus moves by the user pressing HOME or the arrow keys, from the previous ICommand to this ICommand.
+        **/
+        firstElementFocus: HTMLElement;
+
+        /**
+         * Gets or sets the Flyout object displayed by this command. The specified flyout is shown when the ICommand's button is invoked.
+        **/
+        flyout: Flyout;
+
+        /**
+         * Gets or sets a value that indicates whether the ICommand is hiding or in the process of becoming hidden.
+        **/
+        hidden: boolean;
+
+        /**
+         * Gets or sets the icon of the ICommand.
+        **/
+        icon: string;
+
+        /**
+         * Gets the element identifier (ID) of the command.
+        **/
+        id: string;
+
+        /**
+         * Gets or sets the label of the command.
+        **/
+        label: string;
+
+        /**
+         * Gets or sets the HTMLElement with a 'content' type ICommand that should receive focus whenever focus moves by the user pressing END or the arrow keys, from the previous Command to this Command.
+        **/
+        lastElementFocus: HTMLElement;
+
+        /**
+         * Gets or sets the function to be invoked when the command is clicked.
+        **/
+        onclick: Function;
+
+        /**
+         * Gets or sets the section of the app bar that the command is in.
+        **/
+        section: string;
+
+        /**
+         * Gets or sets the selected state of a toggle button.
+        **/
+        selected: boolean;
+
+        /**
+         * Gets or sets the tooltip of the command.
+        **/
+        tooltip: string;
+
+        /**
+         * Gets or sets the type of the command.
+        **/
+        type: string;
+
+        /**
+          * Gets or sets the priority of the command.
+         **/
+        priority: number;
+
+        //#endregion Properties
+    }
+
+
     /**
      * Contains items that were requested from an IListDataAdapter and provides some information about those items.
     **/
@@ -3613,7 +3726,7 @@ declare module WinJS.UI {
     //#region Objects
 
     /**
-     * Represents an application pane for displaying commands.
+     * Displays ICommands in overlayed application pane that opens and closes at the top or bottom of the main view.
     **/
     class AppBar {
 
@@ -3707,7 +3820,7 @@ declare module WinJS.UI {
         dispose(): void;
 
         /**
-         * Returns the AppBarCommand object identified by id.
+         * Returns the Command object identified by id.
          * @param id The element idenitifier (ID) of the command to be returned.
          * @returns The command identified by id. If multiple commands have the same ID, returns an array of all the commands matching the ID.
         **/
@@ -3725,21 +3838,21 @@ declare module WinJS.UI {
 
         /**
          * Hides the specified commands of the AppBar.
-         * @param commands The commands to hide. The array elements may be AppBarCommand objects, or the string identifiers (IDs) of commands.
+         * @param commands The commands to hide. The array elements may be ICommand objects, or the string identifiers (IDs) of commands.
          * @param immediate The parameter immediate is not supported and may be altered or unavailable in the future. true to hide the commands immediately, without animating them; otherwise, false.
         **/
         hideCommands(commands: any[], immediate?: boolean): void;
 
         /**
          * Opens the specified commands of the AppBar.
-         * @param commands The commands to show. The array elements may be AppBarCommand objects, or the string identifiers (IDs) of commands.
+         * @param commands The commands to show. The array elements may be ICommand objects, or the string identifiers (IDs) of commands.
          * @param immediate The parameter immediate is not supported and may be altered or unavailable in the future. true to open the commands immediately, without animating them; otherwise, false.
         **/
         showCommands(commands: any[], immediate?: boolean): void;
 
         /**
          * Opens the specified commands of the AppBar while hiding all other commands.
-         * @param commands The commands to show. The array elements may be AppBarCommand objects, or the string identifiers (IDs) of commands.
+         * @param commands The commands to show. The array elements may be ICommand objects, or the string identifiers (IDs) of commands.
          * @param immediate The parameter immediate is not supported and may be altered or unavailable in the future. true to show the specified commands (and hide the others) immediately, without animating them; otherwise, false.
         **/
         showOnlyCommands(commands: any[], immediate?: boolean): void;
@@ -3785,7 +3898,7 @@ declare module WinJS.UI {
     /**
      * Represents a command to be displayed in an app bar.
     **/
-    class AppBarCommand {
+    class AppBarCommand implements ICommand {
         //#region Constructors
 
         /**
@@ -6318,7 +6431,7 @@ declare module WinJS.UI {
     }
 
     /**
-     * Displays navigation commands in a pane that can be opened or closed.
+     * Displays NavBarCommands in an overlayed navigation pane that opens and closes at the top or bottom of the main view.
     **/
     class NavBar {
         //#region Constructors
@@ -7738,6 +7851,109 @@ declare module WinJS.UI {
 
         //#endregion Properties
 
+    }
+    /**
+     * Displays ICommands within the flow of the app. Use the ToolBar around other statically positined app content.
+    **/
+    class ToolBar {
+
+        /**
+         * Display options for the closed ToolBar.
+        **/
+        public static ClosedDisplayMode: {
+            compact: string;
+            full: string;
+        };
+
+        /**
+        * Gets the DOM element that hosts the ToolBar.
+        **/
+        public element: HTMLElement;
+
+        /**
+         * Gets or sets the Binding List of ICommand for the ToolBar.
+        **/
+        public data: WinJS.Binding.List<ICommand>;
+
+        /**
+         * Gets or sets the closedDisplayMode for the ToolBar. Values are "compact" and "full".
+        **/
+        public closedDisplayMode: string;
+
+        /**
+         * Creates a new ToolBar control.
+        **/
+        constructor(element?: HTMLElement, options?: any);
+
+        /**
+         * Disposes the ToolBar
+        **/
+        public dispose(): void;
+
+        /**
+         * Forces the ToolBar to update its layout. 
+         * Use this function when the window did not change size, but the ToolBar itself did.
+        **/
+        public forceLayout(): void;
+
+        /**
+         * Opens the ToolBar
+        **/
+        public open(): void;
+
+        /**
+         * Closes the ToolBar
+        **/
+        public close(): void;
+
+        /**
+         * Gets or sets whether the ToolBar is currently opened.
+        **/
+        public opened: boolean;
+
+        /**
+         * Occurs immediately before the control is opened. Is cancelable.
+        **/
+        public onbeforeopen: (ev: CustomEvent) => void;
+
+        /**
+         * Occurs immediately after the control is opened.
+        **/
+        public onafteropen: (ev: CustomEvent) => void;
+
+        /**
+         * Occurs immediately before the control is closed. Is cancelable.
+        **/
+        public onbeforeclose: (ev: CustomEvent) => void;
+
+        /**
+         * Occurs immediately after the control is closed.
+        **/
+        public onafterclose: (ev: CustomEvent) => void;
+
+        /**
+          * Registers an event handler for the specified event.
+          * @param type The event type to register. It must be beforeopen, beforeclose, afteropen, or afterclose.
+          * @param listener The event handler function to associate with the event.
+          * @param useCapture Set to true to register the event handler for the capturing phase; otherwise, set to false to register the event handler for the bubbling phase.
+         **/
+        addEventListener(eventName: string, eventHandler: Function, useCapture?: boolean): void;
+
+        /**
+         * Removes an event handler that the addEventListener method registered.
+         * @param type The event type to unregister. It must be beforeopen, beforeclose, afteropen, or afterclose.
+         * @param listener The event handler function to remove.
+         * @param useCapture Set to true to remove the capturing phase event handler; set to false to remove the bubbling phase event handler.
+        **/
+        removeEventListener(eventName: string, eventHandler: Function, useCapture?: boolean): void;
+
+        /**
+         * Raises an event of the specified type and with additional properties.
+         * @param type The type (name) of the event.
+         * @param eventProperties The set of additional properties to be attached to the event object when the event is raised.
+         * @returns true if preventDefault was called on the event, otherwise false.
+        **/
+        dispatchEvent(eventName: string, eventProperties: any): boolean;
     }
 
     /**
