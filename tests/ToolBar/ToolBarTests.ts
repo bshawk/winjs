@@ -929,13 +929,8 @@ module CorsicaTests {
         }
 
         testMinWidth() {
-            var data = new WinJS.Binding.List([
-                new Command(null, { type: _Constants.typeContent, label: "1" }),
-            ]);
             this._element.style.width = "10px";
-            var toolBar = new ToolBar(this._element, {
-                data: data
-            });
+            var toolBar = new ToolBar(this._element);
 
             LiveUnit.Assert.areEqual(_Constants.controlMinWidth, parseInt(getComputedStyle(this._element).width, 10), "Invalid min width of toolBar element");
         }
@@ -953,7 +948,7 @@ module CorsicaTests {
             LiveUnit.Assert.areEqual(0, WinJS.Utilities.getTotalHeight(toolBar._commandingSurface._dom.overflowArea), "Invalid height for the overflowarea container when there are no commands that overflow");
         }
 
-        xtestOverflowAreaContainerSize() {
+        xtestOverflowAreaContainerSize() { // TODO Finish redline changes and then reimplement
             var data = new WinJS.Binding.List([
                 new Command(null, { type: _Constants.typeButton, label: "1" }),
                 new Command(null, { type: _Constants.typeButton, label: "2" }),
@@ -985,7 +980,7 @@ module CorsicaTests {
             LiveUnit.Assert.areEqual(toolBar.element, toolBar._commandingSurface._dom.actionArea.parentNode, "Invalid parent for the actionarea container");
         }
 
-        xtestOverflowMaxHeightForOnlySecondaryCommands() {
+        xtestOverflowMaxHeightForOnlySecondaryCommands() { // TODO Finish redline changes and then reimplement
             var data = new WinJS.Binding.List([
                 new Command(null, { type: _Constants.typeButton, label: "1", section: _Constants.secondaryCommandSection }),
                 new Command(null, { type: _Constants.typeButton, label: "2", section: _Constants.secondaryCommandSection }),
@@ -1007,7 +1002,7 @@ module CorsicaTests {
             LiveUnit.Assert.areEqual(9, Helper._CommandingSurface.getVisibleCommandsInElement(toolBar._commandingSurface._dom.overflowArea).length, "There should be 9 commands in the overflowarea");
         }
 
-        xtestOverflowMaxHeightForMixedCommands() {
+        xtestOverflowMaxHeightForMixedCommands() { // TODO Finish redline changes and then reimplement
             var data = new WinJS.Binding.List([
                 new Command(null, { type: _Constants.typeButton, label: "1" }),
                 new Command(null, { type: _Constants.typeButton, label: "2" }),
@@ -1034,7 +1029,7 @@ module CorsicaTests {
             LiveUnit.Assert.areEqual(4.5 * _Constants.overflowCommandHeight, WinJS.Utilities.getTotalHeight(toolBar._commandingSurface._dom.overflowArea), "Invalid height for the overflowarea container");
         }
 
-        xtestKeyboarding_Opened(complete) {
+        xtestKeyboarding_Opened(complete) { // TODO reimplement when new keyboarding model is decided
             var Key = WinJS.Utilities.Key;
             var firstEL = document.createElement("button");
             var data = new WinJS.Binding.List([
@@ -1095,7 +1090,7 @@ module CorsicaTests {
             });
         }
 
-        xtestKeyboarding_Closed(complete) {
+        xtestKeyboarding_Closed(complete) { // TODO reimplement when new keyboarding model is decided
             var Key = WinJS.Utilities.Key;
             var firstEL = document.createElement("button");
             var data = new WinJS.Binding.List([
@@ -1151,7 +1146,7 @@ module CorsicaTests {
             });
         }
 
-        xtestKeyboardingWithCustomContent(complete) {
+        xtestKeyboardingWithCustomContent(complete) { // TODO reimplement when new keyboarding model is decided
             var Key = WinJS.Utilities.Key;
             var firstEL = document.createElement("button");
             var customEl = document.createElement("div");
@@ -1421,7 +1416,7 @@ module CorsicaTests {
             var toolBar = new ToolBar(this._element, { data: data, opened: true });
             Helper._CommandingSurface.useSynchronousAnimations(toolBar._commandingSurface);
 
-            var msg = "Opening an already opened AppBar should not fire events";
+            var msg = "Opening an already opened ToolBar should not fire events";
             toolBar.onbeforeopen = failEventHandler(_Constants.EventNames.beforeOpen, msg);
             toolBar.onbeforeclose = failEventHandler(_Constants.EventNames.beforeClose, msg);
             toolBar.onafteropen = failEventHandler(_Constants.EventNames.afterOpen, msg);
@@ -1458,7 +1453,7 @@ module CorsicaTests {
             var toolBar = new ToolBar(this._element, { data: data, opened: false });
             Helper._CommandingSurface.useSynchronousAnimations(toolBar._commandingSurface);
 
-            var msg = "Closing an already closed AppBar should not fire events";
+            var msg = "Closing an already closed ToolBar should not fire events";
             toolBar.onbeforeopen = failEventHandler(_Constants.EventNames.beforeOpen, msg);
             toolBar.onbeforeclose = failEventHandler(_Constants.EventNames.beforeClose, msg);
             toolBar.onafteropen = failEventHandler(_Constants.EventNames.afterOpen, msg);

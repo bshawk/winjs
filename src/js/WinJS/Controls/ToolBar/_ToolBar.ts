@@ -56,7 +56,7 @@ closedDisplayModeClassMap[ClosedDisplayMode.full] = _Constants.ClassNames.fullCl
 
 /// <field>
 /// <summary locid="WinJS.UI.ToolBar">
-/// Displays ICommands within the flow of the app. Use the ToolBar around other statically positined app content.
+/// Displays ICommands within the flow of the app. Use the ToolBar around other statically positioned app content.
 /// </summary>
 /// </field>
 /// <icon src="ui_winjs.ui.toolbar.12x12.png" width="12" height="12" />

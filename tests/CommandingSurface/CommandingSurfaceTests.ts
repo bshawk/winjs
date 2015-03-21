@@ -1076,7 +1076,7 @@ module CorsicaTests {
             });
         }
 
-        xtestKeyboarding_Closed(complete) {
+        xtestKeyboarding_Closed(complete) { // TODO reenable when new keyboarding model is decided.
             var Key = WinJS.Utilities.Key;
             var firstEL = document.createElement("button");
             var data = new WinJS.Binding.List([

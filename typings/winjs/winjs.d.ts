@@ -2465,7 +2465,9 @@ declare module WinJS.UI {
 
     //#region Interfaces
 
-    // Define the shape of a Command object to be used in AppBar and ToolBar controls.
+    /** 
+     * Define the shape of a Command object to be used in AppBar and ToolBar controls. 
+    **/
     export interface ICommand {
         //#region Methods
 
@@ -2484,7 +2486,7 @@ declare module WinJS.UI {
 
         /**
          * Removes an event handler that the addEventListener method registered.
-         * @param type The event type to unregister. It must be beforeshow, beforehide, aftershow, or afterhide.
+         * @param type The event type to unregister.
          * @param listener The event handler function to remove.
          * @param useCapture Set to true to remove the capturing phase event handler; set to false to remove the bubbling phase event handler.
         **/
@@ -2550,7 +2552,7 @@ declare module WinJS.UI {
         onclick: Function;
 
         /**
-         * Gets or sets the section of the app bar that the command is in.
+         * Gets the section of the parent control that the command is in. The section can only be set through constructor options.
         **/
         section: string;
 
@@ -2565,7 +2567,7 @@ declare module WinJS.UI {
         tooltip: string;
 
         /**
-         * Gets or sets the type of the command.
+         * Gets the type of the command. The type can only be set through constructor options.
         **/
         type: string;
 
@@ -3734,9 +3736,21 @@ declare module WinJS.UI {
          * Display options for the AppBar when closed.
         */
         static ClosedDisplayMode: {
+            /**
+             * When the AppBar is closed, the actionarea is not visible and doesn't take up any space.
+            **/
             none: string;
+            /** 
+             * When the AppBar is closed, the height of the actionarea is reduced to the minimal height required to display only the actionarea overflowbutton. All other content in the actionarea is not displayed.
+            **/
             minimal: string;
+            /**
+             * When the AppBar is closed, the height of the actionarea is reduced such that button commands are still visible, but their labels are hidden.
+            **/
             compact: string;
+            /**
+             * When the AppBar is closed, the height of the actionarea is always sized to content and does not change between opened and closed states.
+            **/
             full: string;
         };
 
@@ -3744,7 +3758,13 @@ declare module WinJS.UI {
          * Display options for AppBar placement in relation to the main view.
         */
         static Placement: {
+            /**
+             * The AppBar appears at the top of the main view
+            **/
             top: string;
+            /**
+             * The AppBar appears at the bottom of the main view
+            **/
             bottom: string;
         };
 
@@ -3858,7 +3878,7 @@ declare module WinJS.UI {
         showOnlyCommands(commands: any[], immediate?: boolean): void;
 
         /**
-         * Forces the AppBar to update its layout. Use this function when the window did not change size, but AppBar itself did.
+         * Forces the AppBar to update its layout.
         **/
         forceLayout(): void;
 
@@ -3994,7 +4014,7 @@ declare module WinJS.UI {
         onclick: Function;
 
         /**
-         * Gets/Sets the section of the parent control that the command is in. 
+         * Gets the section of the parent control that the command is in. The section can only be set through constructor options.
         **/
         section: string;
 
@@ -4009,7 +4029,7 @@ declare module WinJS.UI {
         tooltip: string;
 
         /**
-         * Gets the type of the command.
+         * Gets the type of the command. The type can only be set through constructor options.
         **/
         type: string;
 
@@ -6353,7 +6373,7 @@ declare module WinJS.UI {
 
         /**
          * Registers an event handler for the specified event.
-         * @param type The event type to register. It must be beforeshow, beforehide, aftershow, or afterhide.
+         * @param type The event type to register.
          * @param listener The event handler function to associate with the event.
          * @param useCapture Set to true to register the event handler for the capturing phase; otherwise, set to false to register the event handler for the bubbling phase.
         **/
@@ -6366,7 +6386,7 @@ declare module WinJS.UI {
 
         /**
          * Removes an event handler that the addEventListener method registered.
-         * @param type The event type to unregister. It must be beforeshow, beforehide, aftershow, or afterhide.
+         * @param type The event type to unregister.
          * @param listener The event handler function to remove.
          * @param useCapture Set to true to remove the capturing phase event handler; set to false to remove the bubbling phase event handler.
         **/
@@ -7853,7 +7873,7 @@ declare module WinJS.UI {
 
     }
     /**
-     * Displays ICommands within the flow of the app. Use the ToolBar around other statically positined app content.
+     * Displays ICommands within the flow of the app. Use the ToolBar around other statically positioned app content.
     **/
     class ToolBar {
 
@@ -7861,7 +7881,13 @@ declare module WinJS.UI {
          * Display options for the closed ToolBar.
         **/
         public static ClosedDisplayMode: {
+            /**
+             * When the ToolBar is closed, the height of the actionarea is reduced such that button commands are still visible, but their labels are hidden.
+            **/
             compact: string;
+            /**
+             * When the ToolBar is closed, the height of the actionarea is always sized to content and does not change between opened and closed states.
+            **/
             full: string;
         };
 
@@ -7882,6 +7908,8 @@ declare module WinJS.UI {
 
         /**
          * Creates a new ToolBar control.
+         * @param element The DOM element that will host the control.
+         * @param options The set of properties and values to apply to the new ToolBar.
         **/
         constructor(element?: HTMLElement, options?: any);
 

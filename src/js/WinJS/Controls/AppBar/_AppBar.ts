@@ -301,7 +301,6 @@ export class AppBar {
         this._disposed = true;
         // Disposing the _commandingSurface will trigger dispose on its OpenCloseMachine and synchronously complete any animations that might have been running.
         this._commandingSurface.dispose();
-        this._synchronousClose();
 
         _Dispose.disposeSubTree(this.element);
     }
