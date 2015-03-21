@@ -434,30 +434,6 @@ declare module WinJS {
             _lastElementFocus;
         }
 
-        //// Move to WinJS.d.ts after the ToolBar API review
-        //export interface ICommand {
-        //    addEventListener(type: string, listener: Function, useCapture?: boolean): void;
-        //    dispose(): void;
-        //    removeEventListener(type: string, listener: Function, useCapture?: boolean): void;
-        //    disabled: boolean;
-        //    element: HTMLElement;
-        //    extraClass: string;
-        //    firstElementFocus: HTMLElement;
-        //    flyout: WinJS.UI.Flyout;
-        //    hidden: boolean;
-        //    icon: string;
-        //    id: string;
-        //    label: string;
-        //    lastElementFocus: HTMLElement;
-        //    onclick: Function;
-        //    section: string;
-        //    selected: boolean;
-        //    tooltip: string;
-        //    type: string;
-        //    priority: number;
-        //    winControl: ICommand
-        //}
-
         /**
         * Remnants of the previous implementation of the AppBar control, contains limited functionality. 
           Currently only used by NavBar and is planned to be replaced by a new implementation.
@@ -630,29 +606,6 @@ declare module WinJS {
             public removeEventListener(eventName: string, eventCallback: Function, useCapture?: boolean): void;
             public dispatchEvent(type: string, eventProperties: any): boolean;
         }
-
-        //class ToolBar {
-        //    public static ClosedDisplayMode: {
-        //        compact: string;
-        //        full: string;
-        //    };
-        //    public element: HTMLElement;
-        //    public data: WinJS.Binding.List<ICommand>;
-        //    constructor(element?: HTMLElement, options?: any);
-        //    public dispose(): void;
-        //    public forceLayout(): void;
-        //    public closedDisplayMode: string;
-        //    public open(): void;
-        //    public close(): void;
-        //    public opened: boolean;
-        //    public onbeforeopen: (ev: CustomEvent) => void;
-        //    public onafteropen: (ev: CustomEvent) => void;
-        //    public onbeforeclose: (ev: CustomEvent) => void;
-        //    public onafterclose: (ev: CustomEvent) => void;
-        //    public addEventListener(eventName: string, eventHandler: Function, useCapture?: boolean): void;
-        //    public removeEventListener(eventName: string, eventCallback: Function, useCapture?: boolean): void;
-        //    public dispatchEvent(type: string, eventProperties: any): boolean;
-        //}
 
         class PrivateItemContainer extends WinJS.UI.ItemContainer {
             _selectionMode: WinJS.UI.SelectionMode;
