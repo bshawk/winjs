@@ -2,19 +2,19 @@
 /// <reference path="../../../../typings/require.d.ts" />
 
 import _Base = require('../Core/_Base');
-import _ToolBarNew = require('./ToolBarNew/_ToolBarNew');
+import _ToolBar = require('./ToolBar/_ToolBar');
 
-var module: typeof _ToolBarNew = null;
+var module: typeof _ToolBar = null;
 
 _Base.Namespace.define("WinJS.UI", {
-    ToolBarNew: {
+    ToolBar: {
         get: () => {
             if (!module) {
-                require(["./ToolBarNew/_ToolBarNew"], (m: typeof _ToolBarNew) => {
+                require(["./ToolBar/_ToolBar"], (m: typeof _ToolBar) => {
                     module = m;
                 });
             }
-            return module.ToolBarNew;
+            return module.ToolBar;
         }
     }
 });

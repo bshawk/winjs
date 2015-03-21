@@ -2,10 +2,10 @@
 ///<reference path="Helper.ts" />
 ///<reference path="../TestLib/winjs.dev.d.ts" />
 
-module Helper.ToolBarNew {
+module Helper.ToolBar {
     "use strict";
 
-    export function verifyRenderedOpened(toolBar: WinJS.UI.PrivateToolBarNew): void {
+    export function verifyRenderedOpened(toolBar: WinJS.UI.PrivateToolBar): void {
 
         //TODO Verify Auto overflowdirection?
 
@@ -20,7 +20,7 @@ module Helper.ToolBarNew {
         Helper._CommandingSurface.verifyRenderedOpened(toolBar._commandingSurface);
     }
 
-    export function verifyRenderedClosed(toolBar: WinJS.UI.PrivateToolBarNew): void {
+    export function verifyRenderedClosed(toolBar: WinJS.UI.PrivateToolBar): void {
         // TODO verify that the AppBar element has the same bounding rect as the the Commanding surface element.
         
         //TODO Verify we have a parent element and our placeHolder element does not.

@@ -43,7 +43,7 @@ define([
     'WinJS/Controls/ContentDialog',
     'WinJS/Controls/SplitView',
     'WinJS/Controls/CommandingSurface',
-    'WinJS/Controls/ToolBarNew',
+    'WinJS/Controls/ToolBar',
     'WinJS/Controls/AppBar',
     ], function (_WinJS) {
     "use strict";

@@ -5,7 +5,7 @@ import _Base = require("../../Core/_Base");
 import _BaseUtils = require("../../Core/_BaseUtils");
 import BindingList = require("../../BindingList");
 import ControlProcessor = require("../../ControlProcessor");
-import _Constants = require("../ToolBarNew/_Constants");
+import _Constants = require("../ToolBar/_Constants");
 import _Command = require("../AppBar/_Command");
 import _CommandingSurface = require("../CommandingSurface");
 import _ICommandingSurface = require("../CommandingSurface/_CommandingSurface");
@@ -27,25 +27,25 @@ import _OpenCloseMachine = require('../../Utilities/_OpenCloseMachine');
 import _Signal = require('../../_Signal');
 import _WriteProfilerMark = require("../../Core/_WriteProfilerMark");
 
-require(["require-style!less/styles-toolbarnew"]);
-require(["require-style!less/colors-toolbarnew"]);
+require(["require-style!less/styles-toolbar"]);
+require(["require-style!less/colors-toolbar"]);
 
 "use strict";
 
 var strings = {
     get ariaLabel() { return _Resources._getWinJSString("ui/toolbarAriaLabel").value; },
     get overflowButtonAriaLabel() { return _Resources._getWinJSString("ui/toolbarOverflowButtonAriaLabel").value; },
-    get mustContainCommands() { return "The toolbarnew can only contain WinJS.UI.Command or WinJS.UI.AppBarCommand controls"; },
+    get mustContainCommands() { return "The toolbar can only contain WinJS.UI.Command or WinJS.UI.AppBarCommand controls"; },
     get duplicateConstruction() { return "Invalid argument: Controls may only be instantiated one time for each DOM element"; }
 };
 
 var ClosedDisplayMode = {
-    /// <field locid="WinJS.UI.ToolBarNew.ClosedDisplayMode.compact" helpKeyword="WinJS.UI.ToolBarNew.ClosedDisplayMode.compact">
-    /// When the ToolBarNew is closed, the height of the actionarea is reduced such that button commands are still visible, but their labels are hidden.
+    /// <field locid="WinJS.UI.ToolBar.ClosedDisplayMode.compact" helpKeyword="WinJS.UI.ToolBar.ClosedDisplayMode.compact">
+    /// When the ToolBar is closed, the height of the actionarea is reduced such that button commands are still visible, but their labels are hidden.
     /// </field>
     compact: "compact",
-    /// <field locid="WinJS.UI.ToolBarNew.ClosedDisplayMode.full" helpKeyword="WinJS.UI.ToolBarNew.ClosedDisplayMode.full">
-    /// When the ToolBarNew is closed, the height of the actionarea is always sized to content and does not change between opened and closed states.
+    /// <field locid="WinJS.UI.ToolBar.ClosedDisplayMode.full" helpKeyword="WinJS.UI.ToolBar.ClosedDisplayMode.full">
+    /// When the ToolBar is closed, the height of the actionarea is always sized to content and does not change between opened and closed states.
     /// </field>
     full: "full",
 };
@@ -55,21 +55,21 @@ closedDisplayModeClassMap[ClosedDisplayMode.compact] = _Constants.ClassNames.com
 closedDisplayModeClassMap[ClosedDisplayMode.full] = _Constants.ClassNames.fullClass;
 
 /// <field>
-/// <summary locid="WinJS.UI.ToolBarNew">
+/// <summary locid="WinJS.UI.ToolBar">
 /// Represents a toolbar for displaying commands.
 /// </summary>
 /// </field>
 /// <icon src="ui_winjs.ui.toolbar.12x12.png" width="12" height="12" />
 /// <icon src="ui_winjs.ui.toolbar.16x16.png" width="16" height="16" />
-/// <htmlSnippet supportsContent="true"><![CDATA[<div data-win-control="WinJS.UI.ToolBarNew">
+/// <htmlSnippet supportsContent="true"><![CDATA[<div data-win-control="WinJS.UI.ToolBar">
 /// <button data-win-control="WinJS.UI.Command" data-win-options="{id:'',label:'example',icon:'back',type:'button',onclick:null,section:'primary'}"></button>
 /// </div>]]></htmlSnippet>
-/// <part name="toolbar" class="win-toolbar" locid="WinJS.UI.ToolBarNew_part:toolbar">The entire ToolBarNew control.</part>
-/// <part name="toolbar-overflowbutton" class="win-toolbar-overflowbutton" locid="WinJS.UI.ToolBarNew_part:ToolBarNew-overflowbutton">The toolbar overflow button.</part>
-/// <part name="toolbar-overflowarea" class="win-toolbar-overflowarea" locid="WinJS.UI.ToolBarNew_part:ToolBarNew-overflowarea">The container for toolbar commands that overflow.</part>
+/// <part name="toolbar" class="win-toolbar" locid="WinJS.UI.ToolBar_part:toolbar">The entire ToolBar control.</part>
+/// <part name="toolbar-overflowbutton" class="win-toolbar-overflowbutton" locid="WinJS.UI.ToolBar_part:ToolBar-overflowbutton">The toolbar overflow button.</part>
+/// <part name="toolbar-overflowarea" class="win-toolbar-overflowarea" locid="WinJS.UI.ToolBar_part:ToolBar-overflowarea">The container for toolbar commands that overflow.</part>
 /// <resource type="javascript" src="//$(TARGET_DESTINATION)/js/WinJS.js" shared="true" />
 /// <resource type="css" src="//$(TARGET_DESTINATION)/css/ui-dark.css" shared="true" />
-export class ToolBarNew {
+export class ToolBar {
     private _id: string;
     private _disposed: boolean;
     private _commandingSurface: _ICommandingSurface._CommandingSurface;
@@ -81,22 +81,22 @@ export class ToolBarNew {
         placeHolder: HTMLElement;
     }
 
-    // <field locid="WinJS.UI.ToolBarNew.ClosedDisplayMode" helpKeyword="WinJS.UI.ToolBarNew.ClosedDisplayMode">
-    /// Display options for the actionarea when the ToolBarNew is closed.
+    // <field locid="WinJS.UI.ToolBar.ClosedDisplayMode" helpKeyword="WinJS.UI.ToolBar.ClosedDisplayMode">
+    /// Display options for the actionarea when the ToolBar is closed.
     /// </field>
     static ClosedDisplayMode = ClosedDisplayMode;
 
     static supportedForProcessing: boolean = true;
 
-    /// <field type="HTMLElement" domElement="true" hidden="true" locid="WinJS.UI.ToolBarNew.element" helpKeyword="WinJS.UI.ToolBarNew.element">
-    /// Gets the DOM element that hosts the ToolBarNew.
+    /// <field type="HTMLElement" domElement="true" hidden="true" locid="WinJS.UI.ToolBar.element" helpKeyword="WinJS.UI.ToolBar.element">
+    /// Gets the DOM element that hosts the ToolBar.
     /// </field>
     get element() {
         return this._dom.root;
     }
 
-    /// <field type="WinJS.Binding.List" locid="WinJS.UI.ToolBarNew.data" helpKeyword="WinJS.UI.ToolBarNew.data">
-    /// Gets or sets the Binding List of WinJS.UI.Command for the ToolBarNew.
+    /// <field type="WinJS.Binding.List" locid="WinJS.UI.ToolBar.data" helpKeyword="WinJS.UI.ToolBar.data">
+    /// Gets or sets the Binding List of WinJS.UI.Command for the ToolBar.
     /// </field>
     get data() {
         return this._commandingSurface.data;
@@ -106,8 +106,8 @@ export class ToolBarNew {
     }
 
     private _closedDisplayMode: string;
-    /// <field type="String" locid="WinJS.UI.ToolBarNew.closedDisplayMode" helpKeyword="WinJS.UI.ToolBarNew.closedDisplayMode">
-    /// Gets or sets the closedDisplayMode for the ToolBarNew. Values are "compact" and "full".
+    /// <field type="String" locid="WinJS.UI.ToolBar.closedDisplayMode" helpKeyword="WinJS.UI.ToolBar.closedDisplayMode">
+    /// Gets or sets the closedDisplayMode for the ToolBar. Values are "compact" and "full".
     /// </field>
     get closedDisplayMode() {
         return this._commandingSurface.closedDisplayMode;
@@ -118,8 +118,8 @@ export class ToolBarNew {
         }
     }
 
-    /// <field type="Boolean" hidden="true" locid="WinJS.UI.ToolBarNew.opened" helpKeyword="WinJS.UI.ToolBarNew.opened">
-    /// Gets or sets whether the ToolBarNew is currently opened.
+    /// <field type="Boolean" hidden="true" locid="WinJS.UI.ToolBar.opened" helpKeyword="WinJS.UI.ToolBar.opened">
+    /// Gets or sets whether the ToolBar is currently opened.
     /// </field>
     get opened(): boolean {
         return this._commandingSurface.opened;
@@ -129,18 +129,18 @@ export class ToolBarNew {
     }
 
     constructor(element?: HTMLElement, options: any = {}) {
-        /// <signature helpKeyword="WinJS.UI.ToolBarNew.ToolBarNew">
-        /// <summary locid="WinJS.UI.ToolBarNew.constructor">
-        /// Creates a new ToolBarNew control.
+        /// <signature helpKeyword="WinJS.UI.ToolBar.ToolBar">
+        /// <summary locid="WinJS.UI.ToolBar.constructor">
+        /// Creates a new ToolBar control.
         /// </summary>
-        /// <param name="element" type="HTMLElement" domElement="true" locid="WinJS.UI.ToolBarNew.constructor_p:element">
+        /// <param name="element" type="HTMLElement" domElement="true" locid="WinJS.UI.ToolBar.constructor_p:element">
         /// The DOM element that will host the control. 
         /// </param>
-        /// <param name="options" type="Object" locid="WinJS.UI.ToolBarNew.constructor_p:options">
-        /// The set of properties and values to apply to the new ToolBarNew control.
+        /// <param name="options" type="Object" locid="WinJS.UI.ToolBar.constructor_p:options">
+        /// The set of properties and values to apply to the new ToolBar control.
         /// </param>
-        /// <returns type="WinJS.UI.ToolBarNew" locid="WinJS.UI.ToolBarNew.constructor_returnValue">
-        /// The new ToolBarNew control.
+        /// <returns type="WinJS.UI.ToolBar" locid="WinJS.UI.ToolBar.constructor_returnValue">
+        /// The new ToolBar control.
         /// </returns>
         /// </signature>
 
@@ -148,7 +148,7 @@ export class ToolBarNew {
 
         // Check to make sure we weren't duplicated
         if (element && element["winControl"]) {
-            throw new _ErrorFromName("WinJS.UI.ToolBarNew.DuplicateConstruction", strings.duplicateConstruction);
+            throw new _ErrorFromName("WinJS.UI.ToolBar.DuplicateConstruction", strings.duplicateConstruction);
         }
 
         this._initializeDom(element || _Global.document.createElement("div"));
@@ -194,45 +194,45 @@ export class ToolBarNew {
         });
     }
 
-    /// <field type="Function" locid="WinJS.UI.ToolBarNew.onbeforeopen" helpKeyword="WinJS.UI.ToolBarNew.onbeforeopen">
+    /// <field type="Function" locid="WinJS.UI.ToolBar.onbeforeopen" helpKeyword="WinJS.UI.ToolBar.onbeforeopen">
     /// Occurs immediately before the control is opened.
     /// </field>
     onbeforeopen: (ev: CustomEvent) => void;
-    /// <field type="Function" locid="WinJS.UI.ToolBarNew.onafteropen" helpKeyword="WinJS.UI.ToolBarNew.onafteropen">
+    /// <field type="Function" locid="WinJS.UI.ToolBar.onafteropen" helpKeyword="WinJS.UI.ToolBar.onafteropen">
     /// Occurs immediately after the control is opened.
     /// </field>
     onafteropen: (ev: CustomEvent) => void;
-    /// <field type="Function" locid="WinJS.UI.ToolBarNew.onbeforeclose" helpKeyword="WinJS.UI.ToolBarNew.onbeforeclose">
+    /// <field type="Function" locid="WinJS.UI.ToolBar.onbeforeclose" helpKeyword="WinJS.UI.ToolBar.onbeforeclose">
     /// Occurs immediately before the control is closed.
     /// </field>
     onbeforeclose: (ev: CustomEvent) => void;
-    /// <field type="Function" locid="WinJS.UI.ToolBarNew.onafterclose" helpKeyword="WinJS.UI.ToolBarNew.onafterclose">
+    /// <field type="Function" locid="WinJS.UI.ToolBar.onafterclose" helpKeyword="WinJS.UI.ToolBar.onafterclose">
     /// Occurs immediately after the control is closed.
     /// </field>
     onafterclose: (ev: CustomEvent) => void;
 
     open(): void {
-        /// <signature helpKeyword="WinJS.UI.ToolBarNew.open">
-        /// <summary locid="WinJS.UI.ToolBarNew.open">
-        /// Opens the ToolBarNew
+        /// <signature helpKeyword="WinJS.UI.ToolBar.open">
+        /// <summary locid="WinJS.UI.ToolBar.open">
+        /// Opens the ToolBar
         /// </summary>
         /// </signature>
         this._commandingSurface.open();
     }
 
     close(): void {
-        /// <signature helpKeyword="WinJS.UI.ToolBarNew.close">
-        /// <summary locid="WinJS.UI.ToolBarNew.close">
-        /// Closes the ToolBarNew
+        /// <signature helpKeyword="WinJS.UI.ToolBar.close">
+        /// <summary locid="WinJS.UI.ToolBar.close">
+        /// Closes the ToolBar
         /// </summary>
         /// </signature>
         this._commandingSurface.close();
     }
 
     dispose() {
-        /// <signature helpKeyword="WinJS.UI.ToolBarNew.dispose">
-        /// <summary locid="WinJS.UI.ToolBarNew.dispose">
-        /// Disposes this ToolBarNew.
+        /// <signature helpKeyword="WinJS.UI.ToolBar.dispose">
+        /// <summary locid="WinJS.UI.ToolBar.dispose">
+        /// Disposes this ToolBar.
         /// </summary>
         /// </signature>
         if (this._disposed) {
@@ -253,16 +253,16 @@ export class ToolBarNew {
     }
 
     forceLayout() {
-        /// <signature helpKeyword="WinJS.UI.ToolBarNew.forceLayout">
-        /// <summary locid="WinJS.UI.ToolBarNew.forceLayout">
-        /// Forces the ToolBarNew to update its layout. Use this function when the window did not change size, but the container of the ToolBarNew changed size.
+        /// <signature helpKeyword="WinJS.UI.ToolBar.forceLayout">
+        /// <summary locid="WinJS.UI.ToolBar.forceLayout">
+        /// Forces the ToolBar to update its layout. Use this function when the window did not change size, but the container of the ToolBar changed size.
         /// </summary>
         /// </signature>
         this._commandingSurface.forceLayout();
     }
 
     private _writeProfilerMark(text: string) {
-        _WriteProfilerMark("WinJS.UI.ToolBarNew:" + this._id + ":" + text);
+        _WriteProfilerMark("WinJS.UI.ToolBar:" + this._id + ":" + text);
     }
 
     private _initializeDom(root: HTMLElement): void {
@@ -423,11 +423,11 @@ export class ToolBarNew {
     }
 }
 
-_Base.Class.mix(ToolBarNew, _Events.createEventProperties(
+_Base.Class.mix(ToolBar, _Events.createEventProperties(
     _Constants.EventNames.beforeOpen,
     _Constants.EventNames.afterOpen,
     _Constants.EventNames.beforeClose,
     _Constants.EventNames.afterClose));
 
 // addEventListener, removeEventListener, dispatchEvent
-_Base.Class.mix(ToolBarNew, _Control.DOMEventMixin);
+_Base.Class.mix(ToolBar, _Control.DOMEventMixin);

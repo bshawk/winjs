@@ -416,7 +416,7 @@ declare module WinJS {
             _commandingSurface: WinJS.UI.PrivateCommandingSurface;
         }
 
-        class PrivateToolBarNew extends WinJS.UI.ToolBarNew {
+        class PrivateToolBar extends WinJS.UI.ToolBar {
             _disposed: boolean;
             _dom: {
                 root: HTMLElement;
@@ -631,7 +631,7 @@ declare module WinJS {
             public dispatchEvent(type: string, eventProperties: any): boolean;
         }
 
-        class ToolBarNew {
+        class ToolBar {
             public static ClosedDisplayMode: {
                 compact: string;
                 full: string;
