@@ -7941,21 +7941,25 @@ declare module WinJS.UI {
 
         /**
          * Occurs immediately before the control is opened. Is cancelable.
+         * @param eventInfo An object that contains information about the event.
         **/
         public onbeforeopen: (ev: CustomEvent) => void;
 
         /**
          * Occurs immediately after the control is opened.
+         * @param eventInfo An object that contains information about the event.
         **/
         public onafteropen: (ev: CustomEvent) => void;
 
         /**
          * Occurs immediately before the control is closed. Is cancelable.
+         * @param eventInfo An object that contains information about the event.
         **/
         public onbeforeclose: (ev: CustomEvent) => void;
 
         /**
          * Occurs immediately after the control is closed.
+         * @param eventInfo An object that contains information about the event.
         **/
         public onafterclose: (ev: CustomEvent) => void;
 
