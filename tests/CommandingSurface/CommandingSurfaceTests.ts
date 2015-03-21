@@ -8,15 +8,10 @@
 /// <reference path="../TestLib/winjs.dev.d.ts" />
 
 module CorsicaTests {
-    var _CommandingSurface = <typeof WinJS.UI.PrivateCommandingSurface> WinJS.UI._CommandingSurface;
+    var _Constants = Helper.require("WinJS/Controls/CommandingSurface/_Constants");
+    var _CommandingSurface = <typeof WinJS.UI.PrivateCommandingSurface> Helper.require("WinJS/Controls/CommandingSurface/_CommandingSurface")._CommandingSurface;
     var Command = <typeof WinJS.UI.PrivateCommand> WinJS.UI.AppBarCommand;
     var Util = WinJS.Utilities;
-
-    var _Constants
-
-    WinJS.Utilities._require(["WinJS/Controls/CommandingSurface/_Constants"], function (constants) {
-        _Constants = constants;
-    })
 
     // Taking the registration mechanism as a parameter allows us to use this code to test both
     // DOM level 0 (e.g. onbeforeopen) and DOM level 2 (e.g. addEventListener) events.

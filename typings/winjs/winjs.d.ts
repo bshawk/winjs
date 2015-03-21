@@ -3734,22 +3734,22 @@ declare module WinJS.UI {
 
         /** 
          * Display options for the AppBar when closed.
-        */
+        **/
         static ClosedDisplayMode: {
             /**
-             * When the AppBar is closed, the actionarea is not visible and doesn't take up any space.
+             * When the AppBar is closed, it is not visible and doesn't take up any space.
             **/
             none: string;
-            /** 
-             * When the AppBar is closed, the height of the actionarea is reduced to the minimal height required to display only the actionarea overflowbutton. All other content in the actionarea is not displayed.
+            /**
+             * When the AppBar is closed, its height is reduced to the minimal height required to display only its overflowbutton. All other content in the AppBar is not displayed.
             **/
             minimal: string;
             /**
-             * When the AppBar is closed, the height of the actionarea is reduced such that button commands are still visible, but their labels are hidden.
+             * When the AppBar is closed, its height is reduced such that button commands are still visible, but their labels are hidden.
             **/
             compact: string;
             /**
-             * When the AppBar is closed, the height of the actionarea is always sized to content and does not change between opened and closed states.
+             * When the AppBar is closed, its height is always sized to content.
             **/
             full: string;
         };
@@ -3786,25 +3786,25 @@ declare module WinJS.UI {
          * Occurs immediately after the AppBar is closed.
          * @param eventInfo An object that contains information about the event.
         **/
-        onafterclose: (ev: CustomEvent) => void;
+        onafterclose: (eventInfo: CustomEvent) => void;
 
         /**
          * Occurs immeidately after the AppBar is opened.
          * @param eventInfo An object that contains information about the event.
         **/
-        onafteropen: (ev: CustomEvent) => void;
+        onafteropen: (eventInfo: CustomEvent) => void;
 
         /**
          * Occurs immediately before the AppBar is closed. Is cancelable.
          * @param eventInfo An object that contains information about the event.
         **/
-        onbeforeclose: (ev: CustomEvent) => void;
+        onbeforeclose: (eventInfo: CustomEvent) => void;
 
         /**
          * Occurs immediately before the AppBar is opened. Is cancelable.
          * @param eventInfo An object that contains information about the event.
         **/
-        onbeforeopen: (ev: CustomEvent) => void;
+        onbeforeopen: (eventInfo: CustomEvent) => void;
 
         //#endregion Events
 
@@ -7882,11 +7882,11 @@ declare module WinJS.UI {
         **/
         public static ClosedDisplayMode: {
             /**
-             * When the ToolBar is closed, the height of the actionarea is reduced such that button commands are still visible, but their labels are hidden.
+             * When the ToolBar is closed, the height of the ToolBar is reduced such that button commands are still visible, but their labels are hidden.
             **/
             compact: string;
             /**
-             * When the ToolBar is closed, the height of the actionarea is always sized to content and does not change between opened and closed states.
+             * When the ToolBar is closed, the height of the ToolBar is always sized to content.
             **/
             full: string;
         };
@@ -7943,25 +7943,25 @@ declare module WinJS.UI {
          * Occurs immediately before the control is opened. Is cancelable.
          * @param eventInfo An object that contains information about the event.
         **/
-        public onbeforeopen: (ev: CustomEvent) => void;
+        public onbeforeopen: (eventInfo: CustomEvent) => void;
 
         /**
          * Occurs immediately after the control is opened.
          * @param eventInfo An object that contains information about the event.
         **/
-        public onafteropen: (ev: CustomEvent) => void;
+        public onafteropen: (eventInfo: CustomEvent) => void;
 
         /**
          * Occurs immediately before the control is closed. Is cancelable.
          * @param eventInfo An object that contains information about the event.
         **/
-        public onbeforeclose: (ev: CustomEvent) => void;
+        public onbeforeclose: (eventInfo: CustomEvent) => void;
 
         /**
          * Occurs immediately after the control is closed.
          * @param eventInfo An object that contains information about the event.
         **/
-        public onafterclose: (ev: CustomEvent) => void;
+        public onafterclose: (eventInfo: CustomEvent) => void;
 
         /**
           * Registers an event handler for the specified event.

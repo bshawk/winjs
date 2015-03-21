@@ -42,7 +42,6 @@ define([
     'WinJS/Controls/ViewBox',
     'WinJS/Controls/ContentDialog',
     'WinJS/Controls/SplitView',
-    'WinJS/Controls/CommandingSurface',
     'WinJS/Controls/ToolBar',
     'WinJS/Controls/AppBar',
     ], function (_WinJS) {

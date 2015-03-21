@@ -41,19 +41,19 @@ var strings = {
 
 var ClosedDisplayMode = {
     /// <field locid="WinJS.UI.AppBar.ClosedDisplayMode.none" helpKeyword="WinJS.UI.AppBar.ClosedDisplayMode.none">
-    /// When the AppBar is closed, the actionarea is not visible and doesn't take up any space.
+    /// When the AppBar is closed, it is not visible and doesn't take up any space.
     /// </field>
     none: "none",
     /// <field locid="WinJS.UI.AppBar.ClosedDisplayMode.minimal" helpKeyword="WinJS.UI.AppBar.ClosedDisplayMode.minimal">
-    /// When the AppBar is closed, the height of the actionarea is reduced to the minimal height required to display only the actionarea overflowbutton. All other content in the actionarea is not displayed.
+    /// When the AppBar is closed, its height is reduced to the minimal height required to display only its overflowbutton. All other content in the AppBar is not displayed.
     /// </field>
     minimal: "minimal",
     /// <field locid="WinJS.UI.AppBar.ClosedDisplayMode.compact" helpKeyword="WinJS.UI.AppBar.ClosedDisplayMode.compact">
-    /// When the AppBar is closed, the height of the actionarea is reduced such that button commands are still visible, but their labels are hidden.
+    /// When the AppBar is closed, its height is reduced such that button commands are still visible, but their labels are hidden.
     /// </field>
     compact: "compact",
     /// <field locid="WinJS.UI.AppBar.ClosedDisplayMode.full" helpKeyword="WinJS.UI.AppBar.ClosedDisplayMode.full">
-    /// When the AppBar is closed, the height of the actionarea is always sized to content and does not change between opened and closed states.
+    /// When the AppBar is closed, its height is always sized to content.
     /// </field>
     full: "full",
 };
@@ -113,7 +113,7 @@ export class AppBar {
     }
 
     // <field locid="WinJS.UI.AppBar.ClosedDisplayMode" helpKeyword="WinJS.UI.AppBar.ClosedDisplayMode">
-    /// Display options for the actionarea when the AppBar is closed.
+    /// Display options for the AppBar when closed.
     /// </field>
     static ClosedDisplayMode = ClosedDisplayMode;
 

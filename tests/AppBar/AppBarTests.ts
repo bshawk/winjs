@@ -225,22 +225,6 @@ module CorsicaTests {
             appBar.dispose();
         }
 
-        testDisposeClosesAppBar() {
-            var data = new WinJS.Binding.List([
-                new Command(null, { type: _Constants.typeButton, label: "opt 1" }),
-                new Command(null, { type: _Constants.typeButton, label: "opt 2", section: _Constants.secondaryCommandSection })
-            ]);
-            var appBar = new AppBar(this._element, { opened: true, data: data });
-            Helper._CommandingSurface.useSynchronousAnimations(appBar._commandingSurface);
-
-            appBar.dispose();
-            Helper.AppBar.verifyRenderedClosed(appBar);
-
-            // Events should not fire
-            appBar.close();
-            appBar.open();
-        }
-
         testVerifyDefaultTabIndex() {
             var appBar = new AppBar();
             LiveUnit.Assert.areEqual("-1", appBar.element.getAttribute("tabIndex"), "AppBar should've assigned a default tabIndex");

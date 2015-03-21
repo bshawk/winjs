@@ -7,6 +7,7 @@ module Helper.AppBar {
 
     var _Constants = Helper.require("WinJS/Controls/AppBar/_Constants");
     var _CommandingSurfaceConstants = Helper.require("WinJS/Controls/CommandingSurface/_Constants");
+    var _CommandingSurface = <typeof WinJS.UI.PrivateCommandingSurface> Helper.require("WinJS/Controls/CommandingSurface/_CommandingSurface")._CommandingSurface;
 
     export function verifyRenderedOpened(appBar: WinJS.UI.PrivateAppBar): void {
 
@@ -34,12 +35,12 @@ module Helper.AppBar {
         switch (placement) {
             case WinJS.UI.AppBar.Placement.top:
                 LiveUnit.Assert.isTrue(Math.abs(appBarRect.top - topOfViewPort) < tolerance);
-                LiveUnit.Assert.areEqual(appBar._commandingSurface.overflowDirection, WinJS.UI._CommandingSurface.OverflowDirection.bottom, "Top AppBar should overflow towards the bottom");
+                LiveUnit.Assert.areEqual(appBar._commandingSurface.overflowDirection, _CommandingSurface.OverflowDirection.bottom, "Top AppBar should overflow towards the bottom");
                 break;
 
             case WinJS.UI.AppBar.Placement.bottom:
                 LiveUnit.Assert.isTrue(Math.abs(appBarRect.bottom - bottomOfViewPort) < tolerance);
-                LiveUnit.Assert.areEqual(appBar._commandingSurface.overflowDirection, WinJS.UI._CommandingSurface.OverflowDirection.top, "Bottom AppBar should overflow towards the top");
+                LiveUnit.Assert.areEqual(appBar._commandingSurface.overflowDirection, _CommandingSurface.OverflowDirection.top, "Bottom AppBar should overflow towards the top");
                 break;
 
             default:

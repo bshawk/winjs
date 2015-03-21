@@ -41,11 +41,11 @@ var strings = {
 
 var ClosedDisplayMode = {
     /// <field locid="WinJS.UI.ToolBar.ClosedDisplayMode.compact" helpKeyword="WinJS.UI.ToolBar.ClosedDisplayMode.compact">
-    /// When the ToolBar is closed, the height of the actionarea is reduced such that button commands are still visible, but their labels are hidden.
+    /// When the ToolBar is closed, the height of the ToolBar is reduced such that button commands are still visible, but their labels are hidden.
     /// </field>
     compact: "compact",
     /// <field locid="WinJS.UI.ToolBar.ClosedDisplayMode.full" helpKeyword="WinJS.UI.ToolBar.ClosedDisplayMode.full">
-    /// When the ToolBar is closed, the height of the actionarea is always sized to content and does not change between opened and closed states.
+    /// When the ToolBar is closed, the height of the ToolBar is always sized to content.
     /// </field>
     full: "full",
 };
