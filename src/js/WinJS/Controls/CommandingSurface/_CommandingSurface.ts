@@ -301,11 +301,11 @@ export class _CommandingSurface {
         });
 
     }
-    /// Occurs immediately before the control is opened.
+    /// Occurs immediately before the control is opened. Is cancelable.
     onbeforeopen: (ev: CustomEvent) => void;
     /// Occurs immediately after the control is opened.
     onafteropen: (ev: CustomEvent) => void;
-    /// Occurs immediately before the control is closed.
+    /// Occurs immediately before the control is closed. Is cancelable.
     onbeforeclose: (ev: CustomEvent) => void;
     /// Occurs immediately after the control is closed.
     onafterclose: (ev: CustomEvent) => void;
@@ -616,6 +616,22 @@ export class _CommandingSurface {
     }
 
     synchronousOpen(): void {
+
+        if (!this._isOpenedMode) {
+            _ElementUtilities.removeClass(this._dom.root, _Constants.ClassNames.closedClass);
+            _ElementUtilities.addClass(this._dom.root, _Constants.ClassNames.openedClass);
+        }
+
+        var propertyLeft = !this._rtl ? "left" : "right";
+        var propertyRight = !this._rtl ? "right" : "left";
+        var rects = this.getBoundingRects();
+        this._dom.overflowArea.style[propertyRight] = Math.min(0, rects.actionArea[propertyRight] - rects.overflowArea.width) + "px";
+
+        if (!this._isOpenedMode) {
+            _ElementUtilities.removeClass(this._dom.root, _Constants.ClassNames.openedClass);
+            _ElementUtilities.addClass(this._dom.root, _Constants.ClassNames.closedClass);
+        }
+
         this._isOpenedMode = true;
         this.updateDomImpl();
     }
