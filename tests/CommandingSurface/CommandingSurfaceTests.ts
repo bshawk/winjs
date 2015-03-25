@@ -1559,7 +1559,7 @@ module CorsicaTests {
         }
 
         testOverFlowAreaHorizontalAlignment_LTR() {
-            // When the LTR CommandingSurface is opening, the overflowarea will typically align its RIGHT edge with the RIGHT edge of the actionarea,
+            // When the LTR CommandingSurface is opening, the overflowarea will typically align its RIGHT edge with the RIGHT edge of the CommandingSurface,
             // However, if while trying to align this way, part of the overflowarea would clip through the LEFT edge of the viewport, then the 
             // overflowarea should instead align its LEFT edge to the Left edge of the viewport.
 
@@ -1572,6 +1572,7 @@ module CorsicaTests {
 
             var el = document.createElement("DIV");
             el.style.width = "10px";
+            el.style.marginLeft = "10px";
             document.body.appendChild(el);
             var commandingSurface = new _CommandingSurface(el, {
                 data: data,
@@ -1588,14 +1589,14 @@ module CorsicaTests {
                 overflowAreaRect = overflowArea.getBoundingClientRect();
 
             // Verify that we start from a sane place. 
-            // Test that there is no space between the left edge of the action area and the left edge of the view.
-            // Test that the overflowarea width with one command is greater than the action area width with no commands.
-            LiveUnit.Assert.areEqual(0, commandingSurfaceRect.left, "TEST ERROR: LTR Test expects the actionarea to be adjacent to the left edge of the view.");
-            LiveUnit.Assert.isTrue(commandingSurfaceRect.width < overflowAreaRect.width, "TEST ERROR: LTR Test expects the overflowarea to be wider than the actionarea.");
+            // Test that there is 10px space between the left edge of the CommandingSurface and the left edge of the view.
+            // Test that the overflowarea width with one command is greater than the left offset of the commandingsurface width with no commands.
+            LiveUnit.Assert.areEqual(0, commandingSurfaceRect.left, "TEST ERROR: LTR Test expects the CommandingSurface to be 10px from the left edge of the view.");
+            LiveUnit.Assert.isTrue(commandingSurfaceRect.width + 10 < overflowAreaRect.width, "TEST ERROR: LTR Test expects the overflowarea to be wider than the CommandingSurface + 10px.");
 
             // Because there is NOT enough room to display the right aligned overflowarea without clipping through the left edge of the viewport, 
             // verify that overflowarea LEFT edge is instead aligned to the LEFT edge of the viewport.
-            LiveUnit.Assert.areEqual("auto", getComputedStyle(overflowArea).right, "OverflowArea in LTR should abanbon right alightment with the actionarea to avoid clipping through the left edge of the view");
+            LiveUnit.Assert.areEqual("auto", getComputedStyle(overflowArea).right, "OverflowArea in LTR should abandon right alignment with the CommandingSurface to avoid clipping through the left edge of the view");
             LiveUnit.Assert.areEqual(0, overflowAreaRect.left, "OverflowArea in LTR should align its left edge with the left edge of the viewport to avoid clipping through it");
 
             // Move the CommandingSurface further away from the left edge.
@@ -1608,8 +1609,8 @@ module CorsicaTests {
             overflowAreaRect = overflowArea.getBoundingClientRect();
 
             // Because there IS enough room to display the right aligned overflowarea without clipping through the left edge of the viewport, 
-            // verify that overflowarea RIGHT edge is aligned to the RIGHT edge of the actionarea.
-            LiveUnit.Assert.areEqual(commandingSurfaceRect.right, overflowAreaRect.right, "LTR OverflowArea should be right alighned with the actionarea");
+            // verify that overflowarea RIGHT edge is aligned to the RIGHT edge of the CommandingSurface.
+            LiveUnit.Assert.areEqual(commandingSurfaceRect.right, overflowAreaRect.right, "LTR OverflowArea should be right alighned with the CommandingSurface");
             LiveUnit.Assert.areEqual("auto", getComputedStyle(overflowArea).left, "LTR OverflowArea's left offset should be 'auto'");
 
             // Cleanup
@@ -1620,7 +1621,7 @@ module CorsicaTests {
 
 
         testOverFlowAreaHorizontalAlignment_RTL() {
-            // When the RTL CommandingSurface is opening, the overflowarea will typically align its LEFT edge with the LEFT edge of the actionarea,
+            // When the RTL CommandingSurface is opening, the overflowarea will typically align its LEFT edge with the LEFT edge of the CommandingSurface,
             // However, if while trying to align this way, part of the overflowarea would clip through the RIGHT edge of the viewport, then the 
             // overflowarea should instead align its RIGHT edge to the RIGHT edge of the viewport.
 
@@ -1633,6 +1634,7 @@ module CorsicaTests {
 
             var el = document.createElement("DIV");
             el.style.width = "10px";
+            el.style.marginRight = "10px";
             document.body.appendChild(el);
             var commandingSurface = new _CommandingSurface(el, {
                 data: data,
@@ -1649,14 +1651,14 @@ module CorsicaTests {
                 overflowAreaRect = overflowArea.getBoundingClientRect();
 
             // Verify that we start from a sane place. 
-            // Test that there is no space between the right edge of the action area and the right edge of the view.
+            // Test that there is 10px space between the right edge of the CommandingSurface and the right edge of the view.
             // Test that the overflowarea width with one command is greater than the action area width with no commands.
-            Helper.Assert.areFloatsEqual(window.innerWidth, commandingSurfaceRect.right, "TEST ERROR: RTL Test expects the actionarea to be adjacent to the right edge of the view.", 1);
-            LiveUnit.Assert.isTrue(commandingSurfaceRect.width < overflowAreaRect.width, "TEST ERROR: RTL Test expects the overflowarea to be wider than the actionarea.");
+            Helper.Assert.areFloatsEqual(window.innerWidth - 10, commandingSurfaceRect.right, "TEST ERROR: RTL Test expects the CommandingSurface to be 10px from the right edge of the view.", 1);
+            LiveUnit.Assert.isTrue(commandingSurfaceRect.width + 10 < overflowAreaRect.width, "TEST ERROR: RTL Test expects the overflowarea to be wider than the CommandingSurface + 10px.");
 
             // Because there is NOT enough room to display the left aligned overflowarea without clipping through the right edge of the viewport, 
             // verify that overflowarea RIGHT edge is instead aligned to the RIGHT edge of the viewport.
-            LiveUnit.Assert.areEqual("auto", getComputedStyle(overflowArea).left, "OverflowArea in RTL should abanbon left alightment with the actionarea to avoid clipping through the right edge of the view");
+            LiveUnit.Assert.areEqual("auto", getComputedStyle(overflowArea).left, "OverflowArea in RTL should abandon left alightment with the CommandingSurface to avoid clipping through the right edge of the view");
             LiveUnit.Assert.areEqual("0px", getComputedStyle(overflowArea).right, "OverflowArea in RTL should align its right edge with the right edge of the viewport to avoid clipping through it");
 
             // Move the CommandingSurface further away from the right edge.
@@ -1669,8 +1671,8 @@ module CorsicaTests {
             overflowAreaRect = overflowArea.getBoundingClientRect();
 
             // Because there IS enough room to display the left aligned overflowarea without clipping through the right edge of the viewport, 
-            // verify that overflowarea LEFT edge is aligned to the LEFT edge of the actionarea.
-            LiveUnit.Assert.areEqual(commandingSurfaceRect.left, overflowAreaRect.left, "RTL OverflowArea should be left alighned with the actionarea");
+            // verify that overflowarea LEFT edge is aligned to the LEFT edge of the CommandingSurface.
+            LiveUnit.Assert.areEqual(commandingSurfaceRect.left, overflowAreaRect.left, "RTL OverflowArea should be left alighned with the CommandingSurface");
             LiveUnit.Assert.areEqual("auto", getComputedStyle(overflowArea).right, "RTL OverflowArea's right offset should be 'auto'");
 
             // Cleanup
