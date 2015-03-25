@@ -1580,19 +1580,18 @@ module CorsicaTests {
 
             Helper._CommandingSurface.useSynchronousAnimations(commandingSurface);
 
-            var actionArea = commandingSurface._dom.actionArea,
-                overflowArea = commandingSurface._dom.overflowArea;
+            var overflowArea = commandingSurface._dom.overflowArea;
 
             // Measure
             commandingSurface.open();
-            var actionAreaRect = actionArea.getBoundingClientRect(),
+            var commandingSurfaceRect = el.getBoundingClientRect(),
                 overflowAreaRect = overflowArea.getBoundingClientRect();
 
             // Verify that we start from a sane place. 
             // Test that there is no space between the left edge of the action area and the left edge of the view.
             // Test that the overflowarea width with one command is greater than the action area width with no commands.
-            LiveUnit.Assert.areEqual(0, actionAreaRect.left, "TEST ERROR: LTR Test expects the actionarea to be adjacent to the left edge of the view.");
-            LiveUnit.Assert.isTrue(actionAreaRect.width < overflowAreaRect.width, "TEST ERROR: LTR Test expects the overflowarea to be wider than the actionarea.");
+            LiveUnit.Assert.areEqual(0, commandingSurfaceRect.left, "TEST ERROR: LTR Test expects the actionarea to be adjacent to the left edge of the view.");
+            LiveUnit.Assert.isTrue(commandingSurfaceRect.width < overflowAreaRect.width, "TEST ERROR: LTR Test expects the overflowarea to be wider than the actionarea.");
 
             // Because there is NOT enough room to display the right aligned overflowarea without clipping through the left edge of the viewport, 
             // verify that overflowarea LEFT edge is instead aligned to the LEFT edge of the viewport.
@@ -1605,12 +1604,12 @@ module CorsicaTests {
 
             // Re Measure
             commandingSurface.open();
-            actionAreaRect = actionArea.getBoundingClientRect(),
+            commandingSurfaceRect = el.getBoundingClientRect(),
             overflowAreaRect = overflowArea.getBoundingClientRect();
 
             // Because there IS enough room to display the right aligned overflowarea without clipping through the left edge of the viewport, 
             // verify that overflowarea RIGHT edge is aligned to the RIGHT edge of the actionarea.
-            LiveUnit.Assert.areEqual(actionAreaRect.right, overflowAreaRect.right, "LTR OverflowArea should be right alighned with the actionarea");
+            LiveUnit.Assert.areEqual(commandingSurfaceRect.right, overflowAreaRect.right, "LTR OverflowArea should be right alighned with the actionarea");
             LiveUnit.Assert.areEqual("auto", getComputedStyle(overflowArea).left, "LTR OverflowArea's left offset should be 'auto'");
 
             // Cleanup
@@ -1642,19 +1641,18 @@ module CorsicaTests {
 
             Helper._CommandingSurface.useSynchronousAnimations(commandingSurface);
 
-            var actionArea = commandingSurface._dom.actionArea,
-                overflowArea = commandingSurface._dom.overflowArea;
+            var overflowArea = commandingSurface._dom.overflowArea;
 
             // Measure
             commandingSurface.open();
-            var actionAreaRect = actionArea.getBoundingClientRect(),
+            var commandingSurfaceRect = el.getBoundingClientRect(),
                 overflowAreaRect = overflowArea.getBoundingClientRect();
 
             // Verify that we start from a sane place. 
             // Test that there is no space between the right edge of the action area and the right edge of the view.
             // Test that the overflowarea width with one command is greater than the action area width with no commands.
-            Helper.Assert.areFloatsEqual(window.innerWidth, actionAreaRect.right, "TEST ERROR: RTL Test expects the actionarea to be adjacent to the right edge of the view.", 1);
-            LiveUnit.Assert.isTrue(actionAreaRect.width < overflowAreaRect.width, "TEST ERROR: RTL Test expects the overflowarea to be wider than the actionarea.");
+            Helper.Assert.areFloatsEqual(window.innerWidth, commandingSurfaceRect.right, "TEST ERROR: RTL Test expects the actionarea to be adjacent to the right edge of the view.", 1);
+            LiveUnit.Assert.isTrue(commandingSurfaceRect.width < overflowAreaRect.width, "TEST ERROR: RTL Test expects the overflowarea to be wider than the actionarea.");
 
             // Because there is NOT enough room to display the left aligned overflowarea without clipping through the right edge of the viewport, 
             // verify that overflowarea RIGHT edge is instead aligned to the RIGHT edge of the viewport.
@@ -1667,12 +1665,12 @@ module CorsicaTests {
 
             // Re Measure
             commandingSurface.open();
-            actionAreaRect = actionArea.getBoundingClientRect(),
+            commandingSurfaceRect = el.getBoundingClientRect(),
             overflowAreaRect = overflowArea.getBoundingClientRect();
 
             // Because there IS enough room to display the left aligned overflowarea without clipping through the right edge of the viewport, 
             // verify that overflowarea LEFT edge is aligned to the LEFT edge of the actionarea.
-            LiveUnit.Assert.areEqual(actionAreaRect.left, overflowAreaRect.left, "RTL OverflowArea should be left alighned with the actionarea");
+            LiveUnit.Assert.areEqual(commandingSurfaceRect.left, overflowAreaRect.left, "RTL OverflowArea should be left alighned with the actionarea");
             LiveUnit.Assert.areEqual("auto", getComputedStyle(overflowArea).right, "RTL OverflowArea's right offset should be 'auto'");
 
             // Cleanup
