@@ -113,7 +113,6 @@ export class ToolBar {
         this._commandingSurface.data = value;
     }
 
-    private _closedDisplayMode: string;
     /// <field type="String" locid="WinJS.UI.ToolBar.closedDisplayMode" helpKeyword="WinJS.UI.ToolBar.closedDisplayMode">
     /// Gets or sets the closedDisplayMode for the ToolBar. Values are "compact" and "full".
     /// </field>

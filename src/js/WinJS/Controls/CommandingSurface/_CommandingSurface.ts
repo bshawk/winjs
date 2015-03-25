@@ -622,10 +622,23 @@ export class _CommandingSurface {
             _ElementUtilities.addClass(this._dom.root, _Constants.ClassNames.openedClass);
         }
 
-        var propertyLeft = !this._rtl ? "left" : "right";
-        var propertyRight = !this._rtl ? "right" : "left";
-        var rects = this.getBoundingRects();
-        this._dom.overflowArea.style[propertyRight] = Math.min(0, rects.actionArea[propertyRight] - rects.overflowArea.width) + "px";
+        var overflowArea = this._dom.overflowArea,
+            rects = this.getBoundingRects(),
+            alignmentOutOfBounds: boolean; 
+
+        if (this._rtl) { 
+            // In RTL the left edge of overflowarea wants to align to the left edge of the actionarea.
+            var viewportRight = window.innerWidth;
+            alignmentOutOfBounds = (rects.actionArea.left + rects.overflowArea.width > viewportRight);
+        } else {
+            // In LTR the right edge of overflowarea wants to align to the right edge of the actionarea.
+            var viewportLeft = 0;
+            alignmentOutOfBounds = (rects.actionArea.right - rects.overflowArea.width < viewportLeft);
+        }
+
+        if (alignmentOutOfBounds) {
+            addClass(this._dom.overflowArea, _Constants.ClassNames.stayInBoundsCssClass);
+        }
 
         if (!this._isOpenedMode) {
             _ElementUtilities.removeClass(this._dom.root, _Constants.ClassNames.openedClass);
@@ -634,6 +647,39 @@ export class _CommandingSurface {
 
         this._isOpenedMode = true;
         this.updateDomImpl();
+    }
+
+    private _ensureAlignment() {
+        // Determines if the opened overflowarea can keep its preferred aligntment without clipping outside of the viewport.
+        // Otherwise adjusts the horizontal position of the overflowarea to keep its anchored edge in view.
+
+        if (!this._isOpenedMode) {
+            _ElementUtilities.removeClass(this._dom.root, _Constants.ClassNames.closedClass);
+            _ElementUtilities.addClass(this._dom.root, _Constants.ClassNames.openedClass);
+        }
+
+        var overflowArea = this._dom.overflowArea,
+            rects = this.getBoundingRects(),
+            outOfBounds = false;
+
+        if (this._rtl) {
+            // In RTL the left edge of overflowarea prefers to align to the left edge of the actionarea.
+            var viewportRight = window.innerWidth;
+            outOfBounds = (rects.actionArea.left + rects.overflowArea.width > viewportRight);
+        } else {
+            // In LTR the right edge of overflowarea prefers to align to the right edge of the actionarea.
+            var viewportLeft = 0;
+            outOfBounds = (rects.actionArea.right - rects.overflowArea.width < viewportLeft);
+        }
+
+        if (outOfBounds) {
+            addClass(this._dom.overflowArea, _Constants.ClassNames.stayInBoundsCssClass);
+        }
+
+        if (!this._isOpenedMode) {
+            _ElementUtilities.removeClass(this._dom.root, _Constants.ClassNames.openedClass);
+            _ElementUtilities.addClass(this._dom.root, _Constants.ClassNames.closedClass);
+        }
     }
 
     synchronousClose(): void {
@@ -668,6 +714,9 @@ export class _CommandingSurface {
                 // Render closed
                 removeClass(this._dom.root, _Constants.ClassNames.openedClass);
                 addClass(this._dom.root, _Constants.ClassNames.closedClass);
+
+                // Reset overflowarea alignment
+                removeClass(this._dom.overflowArea, _Constants.ClassNames.stayInBoundsCssClass);
             }
             rendered.isOpenedMode = this._isOpenedMode;
         }

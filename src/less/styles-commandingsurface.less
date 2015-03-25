@@ -123,14 +123,25 @@
         padding: 0;
         position: absolute;
         right: 0;
+        left: auto;
+        
+        &.win-stayinbounds {
+            left: 0;
+            right: auto;
+        }
 
        .RTL({
             left:0;
             right:auto;
+
+            &.win-stayinbounds {
+                right: 0;
+                left: auto;
+            }
         });
 
         &.win-menu {
-            max-width: 480px; /* override max-width styles from WinJS Menu */
+            max-width: 480px; /* override max-width styles from WinJS */
         }
 
         button.win-command {
