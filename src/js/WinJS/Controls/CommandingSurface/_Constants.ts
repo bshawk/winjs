@@ -9,7 +9,6 @@ export var ClassNames = {
     spacerCssClass: "win-commandingsurface-spacer",
     ellipsisCssClass: "win-commandingsurface-ellipsis",
     overflowAreaCssClass: "win-commandingsurface-overflowarea",
-    stayInBoundsCssClass: "win-stayinbounds",
     contentFlyoutCssClass: "win-commandingsurface-contentflyout",
     emptyCommandingSurfaceCssClass: "win-commandingsurface-empty",
     menuCssClass: "win-menu",

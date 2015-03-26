@@ -1558,127 +1558,100 @@ module CorsicaTests {
             });
         }
 
-        testOverFlowAreaHorizontalAlignment_LTR() {
-            // When the LTR CommandingSurface is opening, the overflowarea will typically align its RIGHT edge with the RIGHT edge of the CommandingSurface,
-            // However, if while trying to align this way, part of the overflowarea would clip through the LEFT edge of the viewport, then the 
-            // overflowarea should instead align its LEFT edge to the Left edge of the viewport.
+        testOverflowAreaHorizontalAlignment() {
 
-            var prevLang = document.documentElement.lang;
-            document.documentElement.lang = "en-us";
+            ["LTR", "RTL"].forEach((direction: string) => {
 
-            var data = new WinJS.Binding.List([
-                new Command(null, { type: _Constants.typeButton, section: _Constants.secondaryCommandSection, label: "opt 1" }),
-            ]);
+                var edgeOfViewport,
+                    initialDistance,
+                    left,
+                    right,
+                    Left,
+                    Right,
+                    prevLang = document.documentElement.lang;
 
-            var el = document.createElement("DIV");
-            el.style.width = "10px";
-            el.style.marginLeft = "10px";
-            document.body.appendChild(el);
-            var commandingSurface = new _CommandingSurface(el, {
-                data: data,
-                overflowDirection: _CommandingSurface.OverflowDirection.bottom
-            });
+                if (direction === "LTR") {
+                    document.documentElement.lang = "en-us";
+                    edgeOfViewport = 0;
+                    initialDistance = 10;
+                    right = "right";
+                    left = "left";
+                    Right = "Right";
+                    Left = "Left";
+                } else {
+                    document.documentElement.lang = "ar-sa";
+                    initialDistance = -10;
+                    edgeOfViewport = window.innerWidth;
+                    right = "left";
+                    left = "right";
+                    Right = "Left";
+                    Left = "Right";
+                }
 
-            Helper._CommandingSurface.useSynchronousAnimations(commandingSurface);
+                LiveUnit.LoggingCore.logComment(
+                    "When the " + direction + " CommandingSurface is opening, the overflowarea will typically align its " + right + " edge with the " + right + " edge of the CommandingSurface, " +
+                    "However, if while trying to align this way, part of the overflowarea would clip through the " + left + " edge of the viewport, then the " +
+                    "overflowarea should instead align its " + left + " edge to the " + left + " edge of the viewport."
+                    );
 
-            var overflowArea = commandingSurface._dom.overflowArea;
+                var data = new WinJS.Binding.List([
+                    new Command(null, { type: _Constants.typeButton, section: _Constants.secondaryCommandSection, label: "opt 1" }),
+                ]);
 
-            // Measure
-            commandingSurface.open();
-            var commandingSurfaceRect = el.getBoundingClientRect(),
+                var initialMargin = Math.abs(initialDistance);
+                var el = document.createElement("DIV");
+                el.style.width = "10px";
+                el.style["margin" + Left] = initialMargin + "px";
+                document.body.appendChild(el);
+                var commandingSurface = new _CommandingSurface(el, {
+                    data: data,
+                    overflowDirection: _CommandingSurface.OverflowDirection.bottom
+                });
+
+                Helper._CommandingSurface.useSynchronousAnimations(commandingSurface);
+
+                // Measure
+                commandingSurface.open();
+                var overflowArea = commandingSurface._dom.overflowArea,
+                    commandingSurfaceRect = el.getBoundingClientRect(),
+                    overflowAreaRect = overflowArea.getBoundingClientRect();
+
+                LiveUnit.LoggingCore.logComment(
+                    "Verify that we start from a sane place. " +
+                    "Test that there is " + initialMargin + " space between the " + left + " edge of the CommandingSurface and the " + left + " edge of the view. " +
+                    "Test that the overflowarea width with one command is greater than the " + left + " offset of the commandingsurface width with no commands."
+                    );
+                Helper.Assert.areFloatsEqual(edgeOfViewport + initialDistance, commandingSurfaceRect[left], "TEST ERROR: " + direction + " Test expects the CommandingSurface to be " + initialMargin + " from the " + left + " edge of the view.", 1);
+                LiveUnit.Assert.isTrue(commandingSurfaceRect.width + 10 < overflowAreaRect.width, "TEST ERROR: " + direction + " Test expects the overflowarea to be wider than the CommandingSurface + " + initialMargin + ".");
+
+                LiveUnit.LoggingCore.logComment(
+                    "Because there is NOT enough room to display the " + right + " aligned overflowarea without clipping through the " + left + " edge of the viewport, " +
+                    "verify that overflowarea " + left + " edge is instead aligned to the " + left + " edge of the viewport."
+                    );
+                Helper.Assert.areFloatsEqual(edgeOfViewport, overflowAreaRect[left], "OverflowArea in " + direction + " should align its " + left + " edge with the " + left + " edge of the viewport to avoid clipping through it", 1);
+
+                LiveUnit.LoggingCore.logComment(
+                    "Move the CommandingSurface further away from the " + left + " edge."
+                    );
+                commandingSurface.close();
+                commandingSurface.element.style["margin" + Left] = overflowAreaRect.width + "px";
+
+                // Re Measure
+                commandingSurface.open();
+                commandingSurfaceRect = el.getBoundingClientRect(),
                 overflowAreaRect = overflowArea.getBoundingClientRect();
 
-            // Verify that we start from a sane place. 
-            // Test that there is 10px space between the left edge of the CommandingSurface and the left edge of the view.
-            // Test that the overflowarea width with one command is greater than the left offset of the commandingsurface width with no commands.
-            LiveUnit.Assert.areEqual(0, commandingSurfaceRect.left, "TEST ERROR: LTR Test expects the CommandingSurface to be 10px from the left edge of the view.");
-            LiveUnit.Assert.isTrue(commandingSurfaceRect.width + 10 < overflowAreaRect.width, "TEST ERROR: LTR Test expects the overflowarea to be wider than the CommandingSurface + 10px.");
+                LiveUnit.LoggingCore.logComment(
+                    "Because there IS now enough room to display the " + right + " aligned overflowarea without clipping through the " + left + " edge of the viewport, " +
+                    "verify that overflowarea " + right + " edge is aligned to the " + right + " edge of the CommandingSurface."
+                    );
+                LiveUnit.Assert.areEqual(commandingSurfaceRect[right], overflowAreaRect[right], direction + " OverflowArea should be " + right + " aligned with the CommandingSurface");
 
-            // Because there is NOT enough room to display the right aligned overflowarea without clipping through the left edge of the viewport, 
-            // verify that overflowarea LEFT edge is instead aligned to the LEFT edge of the viewport.
-            LiveUnit.Assert.areEqual("auto", getComputedStyle(overflowArea).right, "OverflowArea in LTR should abandon right alignment with the CommandingSurface to avoid clipping through the left edge of the view");
-            LiveUnit.Assert.areEqual(0, overflowAreaRect.left, "OverflowArea in LTR should align its left edge with the left edge of the viewport to avoid clipping through it");
-
-            // Move the CommandingSurface further away from the left edge.
-            commandingSurface.close();
-            commandingSurface.element.style.marginLeft = overflowAreaRect.width + "px";
-
-            // Re Measure
-            commandingSurface.open();
-            commandingSurfaceRect = el.getBoundingClientRect(),
-            overflowAreaRect = overflowArea.getBoundingClientRect();
-
-            // Because there IS enough room to display the right aligned overflowarea without clipping through the left edge of the viewport, 
-            // verify that overflowarea RIGHT edge is aligned to the RIGHT edge of the CommandingSurface.
-            LiveUnit.Assert.areEqual(commandingSurfaceRect.right, overflowAreaRect.right, "LTR OverflowArea should be right alighned with the CommandingSurface");
-            LiveUnit.Assert.areEqual("auto", getComputedStyle(overflowArea).left, "LTR OverflowArea's left offset should be 'auto'");
-
-            // Cleanup
-            commandingSurface.dispose();
-            commandingSurface.element.parentElement.removeChild(commandingSurface.element);
-            document.documentElement.lang = prevLang;
-        }
-
-
-        testOverFlowAreaHorizontalAlignment_RTL() {
-            // When the RTL CommandingSurface is opening, the overflowarea will typically align its LEFT edge with the LEFT edge of the CommandingSurface,
-            // However, if while trying to align this way, part of the overflowarea would clip through the RIGHT edge of the viewport, then the 
-            // overflowarea should instead align its RIGHT edge to the RIGHT edge of the viewport.
-
-            var prevLang = document.documentElement.lang;
-            document.documentElement.lang = "ar-sa";
-
-            var data = new WinJS.Binding.List([
-                new Command(null, { type: _Constants.typeButton, section: _Constants.secondaryCommandSection, label: "opt 1" }),
-            ]);
-
-            var el = document.createElement("DIV");
-            el.style.width = "10px";
-            el.style.marginRight = "10px";
-            document.body.appendChild(el);
-            var commandingSurface = new _CommandingSurface(el, {
-                data: data,
-                overflowDirection: _CommandingSurface.OverflowDirection.bottom
+                // Cleanup
+                el.parentElement.removeChild(el);
+                commandingSurface.dispose();
+                document.documentElement.lang = prevLang;
             });
-
-            Helper._CommandingSurface.useSynchronousAnimations(commandingSurface);
-
-            var overflowArea = commandingSurface._dom.overflowArea;
-
-            // Measure
-            commandingSurface.open();
-            var commandingSurfaceRect = el.getBoundingClientRect(),
-                overflowAreaRect = overflowArea.getBoundingClientRect();
-
-            // Verify that we start from a sane place. 
-            // Test that there is 10px space between the right edge of the CommandingSurface and the right edge of the view.
-            // Test that the overflowarea width with one command is greater than the action area width with no commands.
-            Helper.Assert.areFloatsEqual(window.innerWidth - 10, commandingSurfaceRect.right, "TEST ERROR: RTL Test expects the CommandingSurface to be 10px from the right edge of the view.", 1);
-            LiveUnit.Assert.isTrue(commandingSurfaceRect.width + 10 < overflowAreaRect.width, "TEST ERROR: RTL Test expects the overflowarea to be wider than the CommandingSurface + 10px.");
-
-            // Because there is NOT enough room to display the left aligned overflowarea without clipping through the right edge of the viewport, 
-            // verify that overflowarea RIGHT edge is instead aligned to the RIGHT edge of the viewport.
-            LiveUnit.Assert.areEqual("auto", getComputedStyle(overflowArea).left, "OverflowArea in RTL should abandon left alightment with the CommandingSurface to avoid clipping through the right edge of the view");
-            LiveUnit.Assert.areEqual("0px", getComputedStyle(overflowArea).right, "OverflowArea in RTL should align its right edge with the right edge of the viewport to avoid clipping through it");
-
-            // Move the CommandingSurface further away from the right edge.
-            commandingSurface.close();
-            commandingSurface.element.style.marginRight = overflowAreaRect.width + "px";
-
-            // Re Measure
-            commandingSurface.open();
-            commandingSurfaceRect = el.getBoundingClientRect(),
-            overflowAreaRect = overflowArea.getBoundingClientRect();
-
-            // Because there IS enough room to display the left aligned overflowarea without clipping through the right edge of the viewport, 
-            // verify that overflowarea LEFT edge is aligned to the LEFT edge of the CommandingSurface.
-            LiveUnit.Assert.areEqual(commandingSurfaceRect.left, overflowAreaRect.left, "RTL OverflowArea should be left alighned with the CommandingSurface");
-            LiveUnit.Assert.areEqual("auto", getComputedStyle(overflowArea).right, "RTL OverflowArea's right offset should be 'auto'");
-
-            // Cleanup
-            commandingSurface.dispose();
-            commandingSurface.element.parentElement.removeChild(commandingSurface.element);
-            document.documentElement.lang = prevLang;
         }
     }
 }

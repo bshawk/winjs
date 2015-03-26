@@ -131,7 +131,7 @@ export class _CommandingSurface {
     private _nextLayoutStage: number;
     private _initializedSignal: _Signal<any>;
     _isOpenedMode: boolean;
-    _alignmentInBounds: boolean;
+    _overflowAlignmentOffset: number;
 
     // Measurements
     private _cachedMeasurements: {
@@ -621,34 +621,33 @@ export class _CommandingSurface {
 
     synchronousOpen(): void {
 
-        this._alignmentInBounds = false;
+        this._overflowAlignmentOffset = 0;
         this._isOpenedMode = true;
         this.updateDomImpl();
-        if (!this._checkAlignmentInBounds()) {
-            this._alignmentInBounds = false;
-            this.updateDomImpl();
-        }
+        this._overflowAlignmentOffset = this._checkOffsetNeeded();
+        this.updateDomImpl();
     }
 
-    private _checkAlignmentInBounds(): boolean {
-        // Determines if the opened overflowarea can keep its preferred alignment without clipping outside of the viewport.
-        // Otherwise adjusts the horizontal position of the overflowarea to keep its anchored edge in view.
+    private _checkOffsetNeeded(): number {
+        // Returns any negative offset needed to prevent the shown overflowarea from clipping outside of the viewport.
 
         var overflowArea = this._dom.overflowArea,
             rects = this.getBoundingRects(),
-            outOfBounds = false;
-
+            additionalOffsetNeeded = 0;
         if (this._rtl) {
-            // In RTL the left edge of overflowarea prefers to align to the left edge of the commandingSurface.
-            var viewportRight = window.innerWidth;
-            outOfBounds = (rects.commandingSurface.left + rects.overflowArea.width > viewportRight);
+            // In RTL the left edge of overflowarea prefers to align to the LEFT edge of the commandingSurface. 
+            // Make sure we avoid clipping through the RIGHT edge of the viewport
+            var viewportRight = window.innerWidth,
+                offsetRight = rects.overflowArea.right;
+            additionalOffsetNeeded = Math.min(viewportRight - offsetRight, 0);
         } else {
-            // In LTR the right edge of overflowarea prefers to align to the right edge of the commandingSurface.
-            var viewportLeft = 0;
-            outOfBounds = (rects.commandingSurface.right - rects.overflowArea.width < viewportLeft);
+            // In LTR the right edge of overflowarea prefers to align to the RIGHT edge of the commandingSurface.
+            // Make sure we avoid clipping through the LEFT edge of the viewport.
+            var offsetLeft = rects.overflowArea.left;
+            additionalOffsetNeeded = Math.min(0, offsetLeft);
         }
 
-        return outOfBounds;
+        return additionalOffsetNeeded;
     }
 
     synchronousClose(): void {
@@ -670,9 +669,11 @@ export class _CommandingSurface {
         closedDisplayMode: <string>undefined,
         isOpenedMode: <boolean>undefined,
         overflowDirection: <string>undefined,
+        overflowAlignmentOffset: <number>undefined,
     };
     private _updateDomImpl_renderDisplayMode(): void {
         var rendered = this._updateDomImpl_renderedState;
+
 
         if (rendered.isOpenedMode !== this._isOpenedMode) {
             if (this._isOpenedMode) {
@@ -699,14 +700,10 @@ export class _CommandingSurface {
             rendered.overflowDirection = this.overflowDirection;
         }
 
-        if (this._alignmentInBounds) {
-            this._dom.overflowArea.style["margin" + (this._rtl ? "Right" : "Left")] = "0px";
-        } else {
-            if (this._rtl) {
-                this._dom.overflowArea.style.right = Math.max(this.getBoundingRects().overflowArea.right - window.innerWidth, 0) + "px";
-            } else {
-                // math goes here
-            }
+        if (this._overflowAlignmentOffset !== rendered.overflowAlignmentOffset) {
+            var offsetProperty = (this._rtl ? "left" : "right");
+            var offsetTextValue = this._overflowAlignmentOffset + "px";
+            this._dom.overflowArea.style[offsetProperty] = offsetTextValue;
         }
     }
 
