@@ -17,6 +17,7 @@ import _Flyout = require("../../Controls/Flyout");
 import _Global = require("../../Core/_Global");
 import _Hoverable = require("../../Utilities/_Hoverable");
 import _KeyboardBehavior = require("../../Utilities/_KeyboardBehavior");
+import _Log = require('../../Core/_Log');
 import Menu = require("../../Controls/Menu");
 import _MenuCommand = require("../Menu/_Command");
 import Promise = require('../../Promise');
@@ -630,23 +631,32 @@ export class _CommandingSurface {
 
     private _computeAdjustedOverflowAreaOffset(): number {
         // Returns any negative offset needed to prevent the shown overflowarea from clipping outside of the viewport.
-        // This function should only be called when CommandingSurface is rendered and in the opened state and
-        // this._overflowAlignmentOffset = 0. 
+        // This function should only be called when CommandingSurface has been rendered in the opened state with
+        // an overflowAlignmentOffset of 0.
+        if (_Log.log) {
+            !this._updateDomImpl_renderedState.isOpenedMode &&
+            _Log.log("The CommandingSurface should only attempt to compute adjusted overflowArea offset " +
+                " when it has been rendered opened");
+
+            this._updateDomImpl_renderedState.overflowAlignmentOffset !== 0 &&
+            _Log.log("The CommandingSurface should only attempt to compute adjusted overflowArea offset " +
+            " when it has been rendered with an overflowAlignementOffset of 0");
+        }
 
         var overflowArea = this._dom.overflowArea,
-            rects = this.getBoundingRects(),
+            boundingClientRects = this.getBoundingRects(),
             adjustedOffset = 0;
         if (this._rtl) {
             // In RTL the left edge of overflowarea prefers to align to the LEFT edge of the commandingSurface. 
             // Make sure we avoid clipping through the RIGHT edge of the viewport
             var viewportRight = window.innerWidth,
-                offsetRight = rects.overflowArea.right;
-            adjustedOffset = Math.min(viewportRight - offsetRight, 0);
+                rightOffsetFromViewport = boundingClientRects.overflowArea.right;
+            adjustedOffset = Math.min(viewportRight - rightOffsetFromViewport, 0);
         } else {
             // In LTR the right edge of overflowarea prefers to align to the RIGHT edge of the commandingSurface.
             // Make sure we avoid clipping through the LEFT edge of the viewport.
-            var offsetLeft = rects.overflowArea.left;
-            adjustedOffset = Math.min(0, offsetLeft);
+            var leftOffsetFromViewport = boundingClientRects.overflowArea.left;
+            adjustedOffset = Math.min(0, leftOffsetFromViewport);
         }
 
         return adjustedOffset;

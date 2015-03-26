@@ -1563,7 +1563,7 @@ module CorsicaTests {
             ["LTR", "RTL"].forEach((direction: string) => {
 
                 var edgeOfViewport,
-                    offSetCommandingSurfaceBy,
+                    offsetCommandingSurfaceBy,
                     left,
                     right,
                     Left,
@@ -1573,14 +1573,14 @@ module CorsicaTests {
                 if (direction === "LTR") {
                     document.documentElement.lang = "en-us";
                     edgeOfViewport = 0;
-                    offSetCommandingSurfaceBy = 10;
+                    offsetCommandingSurfaceBy = 10;
                     right = "right";
                     left = "left";
                     Right = "Right";
                     Left = "Left";
                 } else {
                     document.documentElement.lang = "ar-sa";
-                    offSetCommandingSurfaceBy = -10;
+                    offsetCommandingSurfaceBy = -10;
                     edgeOfViewport = window.innerWidth;
                     right = "left";
                     left = "right";
@@ -1598,7 +1598,7 @@ module CorsicaTests {
                     new Command(null, { type: _Constants.typeButton, section: _Constants.secondaryCommandSection, label: "opt 1" }),
                 ]);
 
-                var initialMargin = Math.abs(offSetCommandingSurfaceBy);
+                var initialMargin = Math.abs(offsetCommandingSurfaceBy);
                 var el = document.createElement("DIV");
                 el.style.width = "10px";
                 el.style["margin" + Left] = initialMargin + "px";
@@ -1621,7 +1621,7 @@ module CorsicaTests {
                     "Test that there is " + initialMargin + " space between the " + left + " edge of the CommandingSurface and the " + left + " edge of the view. " +
                     "Test that the overflowarea width with one command is greater than the " + left + " offset of the commandingsurface width with no commands."
                     );
-                Helper.Assert.areFloatsEqual(edgeOfViewport + offSetCommandingSurfaceBy, commandingSurfaceRect[left], "TEST ERROR: " + direction + " Test expects the CommandingSurface to be " + initialMargin + " from the " + left + " edge of the view.", 1);
+                Helper.Assert.areFloatsEqual(edgeOfViewport + offsetCommandingSurfaceBy, commandingSurfaceRect[left], "TEST ERROR: " + direction + " Test expects the CommandingSurface to be " + initialMargin + " from the " + left + " edge of the view.", 1);
                 LiveUnit.Assert.isTrue(commandingSurfaceRect.width + 10 < overflowAreaRect.width, "TEST ERROR: " + direction + " Test expects the overflowarea to be wider than the CommandingSurface + " + initialMargin + ".");
 
                 LiveUnit.LoggingCore.logComment(
