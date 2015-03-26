@@ -376,11 +376,11 @@ export class ToolBar {
 
         if (distanceFromTop > distanceFromBottom) {
             // Open upwards
-            this._commandingSurface.overflowDirection = "top";
+            this._commandingSurface.overflowDirection = _Constants.OverflowDirection.top;
             this._dom.root.style.bottom = (bottomOfViewport - closedCommandingSurfaceRect.bottom) + "px";
         } else {
             // Open downwards
-            this._commandingSurface.overflowDirection = "bottom";
+            this._commandingSurface.overflowDirection = _Constants.OverflowDirection.bottom;
             this._dom.root.style.top = closedCommandingSurfaceRect.top + "px";
         }
 
