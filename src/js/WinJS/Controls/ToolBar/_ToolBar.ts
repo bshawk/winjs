@@ -364,13 +364,30 @@ export class ToolBar {
     private _updateDomImpl_renderOpened(): void {
 
         // Measure closed state.
-        var closedActionAreaRect = this._commandingSurface.getBoundingRects().actionArea;
+        var closedCommandingSurfaceRect = this._commandingSurface.getBoundingRects().actionArea;
         this._updateDomImpl_renderedState.prevInlineWidth = this._dom.root.style.width;
+
+        // Determine which direction to expand when opened
+        var topOfViewport = 0,
+            bottomOfViewport = _Global.innerHeight,
+            tolerance = 1,
+            distanceFromTop = closedCommandingSurfaceRect.top - topOfViewport,
+            distanceFromBottom = bottomOfViewport - closedCommandingSurfaceRect.bottom;
+
+        if (distanceFromTop > distanceFromBottom) {
+            // Open upwards
+            this._commandingSurface.overflowDirection = "top";
+            this._dom.root.style.bottom = (bottomOfViewport - closedCommandingSurfaceRect.bottom) + "px";
+        } else {
+            // Open downwards
+            this._commandingSurface.overflowDirection = "bottom";
+            this._dom.root.style.top = closedCommandingSurfaceRect.top + "px";
+        }
 
         // Get replacement element
         var placeHolder = this._dom.placeHolder;
-        placeHolder.style.width = closedActionAreaRect.width + "px";
-        placeHolder.style.height = closedActionAreaRect.height + "px";
+        placeHolder.style.width = closedCommandingSurfaceRect.width + "px";
+        placeHolder.style.height = closedCommandingSurfaceRect.height + "px";
 
         // Move ToolBar element to the body and leave placeHolder element in our place to avoid reflowing surrounding app content.
         this._dom.root.parentElement.insertBefore(placeHolder, this._dom.root);
@@ -379,48 +396,13 @@ export class ToolBar {
         // Render opened state
         _ElementUtilities.addClass(this._dom.root, _Constants.ClassNames.openedClass);
         _ElementUtilities.removeClass(this._dom.root, _Constants.ClassNames.closedClass);
-        this._dom.root.style.width = closedActionAreaRect.width + "px";
-        this._dom.root.style.left = closedActionAreaRect.left + "px";
+        this._dom.root.style.width = closedCommandingSurfaceRect.width + "px";
+        this._dom.root.style.left = closedCommandingSurfaceRect.left + "px";
 
         this._commandingSurface.synchronousOpen();
 
         // Measure opened state
         var openedRects = this._commandingSurface.getBoundingRects();
-
-        //
-        // Determine _commandingSurface overflowDirection
-        //
-        var topOfViewport = 0,
-            bottomOfViewport = topOfViewport + _Global.innerHeight,
-            tolerance = 1;
-
-        var alignTop = () => {
-            this._commandingSurface.overflowDirection = "bottom"; // TODO: Is it safe to use the static commandingSurface "OverflowDirection" enum for this value? (lazy loading... et al)
-            this._dom.root.style.top = closedActionAreaRect.top + "px";
-        }
-        var alignBottom = () => {
-            this._commandingSurface.overflowDirection = "top"; // TODO: Is it safe to use the static commandingSurface "OverflowDirection" enum for this value? (lazy loading... et al)
-            this._dom.root.style.bottom = (bottomOfViewport - closedActionAreaRect.bottom) + "px";
-        }
-        function fitsBelow(): boolean {
-            // If we orient the commandingSurface from top to bottom, would the bottom of the overflow area fit above the bottom edge of the window?
-            var bottomOfOverFlowArea = closedActionAreaRect.top + openedRects.actionArea.height + openedRects.overflowArea.height;
-            return bottomOfOverFlowArea < bottomOfViewport + tolerance;
-        }
-        function fitsAbove(): boolean {
-            // If we orient the commandingSurface from bottom to top, would the top of the overflow area fit below the top edge of the window?
-            var topOfOverFlowArea = closedActionAreaRect.bottom - openedRects.actionArea.height - openedRects.overflowArea.height;
-            return topOfOverFlowArea > topOfViewport - tolerance;
-        }
-
-        if (fitsBelow()) {
-            alignTop();
-        } else if (fitsAbove()) {
-            alignBottom();
-        } else {
-            // TODO, orient ourselves top to bottom and shrink the height of the overflowarea to make us fit within the available space.
-            alignTop();
-        }
     }
     private _updateDomImpl_renderClosed(): void {
 
