@@ -130,8 +130,8 @@ export class _CommandingSurface {
     private _disposed: boolean;
     private _nextLayoutStage: number;
     private _initializedSignal: _Signal<any>;
-    _isOpenedMode: boolean;
-    _overflowAlignmentOffset: number;
+    private _isOpenedMode: boolean;
+    private _overflowAlignmentOffset: number;
 
     // Measurements
     private _cachedMeasurements: {
@@ -624,30 +624,32 @@ export class _CommandingSurface {
         this._overflowAlignmentOffset = 0;
         this._isOpenedMode = true;
         this.updateDomImpl();
-        this._overflowAlignmentOffset = this._checkOffsetNeeded();
+        this._overflowAlignmentOffset = this._computeAdjustedOverflowAreaOffset();
         this.updateDomImpl();
     }
 
-    private _checkOffsetNeeded(): number {
+    private _computeAdjustedOverflowAreaOffset(): number {
         // Returns any negative offset needed to prevent the shown overflowarea from clipping outside of the viewport.
+        // This function should only be called when CommandingSurface is rendered and in the opened state and
+        // this._overflowAlignmentOffset = 0. 
 
         var overflowArea = this._dom.overflowArea,
             rects = this.getBoundingRects(),
-            additionalOffsetNeeded = 0;
+            adjustedOffset = 0;
         if (this._rtl) {
             // In RTL the left edge of overflowarea prefers to align to the LEFT edge of the commandingSurface. 
             // Make sure we avoid clipping through the RIGHT edge of the viewport
             var viewportRight = window.innerWidth,
                 offsetRight = rects.overflowArea.right;
-            additionalOffsetNeeded = Math.min(viewportRight - offsetRight, 0);
+            adjustedOffset = Math.min(viewportRight - offsetRight, 0);
         } else {
             // In LTR the right edge of overflowarea prefers to align to the RIGHT edge of the commandingSurface.
             // Make sure we avoid clipping through the LEFT edge of the viewport.
             var offsetLeft = rects.overflowArea.left;
-            additionalOffsetNeeded = Math.min(0, offsetLeft);
+            adjustedOffset = Math.min(0, offsetLeft);
         }
 
-        return additionalOffsetNeeded;
+        return adjustedOffset;
     }
 
     synchronousClose(): void {
