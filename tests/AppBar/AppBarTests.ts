@@ -1443,9 +1443,12 @@ module CorsicaTests {
             appBar.onafterclose = failEventHandler(_Constants.EventNames.afterClose, msg);
 
             // Verify nothing changes when opening again.
+            var originalOpenedRect = appBar.element.getBoundingClientRect();
             appBar.open();
             LiveUnit.Assert.isTrue(appBar.opened)
             Helper.AppBar.verifyRenderedOpened(appBar);
+            Helper.Assert.areBoundingClientRectsEqual(originalOpenedRect, appBar.element.getBoundingClientRect(),
+                "opening an opened AppBar should not affect its bounding client rect", 0);
         }
 
         testClose() {
@@ -1480,9 +1483,12 @@ module CorsicaTests {
             appBar.onafterclose = failEventHandler(_Constants.EventNames.afterClose, msg);
 
             // Verify nothing changes when closing again.
+            var originalClosedRect = appBar.element.getBoundingClientRect();
             appBar.close();
             LiveUnit.Assert.isFalse(appBar.opened)
             Helper.AppBar.verifyRenderedClosed(appBar);
+            Helper.Assert.areBoundingClientRectsEqual(originalClosedRect, appBar.element.getBoundingClientRect(),
+                "closing a closed AppBar should not affect its bounding client rect", 0);
         }
 
         testOverFlowButtonClick() {

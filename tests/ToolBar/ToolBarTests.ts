@@ -241,6 +241,8 @@ module CorsicaTests {
             toolBar.open();
         }
 
+        xtestOpenedToolBarGetsDisposed() { }
+
         testVerifyDefaultTabIndex() {
             var toolBar = new ToolBar();
             LiveUnit.Assert.areEqual("-1", toolBar.element.getAttribute("tabIndex"), "ToolBar should've assigned a default tabIndex");
@@ -1360,37 +1362,6 @@ module CorsicaTests {
             });
         }
 
-        testOpenedPropertyConstructorOptions() {
-            var toolBar = new ToolBar();
-            LiveUnit.Assert.areEqual(_Constants.defaultOpened, toolBar.opened, "opened property has incorrect default value");
-            toolBar.dispose();
-
-            [true, false].forEach(function (initiallyOpen) {
-                toolBar = new ToolBar(null, { opened: initiallyOpen });
-                LiveUnit.Assert.areEqual(initiallyOpen, toolBar.opened, "opened property does not match the value passed to the constructor.");
-                toolBar.dispose();
-            })
-        }
-
-        testTogglingOpenedProperty() {
-            var data = new WinJS.Binding.List([
-                new Command(null, { type: _Constants.typeButton, icon: 'add', label: "button" }),
-                new Command(null, { type: _Constants.typeSeparator }),
-                new Command(null, { type: _Constants.typeButton, section: 'secondary', label: "secondary" })
-            ]);
-            var toolBar = new ToolBar(this._element, { data: data, opened: false });
-            Helper.ToolBar.useSynchronousAnimations(toolBar);
-            Helper.ToolBar.verifyRenderedClosed(toolBar);
-
-            toolBar.opened = true;
-            LiveUnit.Assert.isTrue(toolBar.opened, "opened property should be writeable.");
-            Helper.ToolBar.verifyRenderedOpened(toolBar);
-
-            toolBar.opened = false;
-            LiveUnit.Assert.isFalse(toolBar.opened, "opened property should be writeable.");
-            Helper.ToolBar.verifyRenderedClosed(toolBar);
-        }
-
         testOpen() {
             var data = new WinJS.Binding.List([
                 new Command(null, { type: _Constants.typeButton, icon: 'add', label: "button" }),
@@ -1401,6 +1372,9 @@ module CorsicaTests {
             Helper.ToolBar.useSynchronousAnimations(toolBar);
 
             toolBar.open();
+
+            //Helper.verifyAutoOverflowDirection();
+
             LiveUnit.Assert.isTrue(toolBar.opened)
             Helper.ToolBar.verifyRenderedOpened(toolBar);
         }
@@ -1423,9 +1397,12 @@ module CorsicaTests {
             toolBar.onafterclose = failEventHandler(_Constants.EventNames.afterClose, msg);
 
             // Verify nothing changes when opening again.
+            var originalOpenedRect = toolBar.element.getBoundingClientRect();
             toolBar.open();
-            LiveUnit.Assert.isTrue(toolBar.opened)
+            LiveUnit.Assert.isTrue(toolBar.opened, "opened ToolBar should still be opened");
             Helper.ToolBar.verifyRenderedOpened(toolBar);
+            Helper.Assert.areBoundingClientRectsEqual(originalOpenedRect, toolBar.element.getBoundingClientRect(),
+                "opening an opened ToolBar should not affect its bounding client rect", 0);
         }
 
         testClose() {
@@ -1460,8 +1437,44 @@ module CorsicaTests {
             toolBar.onafterclose = failEventHandler(_Constants.EventNames.afterClose, msg);
 
             // Verify nothing changes when closing again.
+            var originalClosedRect = toolBar.element.getBoundingClientRect();
             toolBar.close();
             LiveUnit.Assert.isFalse(toolBar.opened)
+            Helper.ToolBar.verifyRenderedClosed(toolBar);
+            Helper.Assert.areBoundingClientRectsEqual(originalClosedRect, toolBar.element.getBoundingClientRect(),
+                "closing a closed ToolBar should not change affect bounding client rect", 0);
+        }
+
+        testOpenedPropertyConstructorOptions() {
+            var toolBar = new ToolBar();
+            LiveUnit.Assert.areEqual(_Constants.defaultOpened, toolBar.opened, "opened property has incorrect default value");
+            toolBar.dispose();
+
+            [true, false].forEach(function (initiallyOpen) {
+                toolBar = new ToolBar(null, { opened: initiallyOpen });
+                LiveUnit.Assert.areEqual(initiallyOpen, toolBar.opened, "opened property does not match the value passed to the constructor.");
+                toolBar.dispose();
+            })
+        }
+
+        testTogglingOpenedProperty() {
+            var data = new WinJS.Binding.List([
+                new Command(null, { type: _Constants.typeButton, icon: 'add', label: "button" }),
+                new Command(null, { type: _Constants.typeSeparator }),
+                new Command(null, { type: _Constants.typeButton, section: 'secondary', label: "secondary" })
+            ]);
+            var toolBar = new ToolBar(this._element, { data: data, opened: false });
+            Helper.ToolBar.useSynchronousAnimations(toolBar);
+            Helper.ToolBar.verifyRenderedClosed(toolBar);
+
+            var closedRect = toolBar.element.getBoundingClientRect();
+
+            toolBar.opened = true;
+            LiveUnit.Assert.isTrue(toolBar.opened, "opened property should be writeable.");
+            Helper.ToolBar.verifyRenderedOpened(toolBar);
+
+            toolBar.opened = false;
+            LiveUnit.Assert.isFalse(toolBar.opened, "opened property should be writeable.");
             Helper.ToolBar.verifyRenderedClosed(toolBar);
         }
 
