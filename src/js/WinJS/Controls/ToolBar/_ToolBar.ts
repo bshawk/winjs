@@ -83,7 +83,6 @@ export class ToolBar {
     private _commandingSurface: _ICommandingSurface._CommandingSurface;
     private _isOpenedMode: boolean;
 
-
     private _dom: {
         root: HTMLElement;
         commandingSurfaceEl: HTMLElement;
