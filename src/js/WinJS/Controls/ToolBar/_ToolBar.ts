@@ -365,7 +365,7 @@ export class ToolBar {
 
         // Measure closed state.
         this._updateDomImpl_renderedState.prevInlineWidth = this._dom.root.style.width;
-        var closedCommandingSurfaceRect = this._commandingSurface.getBoundingRects().actionArea;
+        var closedCommandingSurfaceRect = this.element.getBoundingClientRect();
         var closedContentWidth = _ElementUtilities.getContentWidth(this._dom.root);
         //var closedContentHeight = _ElementUtilities.getContentHeight(this._dom.root);
         var closedStyle = getComputedStyle(this.element);
