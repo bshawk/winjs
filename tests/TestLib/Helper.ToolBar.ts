@@ -32,13 +32,9 @@ module Helper.ToolBar {
         var placeHolder = toolBar._dom.placeHolder; 
         var placeHolderRect = placeHolder.getBoundingClientRect();
 
-        // Verify that the ToolBar element has the same ClientRect as its CommandingSurface's element.
+        // Verify that the ToolBar element has the same ClientRect as its CommandingSurface.
         var msg = "Opened ToolBar should have the same BoundingClientRect as its CommandingSurface.";
         Helper.Assert.areBoundingClientRectsEqual(commandingSurfaceRect, toolBarRect, msg, 1); 
-        //LiveUnit.Assert.areEqual(toolBarRect.height, commandingSurfaceRect.height, "Opened ToolBar and CommandingSurface must have the same height.");
-        //LiveUnit.Assert.areEqual(toolBarRect.width, commandingSurfaceRect.width, "Opened ToolBar and CommandingSurface must have the same width.");
-        //LiveUnit.Assert.areEqual(toolBarRect.top, commandingSurfaceRect.top, "Opened ToolBar and CommandingSurface must have the same top offset.");
-        //LiveUnit.Assert.areEqual(toolBarRect.left, commandingSurfaceRect.left, "Opened ToolBar and CommandingSurface must have the same left offet.");
 
         // Verify that the opened toolbar is a child of the body element with fixed position.
         LiveUnit.Assert.isTrue(toolBar.element.parentElement === document.body, "Opened ToolBar must be a child of the <body> element");
