@@ -398,11 +398,7 @@ export class ToolBar {
         _ElementUtilities.removeClass(this._dom.root, _Constants.ClassNames.closedClass);
         this._dom.root.style.width = closedCommandingSurfaceRect.width + "px";
         this._dom.root.style.left = closedCommandingSurfaceRect.left + "px";
-
         this._commandingSurface.synchronousOpen();
-
-        // Measure opened state
-        var openedRects = this._commandingSurface.getBoundingRects();
     }
     private _updateDomImpl_renderClosed(): void {
 
