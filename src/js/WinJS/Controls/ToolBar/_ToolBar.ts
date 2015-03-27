@@ -83,6 +83,7 @@ export class ToolBar {
     private _commandingSurface: _ICommandingSurface._CommandingSurface;
     private _isOpenedMode: boolean;
 
+
     private _dom: {
         root: HTMLElement;
         commandingSurfaceEl: HTMLElement;
@@ -364,8 +365,15 @@ export class ToolBar {
     private _updateDomImpl_renderOpened(): void {
 
         // Measure closed state.
-        var closedCommandingSurfaceRect = this._commandingSurface.getBoundingRects().actionArea;
         this._updateDomImpl_renderedState.prevInlineWidth = this._dom.root.style.width;
+        var closedCommandingSurfaceRect = this._commandingSurface.getBoundingRects().actionArea;
+        var closedStyle = getComputedStyle(this.element);
+        var closedMargins = {
+            top: parseFloat(closedStyle.marginTop),
+            right: parseFloat(closedStyle.marginRight),
+            bottom: parseFloat(closedStyle.marginBottom),
+            left: parseFloat(closedStyle.marginLeft)
+        };
 
         // Determine which direction to expand when opened
         var topOfViewport = 0,
@@ -377,17 +385,22 @@ export class ToolBar {
         if (distanceFromTop > distanceFromBottom) {
             // Open upwards
             this._commandingSurface.overflowDirection = _Constants.OverflowDirection.top;
-            this._dom.root.style.bottom = (bottomOfViewport - closedCommandingSurfaceRect.bottom) + "px";
+            this._dom.root.style.bottom = distanceFromBottom - closedMargins.bottom + "px";
         } else {
             // Open downwards
             this._commandingSurface.overflowDirection = _Constants.OverflowDirection.bottom;
-            this._dom.root.style.top = closedCommandingSurfaceRect.top + "px";
+            this._dom.root.style.top = distanceFromTop - closedMargins.top + "px";
         }
 
-        // Get replacement element
+        // Size our placeHolder element
         var placeHolder = this._dom.placeHolder;
-        placeHolder.style.width = closedCommandingSurfaceRect.width + "px";
-        placeHolder.style.height = closedCommandingSurfaceRect.height + "px";
+        var placeHolderStyle = placeHolder.style
+        placeHolderStyle.width = closedCommandingSurfaceRect.width + "px";
+        placeHolderStyle.height = closedCommandingSurfaceRect.height + "px";
+        placeHolderStyle.marginTop = closedMargins.top + "px";
+        placeHolderStyle.marginRight = closedMargins.right + "px";
+        placeHolderStyle.marginBottom = closedMargins.bottom + "px";
+        placeHolderStyle.marginLeft = closedMargins.left + "px";
 
         // Move ToolBar element to the body and leave placeHolder element in our place to avoid reflowing surrounding app content.
         this._dom.root.parentElement.insertBefore(placeHolder, this._dom.root);
@@ -397,7 +410,7 @@ export class ToolBar {
         _ElementUtilities.addClass(this._dom.root, _Constants.ClassNames.openedClass);
         _ElementUtilities.removeClass(this._dom.root, _Constants.ClassNames.closedClass);
         this._dom.root.style.width = closedCommandingSurfaceRect.width + "px";
-        this._dom.root.style.left = closedCommandingSurfaceRect.left + "px";
+        this._dom.root.style.left = closedCommandingSurfaceRect.left - closedMargins.left + "px";
         this._commandingSurface.synchronousOpen();
     }
     private _updateDomImpl_renderClosed(): void {

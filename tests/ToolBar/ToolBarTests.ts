@@ -78,6 +78,7 @@ module CorsicaTests {
             newNode.id = "host";
             document.body.appendChild(newNode);
             this._element = newNode;
+            this._element.style.margin = "10px";
         }
 
         tearDown() {

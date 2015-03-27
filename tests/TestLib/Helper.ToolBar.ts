@@ -33,10 +33,12 @@ module Helper.ToolBar {
         var placeHolderRect = placeHolder.getBoundingClientRect();
 
         // Verify that the ToolBar element has the same ClientRect as its CommandingSurface's element.
-        LiveUnit.Assert.areEqual(toolBarRect.height, commandingSurfaceRect.height, "Opened ToolBar and CommandingSurface must have the same height.");
-        LiveUnit.Assert.areEqual(toolBarRect.width, commandingSurfaceRect.width, "Opened ToolBar and CommandingSurface must have the same width.");
-        LiveUnit.Assert.areEqual(toolBarRect.top, commandingSurfaceRect.top, "Opened ToolBar and CommandingSurface must have the same top offset.");
-        LiveUnit.Assert.areEqual(toolBarRect.left, commandingSurfaceRect.left, "Opened ToolBar and CommandingSurface must have the same left offet.");
+        var msg = "Opened ToolBar should have the same BoundingClientRect as its CommandingSurface.";
+        Helper.Assert.areBoundingClientRectsEqual(commandingSurfaceRect, toolBarRect, msg, 1); 
+        //LiveUnit.Assert.areEqual(toolBarRect.height, commandingSurfaceRect.height, "Opened ToolBar and CommandingSurface must have the same height.");
+        //LiveUnit.Assert.areEqual(toolBarRect.width, commandingSurfaceRect.width, "Opened ToolBar and CommandingSurface must have the same width.");
+        //LiveUnit.Assert.areEqual(toolBarRect.top, commandingSurfaceRect.top, "Opened ToolBar and CommandingSurface must have the same top offset.");
+        //LiveUnit.Assert.areEqual(toolBarRect.left, commandingSurfaceRect.left, "Opened ToolBar and CommandingSurface must have the same left offet.");
 
         // Verify that the opened toolbar is a child of the body element with fixed position.
         LiveUnit.Assert.isTrue(toolBar.element.parentElement === document.body, "Opened ToolBar must be a child of the <body> element");
@@ -44,15 +46,12 @@ module Helper.ToolBar {
 
         // Verify that the placeholder element is a child of the body with static positioning.
         LiveUnit.Assert.isTrue(document.body.contains(placeHolder), "placeholder element must be a descendant of the <body> while ToolBar is opened.");
-        LiveUnit.Assert.isTrue(getComputedStyle(placeHolder).position === "static", "Opened ToolBar must have fixed positioning");
+        LiveUnit.Assert.isTrue(getComputedStyle(placeHolder).position === "static", "placeholder element must have static positioning");
 
         // Verify the ToolBar chose the correct overflow direction when opening based on the amount of vertical
         // space between where it's placeholder now is and the top/bottom edges of the viewport. 
         var distanceFromTop = placeHolderRect.top;
         var disatanceFromBottom = window.innerHeight - placeHolderRect.bottom;
-
-
-
 
         // Verify that based on our overflowdirection, we are correctly positioned on top of the placeholder element.
         LiveUnit.Assert.areEqual(toolBarRect.width, placeHolderRect.width, "Opened ToolBar must have same width as its placeholder element");
@@ -62,12 +61,10 @@ module Helper.ToolBar {
             case _CommandingSurface.OverflowDirection.bottom: 
 
                 LiveUnit.Assert.areEqual(toolBarRect.top, placeHolderRect.top, "")
-
                 break;
             case _CommandingSurface.OverflowDirection.top:
 
                 LiveUnit.Assert.areEqual(toolBarRect.bottom, placeHolderRect.bottom, "")
-
                 break;
         }
 
