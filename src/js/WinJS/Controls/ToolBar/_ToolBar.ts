@@ -367,6 +367,8 @@ export class ToolBar {
         // Measure closed state.
         this._updateDomImpl_renderedState.prevInlineWidth = this._dom.root.style.width;
         var closedCommandingSurfaceRect = this._commandingSurface.getBoundingRects().actionArea;
+        var closedContentWidth = _ElementUtilities.getContentWidth(this._dom.root);
+        //var closedContentHeight = _ElementUtilities.getContentHeight(this._dom.root);
         var closedStyle = getComputedStyle(this.element);
         var closedMargins = {
             top: parseFloat(closedStyle.marginTop),
@@ -375,10 +377,9 @@ export class ToolBar {
             left: parseFloat(closedStyle.marginLeft)
         };
 
-        // Determine which direction to expand when opened
+        // Determine which direction to expand the CommandingSurface elements when opened.
         var topOfViewport = 0,
             bottomOfViewport = _Global.innerHeight,
-            tolerance = 1,
             distanceFromTop = closedCommandingSurfaceRect.top - topOfViewport,
             distanceFromBottom = bottomOfViewport - closedCommandingSurfaceRect.bottom;
 
@@ -392,7 +393,8 @@ export class ToolBar {
             this._dom.root.style.top = distanceFromTop - closedMargins.top + "px";
         }
 
-        // Size our placeHolder element
+        // Size our placeHolder. Set height and width to match borderbox of the closed Commandingsurface.
+        // Copy commandingsurface margins to the placeholder.
         var placeHolder = this._dom.placeHolder;
         var placeHolderStyle = placeHolder.style
         placeHolderStyle.width = closedCommandingSurfaceRect.width + "px";
@@ -406,11 +408,13 @@ export class ToolBar {
         this._dom.root.parentElement.insertBefore(placeHolder, this._dom.root);
         _Global.document.body.appendChild(this._dom.root);
 
+        // Positiong the commanding surface to cover the placeholder element.
+        this._dom.root.style.width = closedContentWidth + "px";
+        this._dom.root.style.left = closedCommandingSurfaceRect.left - closedMargins.left + "px";
+
         // Render opened state
         _ElementUtilities.addClass(this._dom.root, _Constants.ClassNames.openedClass);
         _ElementUtilities.removeClass(this._dom.root, _Constants.ClassNames.closedClass);
-        this._dom.root.style.width = closedCommandingSurfaceRect.width + "px";
-        this._dom.root.style.left = closedCommandingSurfaceRect.left - closedMargins.left + "px";
         this._commandingSurface.synchronousOpen();
     }
     private _updateDomImpl_renderClosed(): void {
