@@ -129,7 +129,7 @@ module CorsicaTests {
             LiveUnit.Assert.isNotNull(toolBar.element, "An element should be created when one is not passed to the constructor");
         }
 
-        testDataProperty() { 
+        testDataProperty() {
             // Verify default (empty)
             var toolBar = new ToolBar(this._element);
             LiveUnit.Assert.areEqual(0, toolBar.data.length, "Empty ToolBar should have length 0");
@@ -149,7 +149,7 @@ module CorsicaTests {
                 new Command(null, { type: _Constants.typeButton, label: "opt 2" })
             ]);
 
-            var toolBar = new ToolBar(this._element, {data: data});
+            var toolBar = new ToolBar(this._element, { data: data });
 
             // set data to invalid value
             var property = "data";
@@ -234,20 +234,17 @@ module CorsicaTests {
             // The ToolBar moves itself to the Body when opened and leaves a placeholder element in its place.
             // Verify that calling disposeSubTree on the placeholder element will trigger the ToolBar to dispose.
 
-            var contentHost = document.createElement("DIV");
-            document.body.appendChild(contentHost);
-            contentHost.appendChild(this._element);
+            var toolBarEl = document.createElement("DIV");
+            this._element.appendChild(toolBarEl);
 
             var data = new WinJS.Binding.List([
                 new Command(null, { type: _Constants.typeButton, label: "opt 1" }),
                 new Command(null, { type: _Constants.typeButton, label: "opt 2", section: _Constants.secondaryCommandSection })
             ]);
-            var toolBar = new ToolBar(this._element, { opened: true, data: data });
+            var toolBar = new ToolBar(toolBarEl, { opened: true, data: data });
 
-            WinJS.Utilities.disposeSubTree(contentHost);
+            WinJS.Utilities.disposeSubTree(this._element);
             LiveUnit.Assert.isTrue(toolBar._disposed, "Disposing the ToolBar's placeholder should dispose the ToolBar");
-
-            contentHost.parentElement.removeChild(contentHost);
         }
 
         testDisposeClosesToolBar() {
@@ -1468,35 +1465,32 @@ module CorsicaTests {
                 "closing a closed ToolBar should not change affect bounding client rect", 0);
         }
 
-        testToolBarElementReturnsToOriginalParentElementAfterClosing() {
+        testToolBarElementReturnsToOriginalParentElement_AfterClosing() {
             var data = new WinJS.Binding.List([
                 new Command(null, { type: _Constants.typeButton, icon: 'add', label: "button" }),
                 new Command(null, { type: _Constants.typeSeparator }),
                 new Command(null, { type: _Constants.typeButton, section: 'secondary', label: "secondary" })
             ]);
 
-            var toolBar = new ToolBar(this._element, { data: data, opened: false });
-            Helper.ToolBar.useSynchronousAnimations(toolBar);
-
-            var contentHost = document.createElement("DIV"),
+            var toolBarEl= document.createElement("DIV"),
                 prevSibling = document.createElement("DIV"),
                 nextSibling = document.createElement("DIV");
 
-            document.body.appendChild(contentHost);
-            contentHost.appendChild(prevSibling);
-            contentHost.appendChild(toolBar.element);
-            contentHost.appendChild(nextSibling);
+            this._element.appendChild(prevSibling);
+            this._element.appendChild(toolBarEl);
+            this._element.appendChild(nextSibling);
+
+            var toolBar = new ToolBar(toolBarEl, { data: data, opened: false });
+            Helper.ToolBar.useSynchronousAnimations(toolBar);
 
             // Opening the ToolBar will move it to the body. 
             // Verify that closing the ToolBar moves it back into the correct DOM location of its parent element.
             toolBar.open();
             toolBar.close();
 
-            LiveUnit.Assert.isTrue(contentHost.children[0] === prevSibling, "prevSibling should remain at index 0");
-            LiveUnit.Assert.isTrue(contentHost.children[1] === toolBar.element, "toolBar should remain at index 1");
-            LiveUnit.Assert.isTrue(contentHost.children[2] === nextSibling, "nextSibling should remain at index 2");
-
-            contentHost.parentElement.removeChild(contentHost);
+            LiveUnit.Assert.isTrue(this._element.children[0] === prevSibling, "prevSibling should remain at index 0");
+            LiveUnit.Assert.isTrue(this._element.children[1] === toolBar.element, "toolBar should remain at index 1");
+            LiveUnit.Assert.isTrue(this._element.children[2] === nextSibling, "nextSibling should remain at index 2");
         }
 
         testOpeningOrClosingToolBar_DoesNotReflowDOMContent() {
@@ -1506,30 +1500,29 @@ module CorsicaTests {
                 new Command(null, { type: _Constants.typeButton, section: 'secondary', label: "secondary" })
             ]);
 
-            var toolBar = new ToolBar(this._element, { data: data, opened: false });
-            Helper.ToolBar.useSynchronousAnimations(toolBar);
-
-            var contentHost = document.createElement("DIV"),
+            var toolBarEl = document.createElement("DIV"),
                 prevSibling = document.createElement("DIV"),
                 nextSibling = document.createElement("DIV");
 
-            document.body.appendChild(contentHost);
-            contentHost.appendChild(prevSibling);
-            contentHost.appendChild(toolBar.element);
-            contentHost.appendChild(nextSibling);
+            this._element.appendChild(prevSibling);
+            this._element.appendChild(toolBarEl);
+            this._element.appendChild(nextSibling);
 
-            // Make parent size to content
-            contentHost.style.display = "inline-block";
+            var toolBar = new ToolBar(toolBarEl, { data: data, opened: false });
+            Helper.ToolBar.useSynchronousAnimations(toolBar);
+
+            // Make parent size to content.
+            this._element.style.display = "inline-block";
 
             // When the ToolBar is opened it will move itself to the body and leave a placeholder element 
-            // of the same size in its place. When the ToolBar is closed, it returns to its original DOM Tree.
-            // Verify that opening and closing the ToolBar does not reflow the content around it.
-            var parentRect = contentHost.getBoundingClientRect();
+            // of the same size in its place. When the ToolBar is closed, it returns to its original parent 
+            // element. Verify that opening and closing the ToolBar does not reflow the content around it.
+            var parentRect = this._element.getBoundingClientRect();
             var prevSiblingRect = prevSibling.getBoundingClientRect();
             var nextSiblingRect = nextSibling.getBoundingClientRect();
 
             toolBar.open();
-            Helper.Assert.areBoundingClientRectsEqual(parentRect, contentHost.getBoundingClientRect(),
+            Helper.Assert.areBoundingClientRectsEqual(parentRect, this._element.getBoundingClientRect(),
                 "Opening the ToolBar should not cause its parent element to reflow.", 1);
             Helper.Assert.areBoundingClientRectsEqual(prevSiblingRect, prevSibling.getBoundingClientRect(),
                 "Opening the ToolBar should not cause its previous sibling element to reflow.", 1);
@@ -1537,52 +1530,90 @@ module CorsicaTests {
                 "Opening the ToolBar should not cause its next sibling element to reflow.", 1);
 
             toolBar.close();
-            Helper.Assert.areBoundingClientRectsEqual(parentRect, contentHost.getBoundingClientRect(),
+            Helper.Assert.areBoundingClientRectsEqual(parentRect, this._element.getBoundingClientRect(),
                 "Closing the ToolBar should not cause its parent element to reflow.", 1);
             Helper.Assert.areBoundingClientRectsEqual(prevSiblingRect, prevSibling.getBoundingClientRect(),
                 "Closing the ToolBar should not cause its previous sibling element to reflow.", 1);
             Helper.Assert.areBoundingClientRectsEqual(nextSiblingRect, nextSibling.getBoundingClientRect(),
                 "Closing the ToolBar should not cause its next sibling element to reflow.", 1);
 
-            contentHost.parentElement.removeChild(contentHost);
+            this._element.parentElement.removeChild(this._element);
         }
 
-        // CODE REVIEWERS IGNORE THIS ///////////////////////////////////////////////////////////////
-        //testAutoOverFlowDirection() {
-        //    var iframe = document.createElement("iframe");
-        //    iframe.src = "$(TESTDATA)/WinJSSandbox.html";
-        //    iframe.width = "" + (0);
-        //    iframe.height = "" + (0);
-        //    iframe.onload = function () {
-        //        //function processValues(providedValues) {
-        //        //    var defaultValues: IPositioningAndSizingAssertions = {
-        //        //        desc: "",
-        //        //        windowWidth: defaultMaxDialogWidth + 10,
-        //        //        windowHeight: defaultMaxDialogHeight + 10,
-        //        //        contentWidth: 5,
-        //        //        contentHeight: 5,
+        testAutoOverFlowDirection() {
+            var data = new WinJS.Binding.List([
+                new Command(null, { type: _Constants.typeButton, icon: 'add', label: "primary1" }),
+                new Command(null, { type: _Constants.typeSeparator }),
+                new Command(null, { type: _Constants.typeButton, section: 'secondary', label: "secondary1" }),
+                new Command(null, { type: _Constants.typeButton, icon: 'delete', label: "primary2" }),
+                new Command(null, { type: _Constants.typeSeparator, section: 'secondary' }),
+                new Command(null, { type: _Constants.typeButton, section: 'secondary', label: "secondary2" })
+            ]);
 
-        //        //        expectedDialogWidth: undefined,
-        //        //        expectedDialogHeight: undefined,
-        //        //        expectedDialogHorizontalPosition: undefined,
-        //        //        expectedDialogVerticalPosition: undefined
-        //        //    };
+            // Put ToolBar inside of a fixed position element. We can easily move it around the viewport.
+            var toolBarEl = document.createElement("DIV");
+            var container = document.createElement("DIV");
+            this._element.appendChild(container);
+            container.appendChild(toolBarEl);
+            container.style.position = "fixed";
+            container.style.display = "inline-block";
+            container.style.padding = "0";
+            container.style.border = "none";
+            container.style.margin = "0";
 
-        //        var data = new WinJS.Binding.List([
-        //            new Command(null, { type: _Constants.typeButton, icon: 'add', label: "primary1" }),
-        //            new Command(null, { type: _Constants.typeSeparator }),
-        //            new Command(null, { type: _Constants.typeButton, section: 'secondary', label: "secondary1" }),
-        //            new Command(null, { type: _Constants.typeButton, icon: 'delete', label: "primary2" }),
-        //            new Command(null, { type: _Constants.typeSeparator, section: 'secondary' }),
-        //            new Command(null, { type: _Constants.typeButton, section: 'secondary', label: "secondary2" })
-        //        ]);
+            var toolBar = new ToolBar(toolBarEl, { data: data });
+            Helper.ToolBar.useSynchronousAnimations(toolBar);
 
-        //        var iframeGlobal = iframe.contentWindow;
-        //        var toolBarEl = iframeGlobal.document.createElement("DIV");
-        //        var toolBar = new WinJS.UI.ToolBar(toolBarEl, { data: data });
-        //        iframeGlobal.document.body.appendChild(toolBarEl);
-        //    }
-        //}
+            // Start from a sane place and verify that the ToolBar's parent element is sized to content.
+            LiveUnit.Assert.areEqual(WinJS.Utilities.getTotalHeight(toolBarEl),
+                WinJS.Utilities.getContentHeight(container),
+                "TEST ERROR: ToolBar's container element must size to content.");
+
+            // Vertically center the closed ToolBar's content box.
+            var topOfViewport = 0,
+                bottomOfViewport = window.innerHeight,
+                middleOfViewport = window.innerHeight / 2,
+                paddingTop = WinJS.Utilities.convertToPixels(toolBarEl, "paddingTop"),
+                borderTop = WinJS.Utilities.convertToPixels(toolBarEl, "borderTop"),
+                marginTop = WinJS.Utilities.convertToPixels(toolBarEl, "marginTop"),
+                contentHeight = WinJS.Utilities.getContentHeight(toolBarEl),
+                nextContainerTop = middleOfViewport - (contentHeight / 2) - paddingTop - borderTop - marginTop;
+
+            container.style.top = nextContainerTop + "px";
+
+            // Sanity check our enviornment and verify that the ToolBar element's content box height is centered
+            // around the mid point of the viewport.
+
+            var toolBarRect = toolBarEl.getBoundingClientRect(),
+                contentRectTop = toolBarRect.top + borderTop + paddingTop,
+                middleOfContentBox = contentRectTop + (contentHeight / 2);
+            Helper.Assert.areFloatsEqual(middleOfViewport, middleOfContentBox,
+                "TEST ERROR, Test failed to correctly set enviornment. The content box should be centered " +
+                "around the middpoint of the viewport height", 1);
+
+            // Verify that an opened toolbar will automatically overflow in the direction (top/bottom) that has
+            // the most available space between the viewport and content box.
+
+            // Pull the center of the content box up one pixel up from the middle of the viewport. 
+            nextContainerTop -= 1;
+            container.style.top = nextContainerTop + "px";
+
+            // Opened ToolBar should now overflow bottom.
+            toolBar.open();
+            LiveUnit.Assert.isTrue(toolBar._commandingSurface.overflowDirection = _Constants.OverflowDirection.bottom,
+                "Opened ToolBar should overflow bottom when there is more space below the content box than above it.");
+            toolBar.close();
+
+            // Psh the center of the content box down to 1 pixel below the middle of the viewport
+            nextContainerTop += 2;
+            container.style.top = nextContainerTop + "px";
+
+            // Opened ToolBar should now overflow top.
+            toolBar.open();
+            LiveUnit.Assert.isTrue(toolBar._commandingSurface.overflowDirection = _Constants.OverflowDirection.bottom,
+                "Opened ToolBar should overflow top when there is more space aboce the content box than below it.");
+
+        }
 
         testToolBarRetainsViewPortCoordinatesWhenOpenedAndClosed() {
             var data = new WinJS.Binding.List([
@@ -1638,7 +1669,7 @@ module CorsicaTests {
         // CODE REVIEWERS IGNORE THIS ///////////////////////////////////////////////
         //testConstructorRendersOpened() {
         //    // Verify that construction time render matches programmatic open/close render.
-              
+
         //}
 
         testTogglingOpenedProperty() {
@@ -1650,8 +1681,6 @@ module CorsicaTests {
             var toolBar = new ToolBar(this._element, { data: data, opened: false });
             Helper.ToolBar.useSynchronousAnimations(toolBar);
             Helper.ToolBar.verifyRenderedClosed(toolBar);
-
-            var closedRect = toolBar.element.getBoundingClientRect();
 
             toolBar.opened = true;
             LiveUnit.Assert.isTrue(toolBar.opened, "opened property should be writeable.");

@@ -308,7 +308,7 @@ export class ToolBar {
 
         // While the ToolBar is open, it will place itself in the <body> so it can become a light dismissible
         // overlay. It leaves the placeHolder element behind as stand in at the ToolBar's original DOM location 
-        // to avoid reflowing surrounding appcontent and sell the illusion that the ToolBar hasn't moved along
+        // to avoid reflowing surrounding app content and sell the illusion that the ToolBar hasn't moved along
         // the x or y planes.
         var placeHolder = _Global.document.createElement("DIV");
         _ElementUtilities.addClass(placeHolder, _Constants.ClassNames.placeHolderCssClass);
@@ -370,9 +370,9 @@ export class ToolBar {
 
         // Measure closed state.
         this._updateDomImpl_renderedState.prevInlineWidth = this._dom.root.style.width;
-        var closedToolBarRect = this.element.getBoundingClientRect();
+        var closedToolBarRect = this._dom.root.getBoundingClientRect();
         var closedContentWidth = _ElementUtilities.getContentWidth(this._dom.root);
-        var closedStyle = getComputedStyle(this.element);
+        var closedStyle = getComputedStyle(this._dom.root);
         var closedMargins = {
             top: parseFloat(closedStyle.marginTop),
             right: parseFloat(closedStyle.marginRight),
@@ -411,7 +411,7 @@ export class ToolBar {
         this._dom.root.parentElement.insertBefore(placeHolder, this._dom.root);
         _Global.document.body.appendChild(this._dom.root);
 
-        // Positiong the commanding surface to cover the placeholder element.
+        // Position the commanding surface to cover the placeholder element.
         this._dom.root.style.width = closedContentWidth + "px";
         this._dom.root.style.left = closedToolBarRect.left - closedMargins.left + "px";
 
