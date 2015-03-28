@@ -1666,12 +1666,6 @@ module CorsicaTests {
             });
         }
 
-        // CODE REVIEWERS IGNORE THIS ///////////////////////////////////////////////
-        //testConstructorRendersOpened() {
-        //    // Verify that construction time render matches programmatic open/close render.
-
-        //}
-
         testTogglingOpenedProperty() {
             var data = new WinJS.Binding.List([
                 new Command(null, { type: _Constants.typeButton, icon: 'add', label: "button" }),
