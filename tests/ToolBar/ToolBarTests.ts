@@ -1511,8 +1511,13 @@ module CorsicaTests {
             var toolBar = new ToolBar(toolBarEl, { data: data, opened: false });
             Helper.ToolBar.useSynchronousAnimations(toolBar);
 
-            // Make parent size to content.
-            this._element.style.display = "inline-block";
+            // Ensure elements have dimensions
+            this._element.style.height = "auto";
+            this._element.style.width = "50px";
+            prevSibling.style.height = "10px";
+            prevSibling.style.width = "10px";
+            nextSibling.style.height = "10px";
+            nextSibling.style.width = "10px";
 
             // When the ToolBar is opened it will move itself to the body and leave a placeholder element 
             // of the same size in its place. When the ToolBar is closed, it returns to its original parent 
@@ -1536,8 +1541,6 @@ module CorsicaTests {
                 "Closing the ToolBar should not cause its previous sibling element to reflow.", 1);
             Helper.Assert.areBoundingClientRectsEqual(nextSiblingRect, nextSibling.getBoundingClientRect(),
                 "Closing the ToolBar should not cause its next sibling element to reflow.", 1);
-
-            this._element.parentElement.removeChild(this._element);
         }
 
         testAutoOverFlowDirection() {
@@ -1556,7 +1559,8 @@ module CorsicaTests {
             this._element.appendChild(container);
             container.appendChild(toolBarEl);
             container.style.position = "fixed";
-            container.style.display = "inline-block";
+            container.style.width = "100px";
+            container.style.height = "auto";
             container.style.padding = "0";
             container.style.border = "none";
             container.style.margin = "0";
@@ -1600,19 +1604,20 @@ module CorsicaTests {
 
             // Opened ToolBar should now overflow bottom.
             toolBar.open();
-            LiveUnit.Assert.isTrue(toolBar._commandingSurface.overflowDirection = _Constants.OverflowDirection.bottom,
-                "Opened ToolBar should overflow bottom when there is more space below the content box than above it.");
+            LiveUnit.Assert.areEqual(toolBar._commandingSurface.overflowDirection,
+                _Constants.OverflowDirection.bottom,
+                "ToolBar should overflow bottom when there is more space below the content box than above it.");
             toolBar.close();
 
-            // Psh the center of the content box down to 1 pixel below the middle of the viewport
+            // Push the center of the content box down to 1 pixel below the middle of the viewport
             nextContainerTop += 2;
             container.style.top = nextContainerTop + "px";
 
             // Opened ToolBar should now overflow top.
             toolBar.open();
-            LiveUnit.Assert.isTrue(toolBar._commandingSurface.overflowDirection = _Constants.OverflowDirection.bottom,
-                "Opened ToolBar should overflow top when there is more space aboce the content box than below it.");
-
+            LiveUnit.Assert.areEqual(toolBar._commandingSurface.overflowDirection,
+                _Constants.OverflowDirection.top,
+                "ToolBar should overflow top when there is more space aboce the content box than below it.");
         }
 
         testToolBarRetainsViewPortCoordinatesWhenOpenedAndClosed() {

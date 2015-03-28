@@ -200,9 +200,9 @@ export class ToolBar {
         _ElementUtilities._inDom(this.element).then(() => {
             return this._commandingSurface.initialized;
         }).then(() => {
-            stateMachine.exitInit();
-            this._writeProfilerMark("constructor,StopTM");
-        });
+                stateMachine.exitInit();
+                this._writeProfilerMark("constructor,StopTM");
+            });
     }
 
     /// <field type="Function" locid="WinJS.UI.ToolBar.onbeforeopen" helpKeyword="WinJS.UI.ToolBar.onbeforeopen">
@@ -370,21 +370,25 @@ export class ToolBar {
 
         // Measure closed state.
         this._updateDomImpl_renderedState.prevInlineWidth = this._dom.root.style.width;
-        var closedToolBarRect = this._dom.root.getBoundingClientRect();
-        var closedContentWidth = _ElementUtilities.getContentWidth(this._dom.root);
-        var closedStyle = getComputedStyle(this._dom.root);
-        var closedMargins = {
-            top: parseFloat(closedStyle.marginTop),
-            right: parseFloat(closedStyle.marginRight),
-            bottom: parseFloat(closedStyle.marginBottom),
-            left: parseFloat(closedStyle.marginLeft)
-        };
+        var closedBorderBox = this._dom.root.getBoundingClientRect(),
+            closedContentWidth = _ElementUtilities.getContentWidth(this._dom.root),
+            closedContentHeight = _ElementUtilities.getContentHeight(this._dom.root),
+            closedPaddingTop = _ElementUtilities.convertToPixels(this._dom.root, "paddingTop"),
+            closedBorderTop = _ElementUtilities.convertToPixels(this._dom.root, "borderTop"),
+            closedMargins = {
+                top: _ElementUtilities.convertToPixels(this._dom.root, "marginTop"),
+                right: _ElementUtilities.convertToPixels(this._dom.root, "marginRight"),
+                bottom: _ElementUtilities.convertToPixels(this._dom.root, "marginBottom"),
+                left: _ElementUtilities.convertToPixels(this._dom.root, "marginLeft"),
+            },
+            closedContentBoxTop = closedBorderBox.top + closedBorderTop + closedPaddingTop,
+            closedContentBoxBottom = closedContentBoxTop + closedContentHeight;
 
         // Determine which direction to expand the CommandingSurface elements when opened.
         var topOfViewport = 0,
             bottomOfViewport = _Global.innerHeight,
-            distanceFromTop = closedToolBarRect.top - topOfViewport,
-            distanceFromBottom = bottomOfViewport - closedToolBarRect.bottom;
+            distanceFromTop = closedContentBoxTop - topOfViewport,
+            distanceFromBottom = bottomOfViewport - closedContentBoxBottom;
 
         if (distanceFromTop > distanceFromBottom) {
             // Open upwards
@@ -400,8 +404,8 @@ export class ToolBar {
         // Copy commandingsurface margins to the placeholder.
         var placeHolder = this._dom.placeHolder;
         var placeHolderStyle = placeHolder.style
-        placeHolderStyle.width = closedToolBarRect.width + "px";
-        placeHolderStyle.height = closedToolBarRect.height + "px";
+        placeHolderStyle.width = closedBorderBox.width + "px";
+        placeHolderStyle.height = closedBorderBox.height + "px";
         placeHolderStyle.marginTop = closedMargins.top + "px";
         placeHolderStyle.marginRight = closedMargins.right + "px";
         placeHolderStyle.marginBottom = closedMargins.bottom + "px";
@@ -413,13 +417,14 @@ export class ToolBar {
 
         // Position the commanding surface to cover the placeholder element.
         this._dom.root.style.width = closedContentWidth + "px";
-        this._dom.root.style.left = closedToolBarRect.left - closedMargins.left + "px";
+        this._dom.root.style.left = closedBorderBox.left - closedMargins.left + "px";
 
         // Render opened state
         _ElementUtilities.addClass(this._dom.root, _Constants.ClassNames.openedClass);
         _ElementUtilities.removeClass(this._dom.root, _Constants.ClassNames.closedClass);
         this._commandingSurface.synchronousOpen();
     }
+
     private _updateDomImpl_renderClosed(): void {
 
         // Restore our placement in the DOM
