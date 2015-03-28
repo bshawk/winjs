@@ -40,7 +40,7 @@ module Helper.ToolBar {
         LiveUnit.Assert.isTrue(toolBar.element.parentElement === document.body, "Opened ToolBar must be a child of the <body> element");
         LiveUnit.Assert.isTrue(getComputedStyle(toolBar.element).position === "fixed", "Opened ToolBar must have fixed positioning");
 
-        // Verify that the placeholder element is a child of the body with static positioning.
+        // Verify that the placeholder element is a descendant of the body with static positioning.
         LiveUnit.Assert.isTrue(document.body.contains(placeHolder), "placeholder element must be a descendant of the <body> while ToolBar is opened.");
         LiveUnit.Assert.isTrue(getComputedStyle(placeHolder).position === "static", "placeholder element must have static positioning");
 
