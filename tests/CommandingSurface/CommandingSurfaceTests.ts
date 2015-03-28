@@ -77,8 +77,12 @@ module CorsicaTests {
 
         tearDown() {
             if (this._element) {
-                WinJS.Utilities.disposeSubTree(this._element);
-                document.body.removeChild(this._element);
+                if (this._element.winControl) {
+                    this._element.winControl.dispose();
+                }
+                if (this._element.parentElement) {
+                    this._element.parentElement.removeChild(this._element);
+                }
                 this._element = null;
             }
         }
@@ -929,7 +933,7 @@ module CorsicaTests {
             LiveUnit.Assert.areEqual(0, WinJS.Utilities.getTotalHeight(commandingSurface._dom.overflowArea), "Invalid height for the overflowarea container when there are no commands that overflow");
         }
 
-        xtestOverflowAreaContainerSize() {
+        testOverflowAreaContainerSize() {
             var data = new WinJS.Binding.List([
                 new Command(null, { type: _Constants.typeButton, label: "1" }),
                 new Command(null, { type: _Constants.typeButton, label: "2" }),
@@ -961,7 +965,7 @@ module CorsicaTests {
             LiveUnit.Assert.areEqual(commandingSurface.element, commandingSurface._dom.actionArea.parentNode, "Invalid parent for the actionarea container");
         }
 
-        xtestOverflowMaxHeightForOnlySecondaryCommands() {
+        testOverflowMaxHeightForOnlySecondaryCommands() {
             var data = new WinJS.Binding.List([
                 new Command(null, { type: _Constants.typeButton, label: "1", section: _Constants.secondaryCommandSection }),
                 new Command(null, { type: _Constants.typeButton, label: "2", section: _Constants.secondaryCommandSection }),
@@ -983,7 +987,7 @@ module CorsicaTests {
             LiveUnit.Assert.areEqual(9, Helper._CommandingSurface.getVisibleCommandsInElement(commandingSurface._dom.overflowArea).length, "There should be 9 commands in the overflowarea");
         }
 
-        xtestOverflowMaxHeightForMixedCommands() {
+        testOverflowMaxHeightForMixedCommands() {
             var data = new WinJS.Binding.List([
                 new Command(null, { type: _Constants.typeButton, label: "1" }),
                 new Command(null, { type: _Constants.typeButton, label: "2" }),

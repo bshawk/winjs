@@ -258,9 +258,6 @@ export class ToolBar {
         this._synchronousClose();
 
         _Dispose.disposeSubTree(this.element);
-        //TODO: Does the placeHolder element need a dispose method on it as well, so that will be called if its parent subtree is disposed?
-        // If the placeholder is in the DOM at all, it means the toolbar is temporarily open and absolutely positioned in the docuent.body.
-        // Also, can we accomplish this just by hanging this._winControl off of the placeHolder element as well?
     }
 
     forceLayout() {
@@ -304,13 +301,22 @@ export class ToolBar {
         }
 
         // Create element for commandingSurface and reparent any declarative Commands.
-        // commandingSurface will parse child elements as AppBarCommands.
+        // The CommandingSurface constructor will parse child elements as AppBarCommands.
         var commandingSurfaceEl = document.createElement("DIV");
         _ElementUtilities._reparentChildren(root, commandingSurfaceEl);
         root.appendChild(commandingSurfaceEl);
 
+        // While the ToolBar is open, it will place itself in the <body> so it can become a light dismissible
+        // overlay. It leaves the placeHolder element behind as stand in at the ToolBar's original DOM location 
+        // to avoid reflowing surrounding appcontent and sell the illusion that the ToolBar hasn't moved along
+        // the x or y planes.
         var placeHolder = _Global.document.createElement("DIV");
         _ElementUtilities.addClass(placeHolder, _Constants.ClassNames.placeHolderCssClass);
+        // If the ToolBar's original HTML parent node is disposed while the ToolBar is open and repositioned as 
+        // a temporary child of the <body>, make sure that calling dispose on the placeHolder element will trigger 
+        // dispose on the ToolBar as well.
+        _ElementUtilities.addClass(placeHolder, _Constants.ClassNames.disposableCssClass);
+        placeHolder["dispose"] = this.dispose.bind(this);
 
         this._dom = {
             root: root,
@@ -364,9 +370,8 @@ export class ToolBar {
 
         // Measure closed state.
         this._updateDomImpl_renderedState.prevInlineWidth = this._dom.root.style.width;
-        var closedCommandingSurfaceRect = this.element.getBoundingClientRect();
+        var closedToolBarRect = this.element.getBoundingClientRect();
         var closedContentWidth = _ElementUtilities.getContentWidth(this._dom.root);
-        //var closedContentHeight = _ElementUtilities.getContentHeight(this._dom.root);
         var closedStyle = getComputedStyle(this.element);
         var closedMargins = {
             top: parseFloat(closedStyle.marginTop),
@@ -378,8 +383,8 @@ export class ToolBar {
         // Determine which direction to expand the CommandingSurface elements when opened.
         var topOfViewport = 0,
             bottomOfViewport = _Global.innerHeight,
-            distanceFromTop = closedCommandingSurfaceRect.top - topOfViewport,
-            distanceFromBottom = bottomOfViewport - closedCommandingSurfaceRect.bottom;
+            distanceFromTop = closedToolBarRect.top - topOfViewport,
+            distanceFromBottom = bottomOfViewport - closedToolBarRect.bottom;
 
         if (distanceFromTop > distanceFromBottom) {
             // Open upwards
@@ -395,8 +400,8 @@ export class ToolBar {
         // Copy commandingsurface margins to the placeholder.
         var placeHolder = this._dom.placeHolder;
         var placeHolderStyle = placeHolder.style
-        placeHolderStyle.width = closedCommandingSurfaceRect.width + "px";
-        placeHolderStyle.height = closedCommandingSurfaceRect.height + "px";
+        placeHolderStyle.width = closedToolBarRect.width + "px";
+        placeHolderStyle.height = closedToolBarRect.height + "px";
         placeHolderStyle.marginTop = closedMargins.top + "px";
         placeHolderStyle.marginRight = closedMargins.right + "px";
         placeHolderStyle.marginBottom = closedMargins.bottom + "px";
@@ -408,7 +413,7 @@ export class ToolBar {
 
         // Positiong the commanding surface to cover the placeholder element.
         this._dom.root.style.width = closedContentWidth + "px";
-        this._dom.root.style.left = closedCommandingSurfaceRect.left - closedMargins.left + "px";
+        this._dom.root.style.left = closedToolBarRect.left - closedMargins.left + "px";
 
         // Render opened state
         _ElementUtilities.addClass(this._dom.root, _Constants.ClassNames.openedClass);

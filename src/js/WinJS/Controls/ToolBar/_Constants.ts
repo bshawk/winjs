@@ -37,6 +37,7 @@ export var OverflowDirection = {
     bottom: "bottom",
 };
 
+export var overflowAreaMaxWidth: number = _CommandingSurfaceConstants.overflowAreaMaxWidth;
 export var controlMinWidth: number = _CommandingSurfaceConstants.controlMinWidth;
 
 export var defaultClosedDisplayMode = "compact";

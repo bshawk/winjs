@@ -82,8 +82,12 @@ module CorsicaTests {
 
         tearDown() {
             if (this._element) {
-                WinJS.Utilities.disposeSubTree(this._element);
-                document.body.removeChild(this._element);
+                if (this._element.winControl) {
+                    this._element.winControl.dispose();
+                }
+                if (this._element.parentElement) {
+                    this._element.parentElement.removeChild(this._element);
+                }
                 this._element = null;
             }
         }
@@ -1344,37 +1348,6 @@ module CorsicaTests {
             });
         }
 
-        testOpenedPropertyConstructorOptions() {
-            var appBar = new AppBar();
-            LiveUnit.Assert.areEqual(_Constants.defaultOpened, appBar.opened, "opened property has incorrect default value");
-            appBar.dispose();
-
-            [true, false].forEach(function (initiallyOpen) {
-                appBar = new AppBar(null, { opened: initiallyOpen });
-                LiveUnit.Assert.areEqual(initiallyOpen, appBar.opened, "opened property does not match the value passed to the constructor.");
-                appBar.dispose();
-            })
-        }
-
-        testTogglingOpenedProperty() {
-            var data = new WinJS.Binding.List([
-                new Command(null, { type: _Constants.typeButton, icon: 'add', label: "button" }),
-                new Command(null, { type: _Constants.typeSeparator }),
-                new Command(null, { type: _Constants.typeButton, section: 'secondary', label: "secondary" })
-            ]);
-            var appBar = new AppBar(this._element, { data: data, opened: false });
-            Helper._CommandingSurface.useSynchronousAnimations(appBar._commandingSurface);
-            Helper.AppBar.verifyRenderedClosed(appBar);
-
-            appBar.opened = true;
-            LiveUnit.Assert.isTrue(appBar.opened, "opened property should be writeable.");
-            Helper.AppBar.verifyRenderedOpened(appBar);
-
-            appBar.opened = false;
-            LiveUnit.Assert.isFalse(appBar.opened, "opened property should be writeable.");
-            Helper.AppBar.verifyRenderedClosed(appBar);
-        }
-
         testPlacementConstructorOptions() {
             var appBar = new AppBar();
             LiveUnit.Assert.areEqual(_Constants.defaultPlacement, appBar.placement, "'placement' property has incorrect default value.");
@@ -1489,6 +1462,37 @@ module CorsicaTests {
             Helper.AppBar.verifyRenderedClosed(appBar);
             Helper.Assert.areBoundingClientRectsEqual(originalClosedRect, appBar.element.getBoundingClientRect(),
                 "closing a closed AppBar should not affect its bounding client rect", 0);
+        }
+
+        testOpenedPropertyConstructorOptions() {
+            var appBar = new AppBar();
+            LiveUnit.Assert.areEqual(_Constants.defaultOpened, appBar.opened, "opened property has incorrect default value");
+            appBar.dispose();
+
+            [true, false].forEach(function (initiallyOpen) {
+                appBar = new AppBar(null, { opened: initiallyOpen });
+                LiveUnit.Assert.areEqual(initiallyOpen, appBar.opened, "opened property does not match the value passed to the constructor.");
+                appBar.dispose();
+            })
+        }
+
+        testTogglingOpenedProperty() {
+            var data = new WinJS.Binding.List([
+                new Command(null, { type: _Constants.typeButton, icon: 'add', label: "button" }),
+                new Command(null, { type: _Constants.typeSeparator }),
+                new Command(null, { type: _Constants.typeButton, section: 'secondary', label: "secondary" })
+            ]);
+            var appBar = new AppBar(this._element, { data: data, opened: false });
+            Helper._CommandingSurface.useSynchronousAnimations(appBar._commandingSurface);
+            Helper.AppBar.verifyRenderedClosed(appBar);
+
+            appBar.opened = true;
+            LiveUnit.Assert.isTrue(appBar.opened, "opened property should be writeable.");
+            Helper.AppBar.verifyRenderedOpened(appBar);
+
+            appBar.opened = false;
+            LiveUnit.Assert.isFalse(appBar.opened, "opened property should be writeable.");
+            Helper.AppBar.verifyRenderedClosed(appBar);
         }
 
         testOverFlowButtonClick() {
